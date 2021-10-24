@@ -267,7 +267,8 @@ typedef enum IRQn
 /*@}*/ /* end of group CMSIS */
 
 
-#include "core_armv8mbl.h"                  /* Processor and core peripherals */
+// #include "core_armv8mbl.h"                  /* Processor and core peripherals */
+#include "core_cm23.h"
 #include "system_M2351.h"                   /* System Header */
 #include "partition_M2351.h"
 
