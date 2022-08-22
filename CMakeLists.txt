@@ -4,3 +4,4 @@
 # Author: Saravanan Sekar <saravanan@linumiz.com>
 
 add_subdirectory_ifdef(CONFIG_SOC_SERIES_M48X m48x)
+add_subdirectory_ifdef(CONFIG_SOC_SERIES_M46X m46x)
