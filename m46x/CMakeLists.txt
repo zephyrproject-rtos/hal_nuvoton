@@ -3,6 +3,7 @@
 # Copyright (c) 2022 Nuvoton Technology Corporation.
 
 zephyr_include_directories(StdDriver/inc)
+zephyr_include_directories(StdDriver/drv_emac)
 zephyr_include_directories(Devices/M460/Include)
 zephyr_include_directories(dt-bindings/pinctrl)
 
