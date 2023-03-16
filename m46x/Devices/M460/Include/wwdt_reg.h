@@ -19,7 +19,7 @@
 
 /*---------------------- Window Watchdog Timer -------------------------*/
 /**
-    @addtogroup WWDT Window Watchdog Timer(WWDT)
+    @addtogroup WWDT Window Watchdog Timer (WWDT)
     Memory Mapped Structure for WWDT Controller
   @{
 */

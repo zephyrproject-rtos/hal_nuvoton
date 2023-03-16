@@ -20,8 +20,6 @@
   @{
 */
 
-int32_t g_SPIM_i32ErrCode = 0;       /*!< SPIM global error code */
-
 /** @addtogroup SPIM_EXPORTED_FUNCTIONS SPIM Exported Functions
   @{
 */
@@ -50,8 +48,8 @@ static volatile uint8_t  g_Supported_List[] =
 static void  N_delay(int n);
 static void SwitchNBitOutput(uint32_t u32NBit);
 static void SwitchNBitInput(uint32_t u32NBit);
-static void spim_write(uint8_t pu8TxBuf[], uint32_t u32NTx);
-static void spim_read(uint8_t pu8RxBuf[], uint32_t u32NRx);
+static int32_t spim_write(uint8_t pu8TxBuf[], uint32_t u32NTx);
+static int32_t spim_read(uint8_t pu8RxBuf[], uint32_t u32NRx);
 static void SPIM_WriteStatusRegister(uint8_t dataBuf[], uint32_t u32NTx, uint32_t u32NBit);
 static void SPIM_ReadStatusRegister(uint8_t dataBuf[], uint32_t u32NRx, uint32_t u32NBit);
 static void SPIM_ReadStatusRegister2(uint8_t dataBuf[], uint32_t u32NRx, uint32_t u32NBit);
@@ -66,7 +64,7 @@ static void spim_eon_set_qpi_mode(int isEn);
 static void SPIM_SPANSION_4Bytes_Enable(int isEn, uint32_t u32NBit);
 static void SPIM_WriteInPageDataByIo(uint32_t u32Addr, int is4ByteAddr, uint32_t u32NTx, uint8_t pu8TxBuf[], uint8_t wrCmd,
                                      uint32_t u32NBitCmd, uint32_t u32NBitAddr, uint32_t u32NBitDat, int isSync);
-static void SPIM_WriteInPageDataByPageWrite(uint32_t u32Addr, int is4ByteAddr, uint32_t u32NTx,
+static int32_t SPIM_WriteInPageDataByPageWrite(uint32_t u32Addr, int is4ByteAddr, uint32_t u32NTx,
         uint8_t pu8TxBuf[], uint32_t wrCmd, int isSync);
 
 
@@ -125,15 +123,14 @@ static void SwitchNBitInput(uint32_t u32NBit)
   * @brief      Write data to SPI slave.
   * @param      pu8TxBuf    Transmit buffer.
   * @param      u32NTx      Number of bytes to transmit.
-  * @return     None.
+  * @retval     SPIM_OK          SPIM operation OK.
+  * @retval     SPIM_ERR_TIMEOUT SPIM operation abort due to timeout error.
   * @note       This function sets g_SPIM_i32ErrCode to SPIM_TIMEOUT_ERR if waiting SPIM time-out.
   */
-static void spim_write(uint8_t pu8TxBuf[], uint32_t u32NTx)
+static int32_t spim_write(uint8_t pu8TxBuf[], uint32_t u32NTx)
 {
     uint32_t  buf_idx = 0UL;
     uint32_t u32TimeOutCount = 0UL;
-
-    g_SPIM_i32ErrCode = 0;
 
     while (u32NTx)
     {
@@ -176,14 +173,10 @@ static void spim_write(uint8_t pu8TxBuf[], uint32_t u32NTx)
             SPIM_SET_DATA_WIDTH(32UL);
             SPIM_SET_DATA_NUM(dataNum);
             SPIM_SET_GO();
-            u32TimeOutCount = SystemCoreClock; /* 1 second time-out */
+            u32TimeOutCount = SPIM_TIMEOUT;
             SPIM_WAIT_FREE()
             {
-                if(--u32TimeOutCount == 0)
-                {
-                    g_SPIM_i32ErrCode = SPIM_TIMEOUT_ERR;
-                    break;
-                }
+                if(--u32TimeOutCount == 0) return SPIM_ERR_TIMEOUT;
             }
         }
 
@@ -201,32 +194,29 @@ static void spim_write(uint8_t pu8TxBuf[], uint32_t u32NTx)
             SPIM_SET_DATA_WIDTH(rnm * 8UL);
             SPIM_SET_DATA_NUM(1UL);
             SPIM_SET_GO();
-            u32TimeOutCount = SystemCoreClock; /* 1 second time-out */
+            u32TimeOutCount = SPIM_TIMEOUT;
             SPIM_WAIT_FREE()
             {
-                if(--u32TimeOutCount == 0)
-                {
-                    g_SPIM_i32ErrCode = SPIM_TIMEOUT_ERR;
-                    break;
-                }
+                if(--u32TimeOutCount == 0) return SPIM_ERR_TIMEOUT;
             }
         }
     }
+
+    return SPIM_OK;
 }
 
 /**
   * @brief      Read data from SPI slave.
   * @param      pu8TxBuf    Receive buffer.
   * @param      u32NRx      Size of receive buffer in bytes.
-  * @return     None.
+  * @retval     SPIM_OK          SPIM operation OK.
+  * @retval     SPIM_ERR_TIMEOUT SPIM operation abort due to timeout error.
   * @note       This function sets g_SPIM_i32ErrCode to SPIM_TIMEOUT_ERR if waiting SPIM time-out.
   */
-static void spim_read(uint8_t pu8RxBuf[], uint32_t u32NRx)
+static int32_t spim_read(uint8_t pu8RxBuf[], uint32_t u32NRx)
 {
     uint32_t  buf_idx = 0UL;
     uint32_t u32TimeOutCount = 0UL;
-
-    g_SPIM_i32ErrCode = 0;
 
     while (u32NRx)
     {
@@ -255,14 +245,10 @@ static void spim_read(uint8_t pu8RxBuf[], uint32_t u32NRx)
             SPIM_SET_DATA_WIDTH(32UL);
             SPIM_SET_DATA_NUM(dataNum);
             SPIM_SET_GO();
-            u32TimeOutCount = SystemCoreClock; /* 1 second time-out */
+            u32TimeOutCount = SPIM_TIMEOUT;
             SPIM_WAIT_FREE()
             {
-                if(--u32TimeOutCount == 0)
-                {
-                    g_SPIM_i32ErrCode = SPIM_TIMEOUT_ERR;
-                    break;
-                }
+                if(--u32TimeOutCount == 0) return SPIM_ERR_TIMEOUT;
             }
         }
 
@@ -285,14 +271,10 @@ static void spim_read(uint8_t pu8RxBuf[], uint32_t u32NRx)
             SPIM_SET_DATA_WIDTH(u32NRx * 8UL);
             SPIM_SET_DATA_NUM(1UL);
             SPIM_SET_GO();
-            u32TimeOutCount = SystemCoreClock; /* 1 second time-out */
+            u32TimeOutCount = SPIM_TIMEOUT;
             SPIM_WAIT_FREE()
             {
-                if(--u32TimeOutCount == 0)
-                {
-                    g_SPIM_i32ErrCode = SPIM_TIMEOUT_ERR;
-                    break;
-                }
+                if(--u32TimeOutCount == 0) return SPIM_ERR_TIMEOUT;
             }
 
             tmp = SPIM->RX[0];
@@ -301,13 +283,15 @@ static void spim_read(uint8_t pu8RxBuf[], uint32_t u32NRx)
             u32NRx = 0UL;
         }
     }
+
+    return SPIM_OK;
 }
 
 /**
   * @brief      Issue Read Status Register #1 command.
   * @param      dataBuf     Receive buffer.
   * @param      u32NRx      Size of receive buffer.
- * @param       u32NBit     N-bit transmit/receive.
+  * @param      u32NBit     N-bit transmit/receive.
   * @return     None.
   */
 static void SPIM_ReadStatusRegister(uint8_t dataBuf[], uint32_t u32NRx, uint32_t u32NBit)
@@ -884,6 +868,8 @@ int SPIM_Enable_4Bytes_Mode(int isEn, uint32_t u32NBit)
     switch (idBuf[0])
     {
     case MFGID_WINBOND:
+        isSupt = (idBuf[2] < 0x16U) ? 0L : 1L;
+        break;
     case MFGID_MXIC:
     case MFGID_EON:
         isSupt = (idBuf[2] < 0x19U) ? 0L : 1L;
@@ -1102,15 +1088,14 @@ static void SPIM_WriteInPageDataByIo(uint32_t u32Addr, int is4ByteAddr, uint32_t
   * @param      pu8TxBuf    Transmit buffer.
   * @param      wrCmd       Write command.
   * @param      isSync      Block or not.
-  * @return     None.
+  * @retval     SPIM_OK          SPIM operation OK.
+  * @retval     SPIM_ERR_TIMEOUT SPIM operation abort due to timeout error.
   * @note       This function sets g_SPIM_i32ErrCode to SPIM_TIMEOUT_ERR if waiting SPIM time-out.
   */
-static void SPIM_WriteInPageDataByPageWrite(uint32_t u32Addr, int is4ByteAddr, uint32_t u32NTx,
+static int32_t SPIM_WriteInPageDataByPageWrite(uint32_t u32Addr, int is4ByteAddr, uint32_t u32NTx,
         uint8_t pu8TxBuf[], uint32_t wrCmd, int isSync)
 {
-    uint32_t u32TimeOutCount = SystemCoreClock; /* 1 second time-out */
-
-    g_SPIM_i32ErrCode = 0;
+    uint32_t u32TimeOutCount;
 
     if ((wrCmd == CMD_QUAD_PAGE_PROGRAM_WINBOND) ||
             (wrCmd == CMD_QUAD_PAGE_PROGRAM_MXIC))
@@ -1134,13 +1119,10 @@ static void SPIM_WriteInPageDataByPageWrite(uint32_t u32Addr, int is4ByteAddr, u
 
     if (isSync)
     {
+        u32TimeOutCount = SPIM_TIMEOUT;
         SPIM_WAIT_FREE()
         {
-            if(--u32TimeOutCount == 0)
-            {
-                g_SPIM_i32ErrCode = SPIM_TIMEOUT_ERR;
-                break;
-            }
+            if(--u32TimeOutCount == 0) return SPIM_ERR_TIMEOUT;
         }
     }
 
@@ -1148,6 +1130,8 @@ static void SPIM_WriteInPageDataByPageWrite(uint32_t u32Addr, int is4ByteAddr, u
     {
         spim_eon_set_qpi_mode(0);                /* Exit QPI mode.   */
     }
+
+    return SPIM_OK;
 }
 
 /** @endcond HIDDEN_SYMBOLS */
@@ -1317,15 +1301,14 @@ void SPIM_DMA_Write(uint32_t u32Addr, int is4ByteAddr, uint32_t u32NTx, uint8_t 
   * @param      pu8RxBuf    Receive buffer.
   * @param      u32RdCmd    Read command.
   * @param      isSync      Block or not.
-  * @return     None.
+  * @retval     SPIM_OK          SPIM operation OK.
+  * @retval     SPIM_ERR_TIMEOUT SPIM operation abort due to timeout error.
   * @note       This function sets g_SPIM_i32ErrCode to SPIM_TIMEOUT_ERR if waiting SPIM time-out.
   */
-void SPIM_DMA_Read(uint32_t u32Addr, int is4ByteAddr, uint32_t u32NRx, uint8_t pu8RxBuf[],
+int32_t SPIM_DMA_Read(uint32_t u32Addr, int is4ByteAddr, uint32_t u32NRx, uint8_t pu8RxBuf[],
                    uint32_t u32RdCmd, int isSync)
 {
-    uint32_t u32TimeOutCount = SystemCoreClock; /* 1 second time-out */
-
-    g_SPIM_i32ErrCode = 0;
+    uint32_t u32TimeOutCount;
 
     SPIM_SET_OPMODE(SPIM_CTL0_OPMODE_PAGEREAD); /* Switch to Page Read mode. */
     SPIM_SET_SPIM_MODE(u32RdCmd);               /* SPIM mode.       */
@@ -1338,15 +1321,14 @@ void SPIM_DMA_Read(uint32_t u32Addr, int is4ByteAddr, uint32_t u32NRx, uint8_t p
 
     if (isSync)
     {
+        u32TimeOutCount = SPIM_TIMEOUT;
         SPIM_WAIT_FREE()                       /* Wait for DMA done.  */
         {
-            if(--u32TimeOutCount == 0)
-            {
-                g_SPIM_i32ErrCode = SPIM_TIMEOUT_ERR;
-                break;
-            }
+            if(--u32TimeOutCount == 0) return SPIM_ERR_TIMEOUT;
         }
     }
+
+    return SPIM_OK;
 }
 
 /**

@@ -27,10 +27,10 @@
 
 /*---------------------- System Clock Controller -------------------------*/
 /**
-    @addtogroup CLK System Clock Controller(CLK)
+    @addtogroup CLK System Clock Controller (CLK)
     Memory Mapped Structure for CLK Controller
 @{ */
- 
+
 typedef struct
 {
 
@@ -82,7 +82,8 @@ typedef struct
  * |        |          |The clocks of peripheral are not controlled by Power-down mode, if the peripheral clock source is from LXT or LIRC.
  * |        |          |0 = Chip will not enter Power-down mode after CPU sleep command WFI.
  * |        |          |1 = Chip enters Power-down mode after CPU sleep command WFI.
- * |        |          |Note: This bit is write protected. Refer to the SYS_REGLCTL register.
+ * |        |          |Note 1: This bit is write protected. Refer to the SYS_REGLCTL register.
+ * |        |          |Note 2: System tick interrupt TICKINT(SYS_CTRL[1]) has to be disabled before entering to Power-down mode, to avoid system tick interrupt may influence system not entering power-down mode and keep operation.
  * |[11:10] |HXTGAIN   |HXT Gain Control Bit (Write Protect)
  * |        |          |Gain control is used to enlarge the gain of crystal to make sure crystal work normally.
  * |        |          |00 = HXT frequency is lower than from 8 MHz.
@@ -728,8 +729,6 @@ typedef struct
  * | :----: | :----:   | :---- |
  * |[15:8]  |VSENSEDIV |Video Pixel Clock Divide Number from CCAP Sensor Clock Source
  * |        |          |Video pixel clock frequency = (CCAP sensor clock source frequency) / (VSENSEDIV + 1).
- * |[23:16] |EMAC0DIV  |EMAC0 Clock Divide Number form HCLK
- * |        |          |EMAC0 MDCLK clock frequency = (HCLK) / (EMAC0DIV + 1).
  * |[31:24] |SDH1DIV   |SDH1 Clock Divide Number from SDH1 Clock Source
  * |        |          |SDH1 clock frequency = (SDH1 clock source frequency) / (SDH1DIV + 1).
  * @var CLK_T::CLKDIV4
@@ -905,7 +904,7 @@ typedef struct
  * | :----: | :----:   | :---- |
  * |[0]     |HXTSTB    |HXT Clock Source Stable Flag (Read Only)
  * |        |          |0 = 4~24 MHz external high speed crystal oscillator (HXT) clock is not stable or disabled.
- * |        |          |1 = 4~24 MHz external high speed crystal oscillator (HXT) clock is stable and enabled. 
+ * |        |          |1 = 4~24 MHz external high speed crystal oscillator (HXT) clock is stable and enabled.
  * |[1]     |LXTSTB    |LXT Clock Source Stable Flag (Read Only)
  * |        |          |0 = 32.768 kHz external low speed crystal oscillator (LXT) clock is not stable or disabled.
  * |        |          |1 = 32.768 kHz external low speed crystal oscillator (LXT) clock is stabled and enabled.
@@ -1229,7 +1228,8 @@ typedef struct
  * |        |          |10 = Wake-up pin falling edge enabled at Deep Power-down mode.
  * |        |          |11 = Wake-up pin both edge enabled at Deep Power-down mode.
  * |        |          |Note 1: These bits are write protected. Refer to the SYS_REGLCTL register.
- * |        |          |Note 2: Setting IOCTLSEL(RTC_LXTCTL[8]) to avoid GPF.6 unexpected falling edge.
+ * |        |          |Note 2: To use GPF.6 wake-up pin function at Deep Power-down mode, user has to set IOCTLSEL(RTC_LXTCTL[8])=1 to control GPF.6 in VBAT power domain by RTC_GPIOCTL0.
+ * |        |          |Otherwise, GPF.6 will be digital off (digital input tied to low) in DPD mode and cause unexpected falling edge to wake-up system.
  * @var CLK_T::PMUSTS
  * Offset: 0x94  Power Manager Status Register
  * ---------------------------------------------------------------------------------------------------
@@ -2001,9 +2001,6 @@ typedef struct
 
 #define CLK_CLKDIV3_VSENSEDIV_Pos        (8)                                               /*!< CLK_T::CLKDIV3: VSENSEDIV Position     */
 #define CLK_CLKDIV3_VSENSEDIV_Msk        (0xfful << CLK_CLKDIV3_VSENSEDIV_Pos)             /*!< CLK_T::CLKDIV3: VSENSEDIV Mask         */
-
-#define CLK_CLKDIV3_EMAC0DIV_Pos         (16)                                              /*!< CLK_T::CLKDIV3: EMAC0DIV Position      */
-#define CLK_CLKDIV3_EMAC0DIV_Msk         (0xfful << CLK_CLKDIV3_EMAC0DIV_Pos)              /*!< CLK_T::CLKDIV3: EMAC0DIV Mask          */
 
 #define CLK_CLKDIV3_SDH1DIV_Pos          (24)                                              /*!< CLK_T::CLKDIV3: SDH1DIV Position       */
 #define CLK_CLKDIV3_SDH1DIV_Msk          (0xfful << CLK_CLKDIV3_SDH1DIV_Pos)               /*!< CLK_T::CLKDIV3: SDH1DIV Mask           */

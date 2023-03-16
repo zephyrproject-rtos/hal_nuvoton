@@ -19,7 +19,7 @@
 */
 
 /**
-    @addtogroup EPWM Pulse Width Modulation Controller(EPWM)
+    @addtogroup EPWM Pulse Width Modulation Controller (EPWM)
     Memory Mapped Structure for EPWM Controller
 @{ */
 
@@ -152,7 +152,7 @@ typedef struct
      * |        |          |EPWM pin will be forced as tri-state while ICE debug mode acknowledged.
      * |        |          |1 = ICE debug mode acknowledgement disabled.
      * |        |          |EPWM pin will keep output no matter ICE debug mode acknowledged or not.
-     * |        |          |Note: This bit is write protected. Refer toSYS_REGLCTL register. 
+     * |        |          |Note: This bit is write protected. Refer toSYS_REGLCTL register.
      * @var EPWM_T::CTL1
      * Offset: 0x04  EPWM Control Register 1
      * ---------------------------------------------------------------------------------------------------
@@ -927,13 +927,13 @@ typedef struct
      * | :----: | :----:   | :---- |
      * |[0]     |BRKETRG0  |EPWM Edge Brake Software Trigger (Write Only) (Write Protect)
      * |        |          |Write 1 to this bit will trigger edge brake, and set BRKEIFn to 1 in EPWM_INTSTS1 register.
-     * |        |          |Note: This bit is write protected. Refer to SYS_REGLCTL register. 
+     * |        |          |Note: This bit is write protected. Refer to SYS_REGLCTL register.
      * |[1]     |BRKETRG2  |EPWM Edge Brake Software Trigger (Write Only) (Write Protect)
      * |        |          |Write 1 to this bit will trigger edge brake, and set BRKEIFn to 1 in EPWM_INTSTS1 register.
-     * |        |          |Note: This bit is write protected. Refer to SYS_REGLCTL register. 
+     * |        |          |Note: This bit is write protected. Refer to SYS_REGLCTL register.
      * |[2]     |BRKETRG4  |EPWM Edge Brake Software Trigger (Write Only) (Write Protect)
      * |        |          |Write 1 to this bit will trigger edge brake, and set BRKEIFn to 1 in EPWM_INTSTS1 register.
-     * |        |          |Note: This bit is write protected. Refer to SYS_REGLCTL register. 
+     * |        |          |Note: This bit is write protected. Refer to SYS_REGLCTL register.
      * |[8]     |BRKLTRG0  |EPWM Level Brake Software Trigger (Write Only) (Write Protect)
      * |        |          |Write 1 to this bit will trigger level brake, and set BRKLIFn to 1 in EPWM_INTSTS1 register.
      * |        |          |Note: This bit is write protected. Refer to SYS_REGLCTL register.
@@ -1696,7 +1696,7 @@ typedef struct
      * |[24]    |DACTRGF   |DAC Start of Conversion Flag
      * |        |          |0 = No DAC start of conversion trigger event has occurred.
      * |        |          |1 = A DAC start of conversion trigger event has occurred.
-     * |        |          |Note: This bit can be cleared by software writing 1. 
+     * |        |          |Note: This bit can be cleared by software writing 1.
      * @var EPWM_T::IFA[6]
      * Offset: 0x130  EPWM Interrupt Flag Accumulator Register 0~5
      * ---------------------------------------------------------------------------------------------------
@@ -2440,7 +2440,7 @@ typedef struct
      * |        |          |00 = Reserved.
      * |        |          |01 = EPWM_RCAPDAT0/1.
      * |        |          |10 = EPWM_FCAPDAT0/1.
-     * |        |          |11 = Both EPWM_RCAPDAT0/1 and EPWM_FCAPDAT0/1. 
+     * |        |          |11 = Both EPWM_RCAPDAT0/1 and EPWM_FCAPDAT0/1.
      * |[3]     |CAPORD0_1 |Capture Channel 0/1 Rising/Falling Order
      * |        |          |Set this bit to determine whether the EPWM_RCAPDAT0/1 or EPWM_FCAPDAT0/1 is the first captured data transferred to memory through PDMA when CAPMOD0_1 =11.
      * |        |          |0 = EPWM_FCAPDAT0/1 is the first captured data to memory.
@@ -2450,27 +2450,27 @@ typedef struct
      * |        |          |1 = Channel1.
      * |[8]     |CHEN2_3   |Channel 2/3 PDMA Enable Bit
      * |        |          |0 = Channel 2/3 PDMA function Disabled.
-     * |        |          |1 = Channel 2/3 PDMA function Enabled for the channel 2/3 captured data and transfer to memory. 
+     * |        |          |1 = Channel 2/3 PDMA function Enabled for the channel 2/3 captured data and transfer to memory.
      * |[10:9]  |CAPMOD2_3 |Select EPWM_RCAPDAT2/3 or EPWM_FCAODAT2/3 to Do PDMA Transfer
      * |        |          |00 = Reserved.
      * |        |          |01 = EPWM_RCAPDAT2/3.
      * |        |          |10 = EPWM_FCAPDAT2/3.
-     * |        |          |11 = Both EPWM_RCAPDAT2/3 and EPWM_FCAPDAT2/3. 
+     * |        |          |11 = Both EPWM_RCAPDAT2/3 and EPWM_FCAPDAT2/3.
      * |[11]    |CAPORD2_3 |Capture Channel 2/3 Rising/Falling Order
      * |        |          |Set this bit to determine whether the EPWM_RCAPDAT2/3 or EPWM_FCAPDAT2/3 is the first captured data transferred to memory through PDMA when CAPMOD2_3 =11.
      * |        |          |0 = EPWM_FCAPDAT2/3 is the first captured data to memory.
-     * |        |          |1 = EPWM_RCAPDAT2/3 is the first captured data to memory. 
+     * |        |          |1 = EPWM_RCAPDAT2/3 is the first captured data to memory.
      * |[12]    |CHSEL2_3  |Select Channel 2/3 to Do PDMA Transfer
      * |        |          |0 = Channel2.
      * |        |          |1 = Channel3.
      * |[16]    |CHEN4_5   |Channel 4/5 PDMA Enable Bit
      * |        |          |0 = Channel 4/5 PDMA function Disabled.
-     * |        |          |1 = Channel 4/5 PDMA function Enabled for the channel 4/5 captured data and transfer to memory. 
+     * |        |          |1 = Channel 4/5 PDMA function Enabled for the channel 4/5 captured data and transfer to memory.
      * |[18:17] |CAPMOD4_5 |Select EPWM_RCAPDAT4/5 or EPWM_FCAPDAT4/5 to Do PDMA Transfer
      * |        |          |00 = Reserved.
      * |        |          |01 = EPWM_RCAPDAT4/5.
      * |        |          |10 = EPWM_FCAPDAT4/5.
-     * |        |          |11 = Both EPWM_RCAPDAT4/5 and EPWM_FCAPDAT4/5. 
+     * |        |          |11 = Both EPWM_RCAPDAT4/5 and EPWM_FCAPDAT4/5.
      * |[19]    |CAPORD4_5 |Capture Channel 4/5 Rising/Falling Order
      * |        |          |Set this bit to determine whether the EPWM_RCAPDAT4/5 or EPWM_FCAPDAT4/5 is the first captured data transferred to memory through PDMA when CAPMOD4_5 =11.
      * |        |          |0 = EPWM_FCAPDAT4/5 is the first captured data to memory.

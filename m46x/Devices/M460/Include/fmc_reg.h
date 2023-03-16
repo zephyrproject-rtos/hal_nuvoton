@@ -19,7 +19,7 @@
 */
 
 /**
-    @addtogroup FMC Flash Memory Controller(FMC)
+    @addtogroup FMC Flash Memory Controller (FMC)
     Memory Mapped Structure for FMC Controller
 @{ */
 

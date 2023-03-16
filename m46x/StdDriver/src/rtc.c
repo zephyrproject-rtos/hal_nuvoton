@@ -27,8 +27,6 @@ static volatile uint32_t g_u32hiHour, g_u32loHour, g_u32hiMin, g_u32loMin, g_u32
   @{
 */
 
-int32_t g_RTC_i32ErrCode = 0;       /*!< RTC global error code */
-
 /** @addtogroup RTC_EXPORTED_FUNCTIONS RTC Exported Functions
   @{
 */
@@ -105,18 +103,15 @@ void RTC_Close(void)
   *
   * @param[in]  i32FrequencyX10000  Specify the RTC clock X10000, ex: 327736512 means 32773.6512.
   *
-  * @return     None
+  * @retval     RTC_OK              RTC operation OK.
+  * @retval     RTC_ERR_TIMEOUT     RTC operation abort due to timeout error.
   *
   * @details    This API is used to compensate the 32 kHz frequency by current LXT frequency for RTC application.
-  *
-  * @note       This function sets g_RTC_i32ErrCode to RTC_TIMEOUT_ERR if waiting RTC time-out.
   */
-void RTC_32KCalibration(int32_t i32FrequencyX10000)
+int32_t RTC_32KCalibration(int32_t i32FrequencyX10000)
 {
     int32_t i32RegInt, i32RegFra;
-    uint32_t u32TimeOutCount = SystemCoreClock<<1; /* 2 second time-out */
-
-    g_RTC_i32ErrCode = 0;
+    uint32_t u32TimeOutCnt;
 
     /* Compute integer and fraction for RTC FCR register */
     i32RegInt = (i32FrequencyX10000 / 10000) - RTC_FCR_REFERENCE;
@@ -131,22 +126,16 @@ void RTC_32KCalibration(int32_t i32FrequencyX10000)
     /* Judge Integer part is reasonable */
     if((i32RegInt >= 0) && (i32RegInt <= 31))
     {
-        u32TimeOutCount = SystemCoreClock<<1; /* 2 second time-out */
+        u32TimeOutCnt = SystemCoreClock<<1; /* 2 second time-out */
         while((RTC->FREQADJ & RTC_FREQADJ_FCRBUSY_Msk) == RTC_FREQADJ_FCRBUSY_Msk)
-        if(--u32TimeOutCount == 0)
-        {
-            g_RTC_i32ErrCode = RTC_TIMEOUT_ERR;
-            break;
-        }
+            if(--u32TimeOutCnt == 0) return RTC_ERR_TIMEOUT;
         RTC->FREQADJ = (uint32_t)((i32RegInt << 8) | i32RegFra);
-        u32TimeOutCount = SystemCoreClock<<1; /* 2 second time-out */
+        u32TimeOutCnt = SystemCoreClock<<1; /* 2 second time-out */
         while((RTC->FREQADJ & RTC_FREQADJ_FCRBUSY_Msk) == RTC_FREQADJ_FCRBUSY_Msk)
-        if(--u32TimeOutCount == 0)
-        {
-            g_RTC_i32ErrCode = RTC_TIMEOUT_ERR;
-            break;
-        }
+            if(--u32TimeOutCnt == 0) return RTC_ERR_TIMEOUT;
     }
+
+    return RTC_OK;
 }
 
 /**

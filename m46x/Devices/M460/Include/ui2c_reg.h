@@ -19,7 +19,7 @@
 */
 
 /**
-    @addtogroup UI2C I2C Mode of USCI Controller(UI2C)
+    @addtogroup UI2C I2C Mode of USCI Controller (UI2C)
     Memory Mapped Structure for UI2C Controller
 @{ */
 

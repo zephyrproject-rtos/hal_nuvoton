@@ -19,7 +19,7 @@
 */
 
 /**
-    @addtogroup OTG USB On-The-Go Controller(OTG)
+    @addtogroup OTG USB On-The-Go Controller (OTG)
     Memory Mapped Structure for OTG Controller
 @{ */
 

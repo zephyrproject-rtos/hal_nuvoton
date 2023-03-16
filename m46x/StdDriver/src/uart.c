@@ -143,7 +143,7 @@ void UART_DisableInt(UART_T*  uart, uint32_t u32InterruptFlag)
  *
  *    @return       None
  *
- *    @details      The function is used to Enable UART auto flow control.
+ *    @details      The function is used to enable UART auto flow control.
  */
 void UART_EnableFlowCtrl(UART_T* uart)
 {
@@ -286,7 +286,7 @@ void UART_Open(UART_T* uart, uint32_t u32baudrate)
  *
  *    @param[in]    uart            The pointer of the specified UART module.
  *    @param[in]    pu8RxBuf        The buffer to receive the data of receive FIFO.
- *    @param[in]    u32ReadBytes    The the read bytes number of data.
+ *    @param[in]    u32ReadBytes    The read bytes number of data.
  *
  *    @return       u32Count Receive byte count
  *
@@ -332,7 +332,7 @@ uint32_t UART_Read(UART_T* uart, uint8_t pu8RxBuf[], uint32_t u32ReadBytes)
  *    @brief        Set UART line configuration
  *
  *    @param[in]    uart            The pointer of the specified UART module.
- *    @param[in]    u32baudrate     The register value of baudrate of UART module.
+ *    @param[in]    u32baudrate     The baudrate of UART module.
  *                                  If u32baudrate = 0, UART baudrate will not change.
  *    @param[in]    u32data_width   The data length of UART module.
  *                                  - \ref UART_WORD_LEN_5
@@ -463,7 +463,7 @@ void UART_SetTimeoutCnt(UART_T* uart, uint32_t u32TOC)
  *                                  - \ref UART_IRDA_RXEN
  *
  *    @return       None
-  *
+ *
  *    @details      The function is used to configure IrDA relative settings. It consists of TX or RX mode and baudrate.
  */
 void UART_SelectIrDAMode(UART_T* uart, uint32_t u32Buadrate, uint32_t u32Direction)
@@ -573,7 +573,7 @@ void UART_SelectRS485Mode(UART_T* uart, uint32_t u32Mode, uint32_t u32Addr)
     /* Select UART RS485 function mode */
     uart->FUNCSEL = UART_FUNCSEL_RS485;
 
-    /* Set RS585 configuration */
+    /* Set RS485 configuration */
     uart->ALTCTL &= ~(UART_ALTCTL_RS485NMM_Msk | UART_ALTCTL_RS485AUD_Msk | UART_ALTCTL_RS485AAD_Msk | UART_ALTCTL_ADDRMV_Msk);
     uart->ALTCTL |= (u32Mode | (u32Addr << UART_ALTCTL_ADDRMV_Pos));
 }

@@ -76,17 +76,14 @@ extern "C"
 #define CCAP_INT_ADDRMIEN_ENABLE    (0x1ul<<CCAP_INT_ADDRMIEN_Pos)    /*!< VININT setting for Memory Address Match Interrupt enable  \hideinitializer */
 
 /*---------------------------------------------------------------------------------------------------------*/
-/* Define Error Code                                                                                       */
+/* CCAP Define Error Code                                                                                  */
 /*---------------------------------------------------------------------------------------------------------*/
-#define CCAP_INVALID_INT               ((int32_t)(0xFFFFFFFF-1))
-#define CCAP_INVALID_BUF               ((int32_t)(0xFFFFFFFF-2))
-#define CCAP_INVALID_PIPE              ((int32_t)(0xFFFFFFFF-3))
+#define CCAP_OK             ( 0L)   /*!< CCAP operation OK */
+#define CCAP_ERR_FAIL       (-1L)   /*!< CCAP operation failed */
+#define CCAP_ERR_TIMEOUT    (-2L)   /*!< CCAP operation abort due to timeout error */
 
-#define CCAP_TIMEOUT_ERR    (-1)    /*!< CCAP operation abort due to timeout error \hideinitializer */
 
 /*@}*/ /* end of group CCAP_EXPORTED_CONSTANTS */
-
-extern int32_t g_CCAP_i32ErrCode;
 
 /** @addtogroup CCAP_EXPORTED_FUNCTIONS CCAP Exported Functions
   @{
@@ -141,7 +138,7 @@ void CCAP_Close(void);
 void CCAP_EnableInt(uint32_t u32IntMask);
 void CCAP_DisableInt(uint32_t u32IntMask);
 void CCAP_Start(void);
-void CCAP_Stop(uint32_t u32FrameComplete);
+int32_t CCAP_Stop(uint32_t u32FrameComplete);
 void CCAP_SetPacketScaling(uint32_t u32VNumerator, uint32_t u32VDenominator, uint32_t u32HNumerator, uint32_t u32HDenominator);
 void CCAP_SetPacketStride(uint32_t u32Stride);
 void CCAP_EnableMono(uint32_t u32Interface);

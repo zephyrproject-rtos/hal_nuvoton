@@ -89,10 +89,12 @@ enum UI2C_SLAVE_EVENT
 #define UI2C_ACK_INT_MASK          (0x040U)    /*!< Acknowledge interrupt mask \hideinitializer */
 
 /*---------------------------------------------------------------------------------------------------------*/
-/* USCI_I2C Time-out Handler Constant Definitions                                                          */
+/* USCI_I2C Define Error Code                                                                              */
 /*---------------------------------------------------------------------------------------------------------*/
-#define UI2C_TIMEOUT               SystemCoreClock /*!< 1 second time-out \hideinitializer */
-#define UI2C_TIMEOUT_ERR           (-1L)       /*!< UI2C operation abort due to timeout error \hideinitializer */
+#define UI2C_TIMEOUT               SystemCoreClock  /*!< UI2C time-out counter (1 second time-out) \hideinitializer */
+#define UI2C_OK                    ( 0L)            /*!< UI2C operation OK \hideinitializer */
+#define UI2C_ERR_FAIL              (-1L)            /*!< UI2C operation failed \hideinitializer */
+#define UI2C_ERR_TIMEOUT           (-2L)            /*!< UI2C operation abort due to timeout error \hideinitializer */
 
 /*@}*/ /* end of group USCI_I2C_EXPORTED_CONSTANTS */
 

@@ -19,7 +19,7 @@
 
 /*---------------------- Watch Dog Timer Controller -------------------------*/
 /**
-    @addtogroup WDT Watch Dog Timer Controller(WDT)
+    @addtogroup WDT Watch Dog Timer Controller (WDT)
     Memory Mapped Structure for WDT Controller
   @{
 */

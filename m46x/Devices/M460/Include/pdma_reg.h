@@ -19,7 +19,7 @@
 */
 
 /**
-    @addtogroup PDMA Peripheral Direct Memory Access Controller(PDMA)
+    @addtogroup PDMA Peripheral Direct Memory Access Controller (PDMA)
     Memory Mapped Structure for PDMA Controller
 @{ */
 

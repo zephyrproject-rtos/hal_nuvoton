@@ -53,7 +53,7 @@ void KPI_Close(void);
 int32_t KPI_kbhit(void);
 KPI_KEY_T KPI_GetKey(void);
 void KPI_SetSampleTime(uint32_t ms);
-
+void KPI_EnableSlowScan(void);
 /**@}*/ /* end of group KPI_EXPORTED_FUNCTIONS */
 
 /**@}*/ /* end of group KPI_Driver */

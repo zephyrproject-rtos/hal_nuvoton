@@ -38,6 +38,8 @@ static uint8_t g_hsusbd_UsbAltInterface = 0ul;
 static uint8_t g_hsusbd_EnableTestMode = 0ul;
 static uint8_t g_hsusbd_TestSelector = 0ul;
 
+volatile uint8_t g_hsusbd_RemoteWakeupEn = 0ul;
+
 static uint8_t g_hsusbd_buf[12];
 
 uint8_t volatile g_hsusbd_Configured = 0ul;
@@ -46,8 +48,6 @@ uint8_t g_hsusbd_UsbAddr = 0ul;
 uint8_t g_hsusbd_ShortPacket = 0ul;
 uint32_t volatile g_hsusbd_DmaDone = 0ul;
 uint32_t g_hsusbd_CtrlInSize = 0ul;
-
-int32_t g_HSUSBD_i32ErrCode = 0;       /*!< HSUSBD global error code */
 /** @endcond HIDDEN_SYMBOLS */
 
 /**
@@ -57,17 +57,14 @@ int32_t g_HSUSBD_i32ErrCode = 0;       /*!< HSUSBD global error code */
  * @param[in]   pfnClassReq         Class Request Callback Function
  * @param[in]   pfnSetInterface     SetInterface Request Callback Function
  *
- * @return      None
+ * @retval      HSUSBD_OK           HSUSBD operation OK.
+ * @retval      HSUSBD_ERR_TIMEOUT  HSUSBD operation abort due to timeout error.
  *
  * @details     This function is used to initial HSUSBD.
- *
- * @note        This function sets g_HSUSBD_i32ErrCode to HSUSBD_TIMEOUT_ERR if waiting HSUSBD time-out.
  */
-void HSUSBD_Open(S_HSUSBD_INFO_T *param, HSUSBD_CLASS_REQ pfnClassReq, HSUSBD_SET_INTERFACE_REQ pfnSetInterface)
+int32_t HSUSBD_Open(S_HSUSBD_INFO_T *param, HSUSBD_CLASS_REQ pfnClassReq, HSUSBD_SET_INTERFACE_REQ pfnSetInterface)
 {
-    int32_t i32TimeOutCnt = HSUSBD_TIMEOUT;
-
-    g_HSUSBD_i32ErrCode = 0;
+    uint32_t u32TimeOutCnt;
 
     g_hsusbd_sInfo = param;
     g_hsusbd_pfnClassRequest = pfnClassReq;
@@ -80,15 +77,14 @@ void HSUSBD_Open(S_HSUSBD_INFO_T *param, HSUSBD_CLASS_REQ pfnClassReq, HSUSBD_SE
     HSUSBD_ENABLE_PHY();
 
     /* wait PHY clock ready */
+    u32TimeOutCnt = HSUSBD_TIMEOUT;
     while(!(HSUSBD->PHYCTL & HSUSBD_PHYCTL_PHYCLKSTB_Msk))
     {
-        if( i32TimeOutCnt-- < 0)
-        {
-            g_HSUSBD_i32ErrCode = HSUSBD_TIMEOUT_ERR;
-            break;
-        }
+        if(--u32TimeOutCnt == 0) return HSUSBD_ERR_TIMEOUT;
     }
     HSUSBD->OPER &= ~HSUSBD_OPER_HISPDEN_Msk;   /* full-speed */
+
+    return HSUSBD_OK;
 }
 
 /**
@@ -220,6 +216,7 @@ int HSUSBD_GetDescriptor(void)
 
             break;
         }
+#ifdef SUPPORT_LPM
         /* Get BOS Descriptor */
         case DESC_BOS:
         {
@@ -234,6 +231,7 @@ int HSUSBD_GetDescriptor(void)
             }
             break;
         }
+#endif
         /* Get Qualifier Descriptor */
         case DESC_QUALIFIER:
         {
@@ -385,14 +383,18 @@ void HSUSBD_StandardRequest(void)
                 /* Device */
                 if(gUsbCmd.bmRequestType == 0x80ul)
                 {
+                    uint8_t u8Tmp;
+
+                    u8Tmp = (uint8_t)0ul;
                     if((g_hsusbd_sInfo->gu8ConfigDesc[7] & 0x40ul) == 0x40ul)
                     {
-                        g_hsusbd_buf[0] = (uint8_t)1ul; /* Self-Powered */
+                        u8Tmp |= (uint8_t)1ul; /* Self-Powered/Bus-Powered */
                     }
-                    else
+                    if((g_hsusbd_sInfo->gu8ConfigDesc[7] & 0x20ul) == 0x20ul)
                     {
-                        g_hsusbd_buf[0] = (uint8_t)0ul; /* bus-Powered */
+                        u8Tmp |= (uint8_t)(g_hsusbd_RemoteWakeupEn << 1ul); /* Remote wake up */
                     }
+                    g_hsusbd_buf[0] = u8Tmp;
                 }
                 /* Interface */
                 else if(gUsbCmd.bmRequestType == 0x81ul)
@@ -402,7 +404,7 @@ void HSUSBD_StandardRequest(void)
                 /* Endpoint */
                 else if(gUsbCmd.bmRequestType == 0x82ul)
                 {
-                    uint8_t ep = (uint8_t)(gUsbCmd.wIndex & 0xFul);
+                    uint8_t ep = (uint8_t)(gUsbCmd.wIndex & 0xful);
                     g_hsusbd_buf[0] = (uint8_t)HSUSBD_GetStall((uint32_t)ep) ? (uint8_t)1 : (uint8_t)0;
                 }
                 g_hsusbd_buf[1] = (uint8_t)0ul;
@@ -433,7 +435,7 @@ void HSUSBD_StandardRequest(void)
 
                     /* EP number stall is not allow to be clear in MSC class "Error Recovery Test".
                        a flag: g_u32HsEpStallLock is added to support it */
-                    epNum = (uint32_t)(gUsbCmd.wIndex & 0xFul);
+                    epNum = (uint32_t)(gUsbCmd.wIndex & 0xful);
                     for(i = 0ul; i < HSUSBD_MAX_EP; i++)
                     {
                         if((((HSUSBD->EP[i].EPCFG & 0xf0ul) >> 4) == epNum) && ((g_u32HsEpStallLock & (1ul << i)) == 0ul))
@@ -441,6 +443,10 @@ void HSUSBD_StandardRequest(void)
                             HSUSBD->EP[i].EPRSPCTL = (HSUSBD->EP[i].EPRSPCTL & 0xeful) | HSUSBD_EP_RSPCTL_TOGGLE;
                         }
                     }
+                }
+                else if((gUsbCmd.wValue & 0xfful) == FEATURE_DEVICE_REMOTE_WAKEUP)
+                {
+                    g_hsusbd_RemoteWakeupEn = (uint8_t)0ul;
                 }
                 /* Status stage */
                 HSUSBD_CLR_CEP_INT_FLAG(HSUSBD_CEPINTSTS_STSDONEIF_Msk);
@@ -478,7 +484,10 @@ void HSUSBD_StandardRequest(void)
                 {
                     HSOTG->CTL |= (HSOTG_CTL_HNPREQEN_Msk | HSOTG_CTL_BUSREQ_Msk);
                 }
-
+                if((gUsbCmd.wValue & FEATURE_DEVICE_REMOTE_WAKEUP) == FEATURE_DEVICE_REMOTE_WAKEUP)    /* REMOTE_WAKEUP ebable */
+                {
+                    g_hsusbd_RemoteWakeupEn = (uint8_t)1ul;
+                }
                 /* Status stage */
                 HSUSBD_CLR_CEP_INT_FLAG(HSUSBD_CEPINTSTS_STSDONEIF_Msk);
                 HSUSBD_SET_CEP_STATE(HSUSBD_CEPCTL_NAKCLR);
@@ -555,7 +564,7 @@ void HSUSBD_UpdateDeviceState(void)
             if(gUsbCmd.wValue == FEATURE_ENDPOINT_HALT)
             {
                 uint32_t idx;
-                idx = (uint32_t)(gUsbCmd.wIndex & 0xFul);
+                idx = (uint32_t)(gUsbCmd.wIndex & 0xful);
                 HSUSBD_SetStall(idx);
             }
             else if(g_hsusbd_EnableTestMode)
@@ -582,6 +591,10 @@ void HSUSBD_UpdateDeviceState(void)
                     HSUSBD->TEST = TEST_FORCE_ENABLE;
                 }
             }
+            if((gUsbCmd.wValue & FEATURE_DEVICE_REMOTE_WAKEUP) == FEATURE_DEVICE_REMOTE_WAKEUP)
+            {
+                g_hsusbd_RemoteWakeupEn = (uint8_t)1ul;
+            }
             break;
         }
         case CLEAR_FEATURE:
@@ -589,8 +602,12 @@ void HSUSBD_UpdateDeviceState(void)
             if(gUsbCmd.wValue == FEATURE_ENDPOINT_HALT)
             {
                 uint32_t idx;
-                idx = (uint32_t)(gUsbCmd.wIndex & 0xFul);
+                idx = (uint32_t)(gUsbCmd.wIndex & 0xful);
                 HSUSBD_ClearStall(idx);
+            }
+            else if(gUsbCmd.wValue == FEATURE_DEVICE_REMOTE_WAKEUP)
+            {
+                g_hsusbd_RemoteWakeupEn = (uint8_t)0ul;
             }
             break;
         }
@@ -665,19 +682,16 @@ void HSUSBD_CtrlIn(void)
  * @param[in]   pu8Buf      Control OUT data pointer
  * @param[in]   u32Size     OUT transfer size
  *
- * @return      None
+ * @retval      HSUSBD_OK           HSUSBD operation OK.
+ * @retval      HSUSBD_ERR_TIMEOUT  HSUSBD operation abort due to timeout error.
  *
  * @details     This function is used to start Control OUT transfer
- *
- * @note        This function sets g_HSUSBD_i32ErrCode to HSUSBD_TIMEOUT_ERR if waiting HSUSBD time-out.
  */
-void HSUSBD_CtrlOut(uint8_t pu8Buf[], uint32_t u32Size)
+int32_t HSUSBD_CtrlOut(uint8_t pu8Buf[], uint32_t u32Size)
 {
     uint32_t volatile i;
-    int32_t i32TimeOutCnt = HSUSBD_TIMEOUT;
+    uint32_t u32TimeOutCnt = HSUSBD_TIMEOUT;
 
-    g_HSUSBD_i32ErrCode = 0;
-    
     while(1)
     {
         if((HSUSBD->CEPINTSTS & HSUSBD_CEPINTSTS_RXPKIF_Msk) == HSUSBD_CEPINTSTS_RXPKIF_Msk)
@@ -690,12 +704,10 @@ void HSUSBD_CtrlOut(uint8_t pu8Buf[], uint32_t u32Size)
             break;
         }
 
-        if( i32TimeOutCnt-- < 0)
-        {
-            g_HSUSBD_i32ErrCode = HSUSBD_TIMEOUT_ERR;
-            break;
-        }
+        if(--u32TimeOutCnt == 0) return HSUSBD_ERR_TIMEOUT;
     }
+
+    return HSUSBD_OK;
 }
 
 /**

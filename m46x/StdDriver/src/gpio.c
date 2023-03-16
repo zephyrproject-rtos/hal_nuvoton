@@ -118,7 +118,7 @@ void GPIO_DisableInt(GPIO_T *port, uint32_t u32Pin)
  *                          It could be BIT0 ~ BIT14 for PC and PD GPIO port. \n
  *                          It could be BIT0 ~ BIT11 for PF GPIO port. \n
  *                          It could be BIT6 ~ BIT15 for PI GPIO port. \n
- *                          It could be BIT0 ~ BIT13 for PJ GPIO port. 
+ *                          It could be BIT0 ~ BIT13 for PJ GPIO port.
  * @param[in]   u32Mode     Slew rate mode. It could be
  *                          - \ref GPIO_SLEWCTL_NORMAL
  *                          - \ref GPIO_SLEWCTL_HIGH
@@ -126,7 +126,7 @@ void GPIO_DisableInt(GPIO_T *port, uint32_t u32Pin)
  *
  * @return      None
  *
- * @details     This function is used to set specified GPIO operation mode.
+ * @details     This function is used to set specified GPIO slew rate control.
  */
 void GPIO_SetSlewCtl(GPIO_T *port, uint32_t u32PinMask, uint32_t u32Mode)
 {
@@ -158,7 +158,7 @@ void GPIO_SetSlewCtl(GPIO_T *port, uint32_t u32PinMask, uint32_t u32Mode)
  *
  * @return      None
  *
- * @details     Set the pin mode of specified GPIO pin.
+ * @details     This function is used to set specified GPIO pull-up and pull-down control.
  */
 void GPIO_SetPullCtl(GPIO_T *port, uint32_t u32PinMask, uint32_t u32Mode)
 {

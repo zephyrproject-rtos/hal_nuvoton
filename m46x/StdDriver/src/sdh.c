@@ -19,8 +19,6 @@
   @{
 */
 
-int32_t g_SDH_i32ErrCode = 0;       /*!< SDH global error code */
-
 /** @addtogroup SDH_EXPORTED_FUNCTIONS SDH Exported Functions
   @{
 */
@@ -33,6 +31,7 @@ int32_t g_SDH_i32ErrCode = 0;       /*!< SDH global error code */
 /* calculate CRC-7 and get an error result, software should ignore this error and clear SDISR [CRC_IF] flag */
 /* _sd_uR3_CMD is the flag for it. 1 means software should ignore CRC-7 error */
 
+int32_t g_SDH_i32ErrCode = 0;       /*!< SDH global error code */
 static uint32_t _SDH0_ReferenceClock, _SDH1_ReferenceClock;
 
 #ifdef __ICCARM__
@@ -51,16 +50,16 @@ void SDH_CheckRB(SDH_T *sdh)
     uint32_t u32TimeOutCount1, u32TimeOutCount2;
 
     g_SDH_i32ErrCode = 0;
-    u32TimeOutCount2 = TIMEOUT_SDH;
+    u32TimeOutCount2 = SDH_TIMEOUT_CNT;
     while(1)
     {
         sdh->CTL |= SDH_CTL_CLK8OEN_Msk;
-        u32TimeOutCount1 = TIMEOUT_SDH;
+        u32TimeOutCount1 = SDH_TIMEOUT_CNT;
         while ((sdh->CTL & SDH_CTL_CLK8OEN_Msk) == SDH_CTL_CLK8OEN_Msk)
         {
             if(--u32TimeOutCount1 == 0)
             {
-                g_SDH_i32ErrCode = SDH_TIMEOUT_ERR;
+                g_SDH_i32ErrCode = SDH_ERR_TIMEOUT;
                 break;
             }
         }
@@ -70,7 +69,7 @@ void SDH_CheckRB(SDH_T *sdh)
         }
         if(--u32TimeOutCount2 == 0)
         {
-            g_SDH_i32ErrCode = SDH_TIMEOUT_ERR;
+            g_SDH_i32ErrCode = SDH_ERR_TIMEOUT;
             break;
         }
     }
@@ -81,7 +80,7 @@ uint32_t SDH_SDCommand(SDH_T *sdh, uint32_t ucCmd, uint32_t uArg)
 {
     volatile uint32_t buf, val = 0ul;
     SDH_INFO_T *pSD;
-    uint32_t u32TimeOutCount = TIMEOUT_SDH;
+    uint32_t u32TimeOutCount = SDH_TIMEOUT_CNT;
 
     g_SDH_i32ErrCode = 0;
 
@@ -106,7 +105,7 @@ uint32_t SDH_SDCommand(SDH_T *sdh, uint32_t ucCmd, uint32_t uArg)
         }
         if(--u32TimeOutCount == 0)
         {
-            g_SDH_i32ErrCode = SDH_TIMEOUT_ERR;
+            g_SDH_i32ErrCode = SDH_ERR_TIMEOUT;
             break;
         }
     }
@@ -118,7 +117,7 @@ uint32_t SDH_SDCmdAndRsp(SDH_T *sdh, uint32_t ucCmd, uint32_t uArg, uint32_t nti
 {
     volatile uint32_t buf;
     SDH_INFO_T *pSD;
-    uint32_t u32TimeOutCount = TIMEOUT_SDH;
+    uint32_t u32TimeOutCount = SDH_TIMEOUT_CNT;
 
     g_SDH_i32ErrCode = 0;
 
@@ -160,7 +159,7 @@ uint32_t SDH_SDCmdAndRsp(SDH_T *sdh, uint32_t ucCmd, uint32_t uArg, uint32_t nti
             }
             if(--u32TimeOutCount == 0)
             {
-                g_SDH_i32ErrCode = SDH_TIMEOUT_ERR;
+                g_SDH_i32ErrCode = SDH_ERR_TIMEOUT;
                 break;
             }
         }
@@ -217,7 +216,7 @@ uint32_t SDH_SDCmdAndRsp2(SDH_T *sdh, uint32_t ucCmd, uint32_t uArg, uint32_t pu
     uint32_t i, buf;
     uint32_t tmpBuf[5];
     SDH_INFO_T *pSD;
-    uint32_t u32TimeOutCount = TIMEOUT_SDH;
+    uint32_t u32TimeOutCount = SDH_TIMEOUT_CNT;
 
     g_SDH_i32ErrCode = 0;
 
@@ -242,7 +241,7 @@ uint32_t SDH_SDCmdAndRsp2(SDH_T *sdh, uint32_t ucCmd, uint32_t uArg, uint32_t pu
         }
         if(--u32TimeOutCount == 0)
         {
-            g_SDH_i32ErrCode = SDH_TIMEOUT_ERR;
+            g_SDH_i32ErrCode = SDH_ERR_TIMEOUT;
             break;
         }
     }
@@ -289,7 +288,7 @@ uint32_t SDH_SDCmdAndRspDataIn(SDH_T *sdh, uint32_t ucCmd, uint32_t uArg)
 
     sdh->CTL = buf;
 
-    u32TimeOutCount = TIMEOUT_SDH;
+    u32TimeOutCount = SDH_TIMEOUT_CNT;
     while ((sdh->CTL & SDH_CTL_RIEN_Msk) == SDH_CTL_RIEN_Msk)
     {
         if (pSD->IsCardInsert == FALSE)
@@ -298,12 +297,12 @@ uint32_t SDH_SDCmdAndRspDataIn(SDH_T *sdh, uint32_t ucCmd, uint32_t uArg)
         }
         if(--u32TimeOutCount == 0)
         {
-            g_SDH_i32ErrCode = SDH_TIMEOUT_ERR;
+            g_SDH_i32ErrCode = SDH_ERR_TIMEOUT;
             break;
         }
     }
 
-    u32TimeOutCount = TIMEOUT_SDH;
+    u32TimeOutCount = SDH_TIMEOUT_CNT;
     while ((sdh->CTL & SDH_CTL_DIEN_Msk) == SDH_CTL_DIEN_Msk)
     {
         if (pSD->IsCardInsert == FALSE)
@@ -312,7 +311,7 @@ uint32_t SDH_SDCmdAndRspDataIn(SDH_T *sdh, uint32_t ucCmd, uint32_t uArg)
         }
         if(--u32TimeOutCount == 0)
         {
-            g_SDH_i32ErrCode = SDH_TIMEOUT_ERR;
+            g_SDH_i32ErrCode = SDH_ERR_TIMEOUT;
             break;
         }
     }
@@ -339,7 +338,11 @@ void SDH_Set_clock(SDH_T *sdh, uint32_t sd_clock_khz)
     uint32_t rate, div1;
     static uint32_t u32SD_ClkSrc = 0ul, u32SD_PwrCtl = 0ul;
 
-    SYS_UnlockReg();
+    uint32_t u32RegLockLevel = SYS_IsRegLocked();
+    if (u32RegLockLevel)
+    {
+        SYS_UnlockReg();
+    }
 
     /* initial state, clock source use HIRC */
     if (sd_clock_khz <= 400ul)
@@ -453,6 +456,12 @@ void SDH_Set_clock(SDH_T *sdh, uint32_t sd_clock_khz)
         CLK->CLKDIV3 &= ~CLK_CLKDIV3_SDH1DIV_Msk;
         CLK->CLKDIV3 |= (div1 << CLK_CLKDIV3_SDH1DIV_Pos);
     }
+
+    if (u32RegLockLevel)
+    {
+        SYS_LockReg();
+    }
+
     return;
 }
 
@@ -532,7 +541,7 @@ uint32_t SDH_Init(SDH_T *sdh)
     /* power ON 74 clock */
     sdh->CTL |= SDH_CTL_CLK74OEN_Msk;
 
-    u32TimeOutCount = TIMEOUT_SDH;
+    u32TimeOutCount = SDH_TIMEOUT_CNT;
     while ((sdh->CTL & SDH_CTL_CLK74OEN_Msk) == SDH_CTL_CLK74OEN_Msk)
     {
         if (pSD->IsCardInsert == FALSE)
@@ -541,7 +550,7 @@ uint32_t SDH_Init(SDH_T *sdh)
         }
         if(--u32TimeOutCount == 0)
         {
-            g_SDH_i32ErrCode = SDH_TIMEOUT_ERR;
+            g_SDH_i32ErrCode = SDH_ERR_TIMEOUT;
             break;
         }
     }
@@ -564,7 +573,7 @@ uint32_t SDH_Init(SDH_T *sdh)
         SDH_SDCmdAndRsp(sdh, 41ul, 0x40ff8000ul, u32CmdTimeOut); /* 2.7v-3.6v */
         resp = sdh->RESP0;
 
-        u32TimeOutCount = TIMEOUT_SDH;
+        u32TimeOutCount = SDH_TIMEOUT_CNT;
         while ((resp & 0x00800000ul) != 0x00800000ul)        /* check if card is ready */
         {
             SDH_SDCmdAndRsp(sdh, 55ul, 0x00ul, u32CmdTimeOut);
@@ -573,7 +582,7 @@ uint32_t SDH_Init(SDH_T *sdh)
             resp = sdh->RESP0;
             if(--u32TimeOutCount == 0)
             {
-                g_SDH_i32ErrCode = SDH_TIMEOUT_ERR;
+                g_SDH_i32ErrCode = SDH_ERR_TIMEOUT;
                 break;
             }
         }
@@ -608,7 +617,7 @@ uint32_t SDH_Init(SDH_T *sdh)
             if (SDH_SDCmdAndRsp(sdh, 1ul, 0x40ff8000ul, u32CmdTimeOut) != 2ul)    /* eMMC memory */
             {
                 resp = sdh->RESP0;
-                u32TimeOutCount = TIMEOUT_SDH;
+                u32TimeOutCount = SDH_TIMEOUT_CNT;
                 while ((resp & 0x00800000ul) != 0x00800000ul)
                 {
                     /* check if card is ready */
@@ -619,7 +628,7 @@ uint32_t SDH_Init(SDH_T *sdh)
 
                     if(--u32TimeOutCount == 0)
                     {
-                        g_SDH_i32ErrCode = SDH_TIMEOUT_ERR;
+                        g_SDH_i32ErrCode = SDH_ERR_TIMEOUT;
                         break;
                     }
                 }
@@ -644,7 +653,7 @@ uint32_t SDH_Init(SDH_T *sdh)
             pSD->R3Flag = 1ul;
             SDH_SDCmdAndRsp(sdh, 41ul, 0x00ff8000ul, u32CmdTimeOut); /* 3.0v-3.4v */
             resp = sdh->RESP0;
-            u32TimeOutCount = TIMEOUT_SDH;
+            u32TimeOutCount = SDH_TIMEOUT_CNT;
             while ((resp & 0x00800000ul) != 0x00800000ul)        /* check if card is ready */
             {
                 SDH_SDCmdAndRsp(sdh, 55ul, 0x00ul, u32CmdTimeOut);
@@ -653,7 +662,7 @@ uint32_t SDH_Init(SDH_T *sdh)
                 resp = sdh->RESP0;
                 if(--u32TimeOutCount == 0)
                 {
-                    g_SDH_i32ErrCode = SDH_TIMEOUT_ERR;
+                    g_SDH_i32ErrCode = SDH_ERR_TIMEOUT;
                     break;
                 }
             }
@@ -697,7 +706,7 @@ uint32_t SDH_SwitchToHighSpeed(SDH_T *sdh, SDH_INFO_T *pSD)
 {
     uint32_t volatile status=0ul;
     uint16_t current_comsumption, busy_status0;
-    uint32_t u32TimeOutCount = TIMEOUT_SDH;
+    uint32_t u32TimeOutCount = SDH_TIMEOUT_CNT;
 
     g_SDH_i32ErrCode = 0;
 
@@ -735,7 +744,7 @@ uint32_t SDH_SwitchToHighSpeed(SDH_T *sdh, SDH_INFO_T *pSD)
         {
             if(--u32TimeOutCount == 0)
             {
-                g_SDH_i32ErrCode = SDH_TIMEOUT_ERR;
+                g_SDH_i32ErrCode = SDH_ERR_TIMEOUT;
                 break;
             }
         }
@@ -787,12 +796,12 @@ uint32_t SDH_SelectCardType(SDH_T *sdh)
         sdh->DMASA = (uint32_t)pSD->dmabuf;
         sdh->BLEN = 0x07ul;  /* 64 bit */
         sdh->DMACTL |= SDH_DMACTL_DMARST_Msk;
-        u32TimeOutCount = TIMEOUT_SDH;
+        u32TimeOutCount = SDH_TIMEOUT_CNT;
         while ((sdh->DMACTL & SDH_DMACTL_DMARST_Msk) == 0x2)
         {
             if(--u32TimeOutCount == 0)
             {
-                g_SDH_i32ErrCode = SDH_TIMEOUT_ERR;
+                g_SDH_i32ErrCode = SDH_ERR_TIMEOUT;
                 break;
             }
         }
@@ -883,12 +892,12 @@ uint32_t SDH_SelectCardType(SDH_T *sdh)
 
     SDH_SDCommand(sdh, 7ul, 0ul);
     sdh->CTL |= SDH_CTL_CLK8OEN_Msk;
-    u32TimeOutCount = TIMEOUT_SDH;
+    u32TimeOutCount = SDH_TIMEOUT_CNT;
     while ((sdh->CTL & SDH_CTL_CLK8OEN_Msk) == SDH_CTL_CLK8OEN_Msk)
     {
         if(--u32TimeOutCount == 0)
         {
-            g_SDH_i32ErrCode = SDH_TIMEOUT_ERR;
+            g_SDH_i32ErrCode = SDH_ERR_TIMEOUT;
             break;
         }
     }
@@ -904,7 +913,7 @@ void SDH_Get_SD_info(SDH_T *sdh)
     uint32_t Buffer[4];
     //unsigned char *ptr;
     SDH_INFO_T *pSD;
-    uint32_t u32TimeOutCount = TIMEOUT_SDH;
+    uint32_t u32TimeOutCount = SDH_TIMEOUT_CNT;
 
     g_SDH_i32ErrCode = 0;
 
@@ -940,7 +949,7 @@ void SDH_Get_SD_info(SDH_T *sdh)
                 {
                     if(--u32TimeOutCount == 0)
                     {
-                        g_SDH_i32ErrCode = SDH_TIMEOUT_ERR;
+                        g_SDH_i32ErrCode = SDH_ERR_TIMEOUT;
                         break;
                     }
                 }
@@ -1006,12 +1015,12 @@ void SDH_Open(SDH_T *sdh, uint32_t u32CardDetSrc)
     g_SDH_i32ErrCode = 0;
 
     sdh->DMACTL = SDH_DMACTL_DMARST_Msk;
-    u32TimeOutCount = TIMEOUT_SDH;
+    u32TimeOutCount = SDH_TIMEOUT_CNT;
     while ((sdh->DMACTL & SDH_DMACTL_DMARST_Msk) == SDH_DMACTL_DMARST_Msk)
     {
         if(--u32TimeOutCount == 0)
         {
-            g_SDH_i32ErrCode = SDH_TIMEOUT_ERR;
+            g_SDH_i32ErrCode = SDH_ERR_TIMEOUT;
             break;
         }
     }
@@ -1019,12 +1028,12 @@ void SDH_Open(SDH_T *sdh, uint32_t u32CardDetSrc)
     sdh->DMACTL = SDH_DMACTL_DMAEN_Msk;
 
     sdh->GCTL = SDH_GCTL_GCTLRST_Msk | SDH_GCTL_SDEN_Msk;
-    u32TimeOutCount = TIMEOUT_SDH;
+    u32TimeOutCount = SDH_TIMEOUT_CNT;
     while ((sdh->GCTL & SDH_GCTL_GCTLRST_Msk) == SDH_GCTL_GCTLRST_Msk)
     {
         if(--u32TimeOutCount == 0)
         {
-            g_SDH_i32ErrCode = SDH_TIMEOUT_ERR;
+            g_SDH_i32ErrCode = SDH_ERR_TIMEOUT;
             break;
         }
     }
@@ -1058,12 +1067,12 @@ void SDH_Open(SDH_T *sdh, uint32_t u32CardDetSrc)
     sdh->INTEN |= SDH_INTEN_CDIEN_Msk;
 
     sdh->CTL |= SDH_CTL_CTLRST_Msk;
-    u32TimeOutCount = TIMEOUT_SDH;
+    u32TimeOutCount = SDH_TIMEOUT_CNT;
     while ((sdh->CTL & SDH_CTL_CTLRST_Msk) == SDH_CTL_CTLRST_Msk)
     {
         if(--u32TimeOutCount == 0)
         {
-            g_SDH_i32ErrCode = SDH_TIMEOUT_ERR;
+            g_SDH_i32ErrCode = SDH_ERR_TIMEOUT;
             break;
         }
     }
@@ -1191,7 +1200,7 @@ uint32_t SDH_Read(SDH_T *sdh, uint8_t *pu8BufAddr, uint32_t u32StartSec, uint32_
             sdh->CTL = reg | SDH_CTL_DIEN_Msk;
         }
 
-        u32TimeOutCount = TIMEOUT_SDH;
+        u32TimeOutCount = SDH_TIMEOUT_CNT;
         while(!pSD->DataReadyFlag)
         {
             if(pSD->DataReadyFlag)
@@ -1204,7 +1213,7 @@ uint32_t SDH_Read(SDH_T *sdh, uint8_t *pu8BufAddr, uint32_t u32StartSec, uint32_
             }
             if(--u32TimeOutCount == 0)
             {
-                g_SDH_i32ErrCode = SDH_TIMEOUT_ERR;
+                g_SDH_i32ErrCode = SDH_ERR_TIMEOUT;
                 break;
             }
         }
@@ -1238,7 +1247,7 @@ uint32_t SDH_Read(SDH_T *sdh, uint8_t *pu8BufAddr, uint32_t u32StartSec, uint32_
             sdh->CTL = reg | SDH_CTL_DIEN_Msk;
         }
 
-        u32TimeOutCount = TIMEOUT_SDH;
+        u32TimeOutCount = SDH_TIMEOUT_CNT;
         while(!pSD->DataReadyFlag)
         {
             if (pSD->IsCardInsert == FALSE)
@@ -1247,7 +1256,7 @@ uint32_t SDH_Read(SDH_T *sdh, uint8_t *pu8BufAddr, uint32_t u32StartSec, uint32_
             }
             if(--u32TimeOutCount == 0)
             {
-                g_SDH_i32ErrCode = SDH_TIMEOUT_ERR;
+                g_SDH_i32ErrCode = SDH_ERR_TIMEOUT;
                 break;
             }
         }
@@ -1271,12 +1280,12 @@ uint32_t SDH_Read(SDH_T *sdh, uint8_t *pu8BufAddr, uint32_t u32StartSec, uint32_
 
     SDH_SDCommand(sdh, 7ul, 0ul);
     sdh->CTL |= SDH_CTL_CLK8OEN_Msk;
-    u32TimeOutCount = TIMEOUT_SDH;
+    u32TimeOutCount = SDH_TIMEOUT_CNT;
     while ((sdh->CTL & SDH_CTL_CLK8OEN_Msk) == SDH_CTL_CLK8OEN_Msk)
     {
         if(--u32TimeOutCount == 0)
         {
-            g_SDH_i32ErrCode = SDH_TIMEOUT_ERR;
+            g_SDH_i32ErrCode = SDH_ERR_TIMEOUT;
             break;
         }
     }
@@ -1360,7 +1369,7 @@ uint32_t SDH_Write(SDH_T *sdh, uint8_t *pu8BufAddr, uint32_t u32StartSec, uint32
             sdh->CTL = reg | SDH_CTL_DOEN_Msk;
         }
 
-        u32TimeOutCount = TIMEOUT_SDH;
+        u32TimeOutCount = SDH_TIMEOUT_CNT;
         while(!pSD->DataReadyFlag)
         {
             if (pSD->IsCardInsert == FALSE)
@@ -1369,7 +1378,7 @@ uint32_t SDH_Write(SDH_T *sdh, uint8_t *pu8BufAddr, uint32_t u32StartSec, uint32
             }
             if(--u32TimeOutCount == 0)
             {
-                g_SDH_i32ErrCode = SDH_TIMEOUT_ERR;
+                g_SDH_i32ErrCode = SDH_ERR_TIMEOUT;
                 break;
             }
         }
@@ -1396,7 +1405,7 @@ uint32_t SDH_Write(SDH_T *sdh, uint8_t *pu8BufAddr, uint32_t u32StartSec, uint32
             sdh->CTL = reg | SDH_CTL_DOEN_Msk;
         }
 
-        u32TimeOutCount = TIMEOUT_SDH;
+        u32TimeOutCount = SDH_TIMEOUT_CNT;
         while(!pSD->DataReadyFlag)
         {
             if (pSD->IsCardInsert == FALSE)
@@ -1405,7 +1414,7 @@ uint32_t SDH_Write(SDH_T *sdh, uint8_t *pu8BufAddr, uint32_t u32StartSec, uint32
             }
             if(--u32TimeOutCount == 0)
             {
-                g_SDH_i32ErrCode = SDH_TIMEOUT_ERR;
+                g_SDH_i32ErrCode = SDH_ERR_TIMEOUT;
                 break;
             }
         }
@@ -1426,12 +1435,12 @@ uint32_t SDH_Write(SDH_T *sdh, uint8_t *pu8BufAddr, uint32_t u32StartSec, uint32
 
     SDH_SDCommand(sdh, 7ul, 0ul);
     sdh->CTL |= SDH_CTL_CLK8OEN_Msk;
-    u32TimeOutCount = TIMEOUT_SDH;
+    u32TimeOutCount = SDH_TIMEOUT_CNT;
     while ((sdh->CTL & SDH_CTL_CLK8OEN_Msk) == SDH_CTL_CLK8OEN_Msk)
     {
         if(--u32TimeOutCount == 0)
         {
-            g_SDH_i32ErrCode = SDH_TIMEOUT_ERR;
+            g_SDH_i32ErrCode = SDH_ERR_TIMEOUT;
             break;
         }
     }

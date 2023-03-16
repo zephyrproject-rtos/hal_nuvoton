@@ -19,7 +19,7 @@
 */
 
 /**
-    @addtogroup USBD USB Device Controller(USBD)
+    @addtogroup USBD USB Device Controller (USBD)
     Memory Mapped Structure for USBD Controller
 @{ */
 

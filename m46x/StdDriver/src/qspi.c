@@ -385,7 +385,7 @@ void QSPI_SetFIFO(QSPI_T *qspi, uint32_t u32TxThreshold, uint32_t u32RxThreshold
 uint32_t QSPI_GetBusClock(QSPI_T *qspi)
 {
     uint32_t u32Div;
-    uint32_t u32ClkSrc;
+    uint32_t u32ClkSrc = 0UL;
 
     /* Get DIVIDER setting */
     u32Div = (qspi->CLKDIV & QSPI_CLKDIV_DIVIDER_Msk) >> QSPI_CLKDIV_DIVIDER_Pos;

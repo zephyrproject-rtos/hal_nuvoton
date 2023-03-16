@@ -165,7 +165,7 @@ void USPI_EnableAutoSS(USPI_T *uspi, uint32_t u32SSPinMask, uint32_t u32ActiveLe
 uint32_t USPI_SetBusClock(USPI_T *uspi, uint32_t u32BusClock)
 {
     uint32_t u32ClkDiv;
-    uint32_t u32Pclk;
+    uint32_t u32Pclk = 0UL;
 
     if(uspi == USPI0)
     {
@@ -188,7 +188,7 @@ uint32_t USPI_SetBusClock(USPI_T *uspi, uint32_t u32BusClock)
   */
 uint32_t USPI_GetBusClock(USPI_T *uspi)
 {
-    uint32_t u32BusClk;
+    uint32_t u32BusClk = 0UL;
     uint32_t u32ClkDiv;
 
     u32ClkDiv = (uspi->BRGEN & USPI_BRGEN_CLKDIV_Msk) >> USPI_BRGEN_CLKDIV_Pos;

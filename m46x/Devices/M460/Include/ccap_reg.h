@@ -155,20 +155,20 @@ typedef struct {
      * | :----: | :----:   | :---- |
      * |[7:0]   |PKTSHML   |Packet Scaling Horizontal Factor M
      * |        |          |Specifies the lower 8-bit of denominator part (M) of the horizontal scaling factor.
-     * |        |          |The lower 8-bit will be cascaded with higher 8-bit (PKDSHMH) to form a 16-bit denominator (M) of vertical factor.
+     * |        |          |The lower 8-bit will be cascaded with higher 8-bit (PKTSHMH) to form a 16-bit denominator (M) of vertical factor.
      * |        |          |The output image width will be equal to the image width * N/M.
      * |        |          |Note: The value of N must be equal to or less than M.
      * |[15:8]  |PKTSHNL   |Packet Scaling Horizontal Factor N
      * |        |          |Specify the lower 8-bit of numerator part (N) of the horizontal scaling factor.
-     * |        |          |The lower 8-bit will be cascaded with higher 8-bit (PKDSHNH) to form a 16-bit numerator of horizontal factor.
+     * |        |          |The lower 8-bit will be cascaded with higher 8-bit (PKTSHNH) to form a 16-bit numerator of horizontal factor.
      * |[23:16] |PKTSVML   |Packet Scaling Vertical Factor M
      * |        |          |Specify the lower 8-bit of denominator part (M) of the vertical scaling factor.
-     * |        |          |The lower 8-bit will be cascaded with higher 8-bit (PKDSVMH) to form a 16-bit denominator (M) of vertical factor.
+     * |        |          |The lower 8-bit will be cascaded with higher 8-bit (PKTSVMH) to form a 16-bit denominator (M) of vertical factor.
      * |        |          |The output image width will be equal to the image height * N/M.
      * |        |          |Note: The value of N must be equal to or less than M.
      * |[31:24] |PKTSVNL   |Packet Scaling Vertical Factor N
      * |        |          |Specify the lower 8-bit of numerator part (N) of the vertical scaling factor.
-     * |        |          |The lower 8-bit will be cascaded with higher 8-bit (PKDSVNH) to form a 16-bit numerator of vertical factor.
+     * |        |          |The lower 8-bit will be cascaded with higher 8-bit (PKTSVNH) to form a 16-bit numerator of vertical factor.
      * @var CCAP_T::FRCTL
      * Offset: 0x30  Scaling Frame Rate Factor Register
      * ---------------------------------------------------------------------------------------------------

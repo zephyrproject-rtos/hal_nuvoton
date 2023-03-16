@@ -31,7 +31,7 @@ static uint32_t I2S_GetSourceClockFreq(I2S_T *i2s);
   */
 static uint32_t I2S_GetSourceClockFreq(I2S_T *i2s)
 {
-    uint32_t u32Freq, u32ClkSrcSel;
+    uint32_t u32Freq = 0UL, u32ClkSrcSel;
 
     if(i2s == I2S0)
     {

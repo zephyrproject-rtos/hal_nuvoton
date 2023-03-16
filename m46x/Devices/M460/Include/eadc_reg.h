@@ -20,7 +20,7 @@
 
 /*---------------------- Enhanced Analog to Digital Converter -------------------------*/
 /**
-    @addtogroup EADC Enhanced Analog to Digital Converter(EADC)
+    @addtogroup EADC Enhanced Analog to Digital Converter (EADC)
     Memory Mapped Structure for EADC Controller
 @{ */
 
@@ -434,7 +434,7 @@ typedef struct
      * |        |          |10000 = Sample Module 16 conversion result EADC_DAT16 is selected to be compared.
      * |        |          |10001 = Sample Module 17 conversion result EADC_DAT17 is selected to be compared.
      * |        |          |10010 = Sample Module 18 conversion result EADC_DAT18 is selected to be compared.
-     * |        |          |Others = reserved. 
+     * |        |          |Others = reserved.
      * |[11:8]  |CMPMCNT   |Compare Match Count
      * |        |          |When the specified ADC sample module analog conversion result matches the compare condition defined by CMPCOND (EADC_CMPn[2], n=0~3), the internal match counter will increase 1
      * |        |          |If the compare result does not meet the compare condition, the internal compare match counter will reset to 0
@@ -639,7 +639,7 @@ typedef struct
      * |[3]     |CALRD     |Calibration Read Operation Bit for debug mode
      * |        |          |0 = none.
      * |        |          |1 = do calibration read operation.
-     * |[4]     |OUTSEL    |Calibration Output Mode Selection 
+     * |[4]     |OUTSEL    |Calibration Output Mode Selection
      * |[5]     |CALSEL16T |Calibration Select Times Bit
      * |        |          |0 = Calibration 1 times.
      * |        |          |1 = Calibration 16 times (default).

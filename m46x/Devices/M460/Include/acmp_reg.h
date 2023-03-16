@@ -27,10 +27,10 @@
 
 /*---------------------- Analog Comparator Controller -------------------------*/
 /**
-    @addtogroup ACMP Analog Comparator Controller(ACMP)
+    @addtogroup ACMP Analog Comparator Controller (ACMP)
     Memory Mapped Structure for ACMP Controller
 @{ */
- 
+
 typedef struct
 {
 
@@ -61,7 +61,7 @@ typedef struct
  * |        |          |01 = Internal comparator reference voltage (CRV0).
  * |        |          |10 = Band-gap voltage.
  * |        |          |11 = DAC0 output.
- * |        |          |Note: NEGSEL must select 2u2019b01 in calibration mode.
+ * |        |          |Note: NEGSEL must select 2'b01 in calibration mode.
  * |[7:6]   |POSSEL    |Comparator Positive Input Selection
  * |        |          |00 = Input from ACMP0_P0.
  * |        |          |01 = Input from ACMP0_P1.
@@ -138,7 +138,7 @@ typedef struct
  * |        |          |01 = Internal comparator reference voltage (CRV1).
  * |        |          |10 = Band-gap voltage.
  * |        |          |11 = DAC0 output.
- * |        |          |Note: NEGSEL must select 2u2019b01 in calibration mode.
+ * |        |          |Note: NEGSEL must select 2'b01 in calibration mode.
  * |[7:6]   |POSSEL    |Comparator Positive Input Selection
  * |        |          |00 = Input from ACMP1_P0.
  * |        |          |01 = Input from ACMP1_P1.
@@ -200,7 +200,7 @@ typedef struct
  * |[0]     |ACMPIF0   |Comparator 0 Interrupt Flag
  * |        |          |This bit is set by hardware when the edge condition defined by INTPOL (ACMP_CTL0[9:8]) is detected on comparator 0 output
  * |        |          |This will generate an interrupt if ACMPIE (ACMP_CTL0[1]) is set to 1.
- * |        |          |Note: Write 1 to clear this bit to 0. 
+ * |        |          |Note: Write 1 to clear this bit to 0.
  * |[1]     |ACMPIF1   |Comparator 1 Interrupt Flag
  * |        |          |This bit is set by hardware when the edge condition defined by INTPOL (ACMP_CTL1[9:8]) is detected on comparator 1 output
  * |        |          |This will cause an interrupt if ACMPIE (ACMP_CTL1[1]) is set to 1.
@@ -319,76 +319,76 @@ typedef struct
  * |        |          |ACMP0 offset canceling trim code of NMOS
  * |        |          |Note: 1. Once ACMP0 is enabled, reading these bits will gets initial value from ROMMAP46[19:16]
  * |        |          |2. write MODESEL ACMP_CTL0[29:28] will decide NCODE0 load from which ROMMAP
- * |        |          | MODESEL = 2u2019b00, NCODE0 load from ROMMAP46[3:0]
- * |        |          | MODESEL = 2u2019b01, NCODE0 load from ROMMAP46[19:16]
- * |        |          | MODESEL = 2u2019b10, NCODE0 load from ROMMAP47[3:0]
- * |        |          | MODESEL = 2u2019b11, NCODE0 load from ROMMAP47[19:16]
+ * |        |          | MODESEL = 2'b00, NCODE0 load from ROMMAP46[3:0]
+ * |        |          | MODESEL = 2'b01, NCODE0 load from ROMMAP46[19:16]
+ * |        |          | MODESEL = 2'b10, NCODE0 load from ROMMAP47[3:0]
+ * |        |          | MODESEL = 2'b11, NCODE0 load from ROMMAP47[19:16]
  * |[7]     |NSEL0     |Comparator0Comparator 0 Offset of NMOS
  * |        |          |0 = trim NMOS negative offset
  * |        |          |1 = trim NMOS positive offset
  * |        |          |Note: 1. Once ACMP0 is enabled, reading this bit default will get initial value from ROMMAP46[20]
  * |        |          | 2. write MODESEL ACMP_CTL0[29:28] will decide NSEL0 load from which ROMMAP
- * |        |          | MODESEL = 2u2019b00, NSEL0 load from ROMMAP46[4]
- * |        |          | MODESEL = 2u2019b01, NSEL0 load from ROMMAP46[20]
- * |        |          | MODESEL = 2u2019b10, NSEL0 load from ROMMAP47[4]
- * |        |          | MODESEL = 2u2019b11, NSEL0 load from ROMMAP47[20]
+ * |        |          | MODESEL = 2'b00, NSEL0 load from ROMMAP46[4]
+ * |        |          | MODESEL = 2'b01, NSEL0 load from ROMMAP46[20]
+ * |        |          | MODESEL = 2'b10, NSEL0 load from ROMMAP47[4]
+ * |        |          | MODESEL = 2'b11, NSEL0 load from ROMMAP47[20]
  * |        |          |2
  * |        |          |If ACMP0 is enabled and CALTRG0 (ACMP_CALCTL01[0]]) is set, after calibration done DONE0(ACMP_CALSRTS01[0]) will get NSEL0 value
  * |[11:8]  |PCODE0    |Comparator0Comparator 0 Offset of PMOS
  * |        |          |ACMP0 offset canceling trim code of PMOS
  * |        |          |Note: 1. Once ACMP0 is enabled, reading these bits default will get initial value from ROMMAP46[27:24]
  * |        |          |2. write MODESEL ACMP_CTL0[29:28] will decide PCODE0 load from which ROMMAP
- * |        |          | MODESEL = 2u2019b00, PCODE0 load from ROMMAP46[11:8]
- * |        |          | MODESEL = 2u2019b01, PCODE0 load from ROMMAP46[27:24]
- * |        |          | MODESEL = 2u2019b10, PCODE0 load from ROMMAP47[11:8]
- * |        |          | MODESEL = 2u2019b11, PCODE0 load from ROMMAP47[27:24]
+ * |        |          | MODESEL = 2'b00, PCODE0 load from ROMMAP46[11:8]
+ * |        |          | MODESEL = 2'b01, PCODE0 load from ROMMAP46[27:24]
+ * |        |          | MODESEL = 2'b10, PCODE0 load from ROMMAP47[11:8]
+ * |        |          | MODESEL = 2'b11, PCODE0 load from ROMMAP47[27:24]
  * |[15]    |PSEL0     |Comparator0Comparator 0 Offset of PMOS
  * |        |          |0 = trim PMOS negative offset
  * |        |          |1 = trim PMOS positive offset
  * |        |          |Note: 1. Once ACMP0 is enabled, reading this bit default will get initial value from ROMMAP46[28].
  * |        |          |2. write MODESEL ACMP_CTL0[29:28] will decide PSEL0 load from which ROMMAP
- * |        |          | MODESEL = 2u2019b00, PSEL0 load from ROMMAP46[12]
- * |        |          | MODESEL = 2u2019b01, PSEL0 load from ROMMAP48[28]
- * |        |          | MODESEL = 2u2019b10, PSEL0 load from ROMMAP47[12]
- * |        |          | MODESEL = 2u2019b11, PSEL0 load from ROMMAP47[28]
+ * |        |          | MODESEL = 2'b00, PSEL0 load from ROMMAP46[12]
+ * |        |          | MODESEL = 2'b01, PSEL0 load from ROMMAP48[28]
+ * |        |          | MODESEL = 2'b10, PSEL0 load from ROMMAP47[12]
+ * |        |          | MODESEL = 2'b11, PSEL0 load from ROMMAP47[28]
  * |        |          |3
  * |        |          |If ACMP0 is enabled and CALTRG0 (ACMP_CALCTL01[0]]) is set, after calibration done DONE0(ACMP_CALSACMP_CALSTS01R[0]) will get PSEL0 value
  * |[19:16] |NCODE1    |Comparator 1 Offset of NMOS
  * |        |          |ACMP1 offset canceling trim code of PMOS
  * |        |          |Note: 1. Once ACMP1 is enabled, reading these bits default will get initial value from ROMMAP48[19:16]
  * |        |          |2. write MODESEL ACMP_CTL1[29:28] will decide NCODE1 load from which ROMMAP
- * |        |          | MODESEL = 2u2019b00, NCODE1load from ROMMAP48[3:0]
- * |        |          | MODESEL = 2u2019b01, NCODE1 load from ROMMAP48[19:16]
- * |        |          | MODESEL = 2u2019b10, NCODE1 load from ROMMAP49[3:0]
- * |        |          | MODESEL = 2u2019b11, NCODE1 load from ROMMAP49[19:16]
+ * |        |          | MODESEL = 2'b00, NCODE1load from ROMMAP48[3:0]
+ * |        |          | MODESEL = 2'b01, NCODE1 load from ROMMAP48[19:16]
+ * |        |          | MODESEL = 2'b10, NCODE1 load from ROMMAP49[3:0]
+ * |        |          | MODESEL = 2'b11, NCODE1 load from ROMMAP49[19:16]
  * |[23]    |NSEL1     |Comparator 1 Offset of NMOS
  * |        |          |0 = trim NMOS negative offset
  * |        |          |1 = trim NMOS positive offset
  * |        |          |Note: 1. Once ACMP1 is enabled, reading this bit default will get initial value from ROMMAP48[20]
  * |        |          | 2. write MODESEL ACMP_CTL1[29:28] will decide NSEL1 load from which ROMMAP
- * |        |          | MODESEL = 2u2019b00, NSEL1 load from ROMMAP48[4]
- * |        |          | MODESEL = 2u2019b01, NSEL1 load from ROMMAP48[20]
- * |        |          | MODESEL = 2u2019b10, NSEL1 load from ROMMAP49[4]
- * |        |          | MODESEL = 2u2019b11, NSEL1 load from ROMMAP49[20]
+ * |        |          | MODESEL = 2'b00, NSEL1 load from ROMMAP48[4]
+ * |        |          | MODESEL = 2'b01, NSEL1 load from ROMMAP48[20]
+ * |        |          | MODESEL = 2'b10, NSEL1 load from ROMMAP49[4]
+ * |        |          | MODESEL = 2'b11, NSEL1 load from ROMMAP49[20]
  * |        |          |3
  * |        |          |If ACMP1 is enabled and CALTRG1 (ACMP_CALCTL01[1]]) is set, after calibration done DONE1(ACMP_CALSRTS01[4]) will get NSEL1 value
  * |[27:24] |PCODE1    |Comparator 1 Offset of PMOS
  * |        |          |ACMP1 offset canceling trim code of PMOS
  * |        |          |Note: 1. Once ACMP1 is enabled, reading these bits default will get initial value from ROMMAP48[27:24]
  * |        |          |2. write MODESEL ACMP_CTL1[29:28] will decide PCODE1 load from which ROMMAP
- * |        |          | MODESEL = 2u2019b00, PCODE1 load from ROMMAP48[11:8]
- * |        |          | MODESEL = 2u2019b01, PCODE1 load from ROMMAP48[27:24]
- * |        |          | MODESEL = 2u2019b10, PCODE1 load from ROMMAP49[11:8]
- * |        |          | MODESEL = 2u2019b11, PCODE1 load from ROMMAP49[27:24]
+ * |        |          | MODESEL = 2'b00, PCODE1 load from ROMMAP48[11:8]
+ * |        |          | MODESEL = 2'b01, PCODE1 load from ROMMAP48[27:24]
+ * |        |          | MODESEL = 2'b10, PCODE1 load from ROMMAP49[11:8]
+ * |        |          | MODESEL = 2'b11, PCODE1 load from ROMMAP49[27:24]
  * |[31]    |PSEL1     |Comparator 1 Offset of PMOS
  * |        |          |0 = trim PMOS negative offset
  * |        |          |1 = trim PMOS positive offset
  * |        |          |Note: 1. Once ACMP1 is enabled, reading this bit default will get initial value from ROMMAP48[28]
  * |        |          | 2. write MODESEL ACMP_CTL1[29:28] will decide PSEL1 load from which ROMMAP
- * |        |          | MODESEL = 2u2019b00, PSEL1 load from ROMMAP48[12]
- * |        |          | MODESEL = 2u2019b01, PSEL1 load from ROMMAP48[28]
- * |        |          | MODESEL = 2u2019b10, PSEL1 load from ROMMAP49[12]
- * |        |          | MODESEL = 2u2019b11, PSEL1 load from ROMMAP49[28]
+ * |        |          | MODESEL = 2'b00, PSEL1 load from ROMMAP48[12]
+ * |        |          | MODESEL = 2'b01, PSEL1 load from ROMMAP48[28]
+ * |        |          | MODESEL = 2'b10, PSEL1 load from ROMMAP49[12]
+ * |        |          | MODESEL = 2'b11, PSEL1 load from ROMMAP49[28]
  * |        |          |3
  * |        |          |If ACMP1 is enabled and CALTRG1 (ACMP_CALCTL01[1]]) is set, after calibration done DONE1(ACMP_CALSRTS01[4]) will get PSEL1 value
  * @var ACMP_T::TEST
@@ -401,13 +401,13 @@ typedef struct
  * |        |          |1 = CRV voltage output to ACMP0_N pin for voltage measure.
  * |        |          |This bit is designed for Nuvoton Lab use only.
  * |        |          |Note: This bit is write protected. Refer to the SYS_REGLCTL register.
- * |        |          |Note: NEGSEL (ACMP_CTL0[5:4]) or NEGSEL (ACMP_CTL1[5:4]) must select to 2u2019b01 in CRV test mode
+ * |        |          |Note: NEGSEL (ACMP_CTL0[5:4]) or NEGSEL (ACMP_CTL1[5:4]) must select to 2'b01 in CRV test mode
  * |[1]     |CRV1TEST  |CRV1 Test Mode Enable Bit (Write Protect)
  * |        |          |0 = No effect.
  * |        |          |1 = CRV voltage output to ACMP0_N pin for voltage measure.
  * |        |          |This bit is designed for Nuvoton Lab use only.
  * |        |          |Note: This bit is write protected. Refer to the SYS_REGLCTL register.
- * |        |          |Note: NEGSEL (ACMP_CTL0[5:4]) or NEGSEL (ACMP_CTL1[5:4]) must select to 2u2019b01 in CRV test mode
+ * |        |          |Note: NEGSEL (ACMP_CTL0[5:4]) or NEGSEL (ACMP_CTL1[5:4]) must select to 2'b01 in CRV test mode
  * |[4]     |OUTSEL    |Comparator CRV Output Source Selection
  * |        |          |0 = CRV output from resistor string
  * |        |          |1 = CRV output from bandgap voltage

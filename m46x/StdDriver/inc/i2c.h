@@ -28,7 +28,7 @@ extern "C"
 */
 
 /*---------------------------------------------------------------------------------------------------------*/
-/*  I2C_CTL constant definitions.                                                                            */
+/*  I2C_CTL constant definitions.                                                                          */
 /*---------------------------------------------------------------------------------------------------------*/
 #define I2C_CTL_STA_SI            0x28UL /*!< I2C_CTL setting for I2C control bits. It would set STA and SI bits          \hideinitializer */
 #define I2C_CTL_STA_SI_AA         0x2CUL /*!< I2C_CTL setting for I2C control bits. It would set STA, SI and AA bits      \hideinitializer */
@@ -55,10 +55,12 @@ extern "C"
 #define I2C_PECTX_DISABLE           0    /*!< Disable SMBus Packet Error Check Transmit function                          \hideinitializer */
 
 /*---------------------------------------------------------------------------------------------------------*/
-/* I2C Time-out Handler Constant Definitions                                                               */
+/* I2C Define Error Code                                                                                   */
 /*---------------------------------------------------------------------------------------------------------*/
-#define I2C_TIMEOUT                 SystemCoreClock /*!< 1 second time-out \hideinitializer */
-#define I2C_TIMEOUT_ERR             (-1L)           /*!< I2C operation abort due to timeout error \hideinitializer */
+#define I2C_TIMEOUT     SystemCoreClock  /*!< I2C time-out counter (1 second time-out)                                    \hideinitializer */
+#define I2C_OK          ( 0L)            /*!< I2C operation OK                                                            \hideinitializer */
+#define I2C_ERR_FAIL    (-1L)            /*!< I2C operation failed                                                        \hideinitializer */
+#define I2C_ERR_TIMEOUT (-2L)            /*!< I2C operation abort due to timeout error                                    \hideinitializer */
 
 /*@}*/ /* end of group I2C_EXPORTED_CONSTANTS */
 
@@ -466,8 +468,8 @@ uint32_t I2C_GetIntFlag(I2C_T *i2c);
 uint32_t I2C_GetStatus(I2C_T *i2c);
 uint32_t I2C_Open(I2C_T *i2c, uint32_t u32BusClock);
 uint8_t I2C_GetData(I2C_T *i2c);
-void I2C_SetSlaveAddr(I2C_T *i2c, uint8_t u8SlaveNo, uint8_t u8SlaveAddr, uint8_t u8GCMode);
-void I2C_SetSlaveAddrMask(I2C_T *i2c, uint8_t u8SlaveNo, uint8_t u8SlaveAddrMask);
+void I2C_SetSlaveAddr(I2C_T *i2c, uint8_t u8SlaveNo, uint16_t u16SlaveAddr, uint8_t u8GCMode);
+void I2C_SetSlaveAddrMask(I2C_T *i2c, uint8_t u8SlaveNo, uint16_t u16SlaveAddrMask);
 uint32_t I2C_SetBusClockFreq(I2C_T *i2c, uint32_t u32BusClock);
 void I2C_EnableTimeout(I2C_T *i2c, uint8_t u8LongTimeout);
 void I2C_DisableTimeout(I2C_T *i2c);

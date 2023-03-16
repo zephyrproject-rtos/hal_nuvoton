@@ -319,6 +319,30 @@ extern "C"
   * \hideinitializer
   */
 #define ACMP_CRV_SEL(acmp, u32Level) ((acmp)->VREF = ((acmp)->VREF & ~ACMP_VREF_CRV0SEL_Msk) | ((u32Level)<<ACMP_VREF_CRV0SEL_Pos))
+#define ACMP_CRV0_SEL(acmp, u32Level) ((acmp)->VREF = ((acmp)->VREF & ~ACMP_VREF_CRV0SEL_Msk) | ((u32Level)<<ACMP_VREF_CRV0SEL_Pos))
+#define ACMP_CRV1_SEL(acmp, u32Level) ((acmp)->VREF = ((acmp)->VREF & ~ACMP_VREF_CRV1SEL_Msk) | ((u32Level)<<ACMP_VREF_CRV1SEL_Pos))
+
+
+/**
+  * @brief This macro is used to enable comparator reference voltage
+  * @param[in] acmp The pointer of the specified ACMP module
+  * @return   None
+  * @details  CRV must be enabled before using it.
+  * \hideinitializer
+  */
+#define ACMP_ENABLE_CRV0(acmp) ((acmp)->VREF |= ACMP_VREF_CRV0EN_Msk)
+#define ACMP_ENABLE_CRV1(acmp) ((acmp)->VREF |= ACMP_VREF_CRV1EN_Msk)
+
+
+  /**
+    * @brief This macro is used to disable comparator reference voltage
+    * @param[in] acmp The pointer of the specified ACMP module
+    * @return   None
+    * @details  Disable CRV.
+    * \hideinitializer
+    */
+#define ACMP_DISABLE_CRV0(acmp) ((acmp)->VREF &= ~ACMP_VREF_CRV0EN_Msk)
+#define ACMP_DISABLE_CRV1(acmp) ((acmp)->VREF &= ~ACMP_VREF_CRV1EN_Msk)
 
 /**
   * @brief This macro is used to select the source of CRV
@@ -326,11 +350,21 @@ extern "C"
   * @param[in] u32Src is the source of CRV. Including:
   *                  - \ref ACMP_VREF_CRV0SSEL_VDDA
   *                  - \ref ACMP_VREF_CRV0SSEL_INTVREF
+  *                  - \ref ACMP_VREF_CRV1SSEL_VDDA
+  *                  - \ref ACMP_VREF_CRV1SSEL_INTVREF
+  *                  - \ref ACMP_VREF_CRV2SSEL_VDDA
+  *                  - \ref ACMP_VREF_CRV2SSEL_INTVREF
+  *                  - \ref ACMP_VREF_CRV3SSEL_VDDA
+  *                  - \ref ACMP_VREF_CRV3SSEL_INTVREF
   * @return None
   * @details The source of CRV can be VDDA or internal reference voltage. The internal reference voltage level is determined by SYS_VREFCTL register.
   * \hideinitializer
   */
 #define ACMP_SELECT_CRV_SRC(acmp, u32Src) ((acmp)->VREF = ((acmp)->VREF & ~ACMP_VREF_CRV0SSEL_Msk) | (u32Src))
+#define ACMP_SELECT_CRV0_SRC(acmp, u32Src) ((acmp)->VREF = ((acmp)->VREF & ~ACMP_VREF_CRV0SSEL_Msk) | (u32Src))
+#define ACMP_SELECT_CRV1_SRC(acmp, u32Src) ((acmp)->VREF = ((acmp)->VREF & ~ACMP_VREF_CRV1SSEL_Msk) | (u32Src))
+#define ACMP_SELECT_CRV2_SRC(acmp, u32Src) ((acmp)->VREF = ((acmp)->VREF & ~ACMP_VREF_CRV0SSEL_Msk) | (u32Src))
+#define ACMP_SELECT_CRV3_SRC(acmp, u32Src) ((acmp)->VREF = ((acmp)->VREF & ~ACMP_VREF_CRV1SSEL_Msk) | (u32Src))
 
 /**
   * @brief This macro is used to select ACMP interrupt condition

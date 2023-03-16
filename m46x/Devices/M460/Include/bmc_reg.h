@@ -19,10 +19,10 @@
 */
 
 /**
-    @addtogroup BMC Controller
+    @addtogroup BMC Biphase Mark Coding Controller (BMC)
     Memory Mapped Structure for BMC Controller
 @{ */
- 
+
 typedef struct
 {
 
@@ -39,7 +39,7 @@ typedef struct
  * |[1]     |BWADJ     |Bit Width Adjustment 1.5 Time
  * |        |          |0 = The bit time period of Logic '0' is same as Logic '1'.
  * |        |          |1 = The bit time period of Logic '0' is 1.5 times as Logic '1'.
- * |        |          |Note: When this bit is set, the PDMA 
+ * |        |          |Note: When this bit is set, the PDMA
  * |[2]     |PREAM32   |Preamble Bit Number 32
  * |        |          |0 = The bit number of Preamble is 64 bits.
  * |        |          |1 = The bit number of Preamble is 32 bits.

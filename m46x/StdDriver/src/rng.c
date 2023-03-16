@@ -310,6 +310,49 @@ int32_t RNG_ECDH(uint32_t u32KeySize)
     return (CRPT->PRNG_KSSTS & CRPT_PRNG_KSCTL_NUM_Msk);
 }
 
+
+/**
+ *  @brief      To generate entropy from hardware entropy source (TRNG)
+ *
+ *  @return     -1       Failed
+ *               Others  The bytes in pu8Out buffer
+ *
+ *  @details    The function is used to generate entropy from TRNG.
+ */
+int32_t RNG_EntropyPoll(uint8_t* pu8Out, int32_t i32Len)
+{
+    int32_t timeout;
+    int32_t i;
+
+    if((TRNG->CTL & TRNG_CTL_READY_Msk) == 0)
+    {
+        /* TRNG is not in active */
+        printf("trng is not active\n");
+        return -1;
+    }
+
+    /* Trigger entropy generate */
+    TRNG->CTL |= TRNG_CTL_TRNGEN_Msk;
+
+    for(i = 0; i < i32Len; i++)
+    {
+        timeout = SystemCoreClock;
+        while((TRNG->CTL & TRNG_CTL_DVIF_Msk) == 0)
+        {
+            if(timeout-- <= 0)
+            {
+                /* Timeout error */
+                printf("timeout\n");
+                return -1;
+            }
+        }
+        /* Get one byte entroy */
+        *pu8Out++ = TRNG->DATA;
+    }
+
+    return i32Len;
+}
+
 /**@}*/ /* end of group RNG_EXPORTED_FUNCTIONS */
 
 /**@}*/ /* end of group RNG_Driver */

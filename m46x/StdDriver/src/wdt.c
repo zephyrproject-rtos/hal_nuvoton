@@ -17,8 +17,6 @@
   @{
 */
 
-int32_t g_WDT_i32ErrCode = 0;       /*!< WDT global error code */
-
 /** @addtogroup WDT_EXPORTED_FUNCTIONS WDT Exported Functions
   @{
 */
@@ -44,19 +42,19 @@ int32_t g_WDT_i32ErrCode = 0;       /*!< WDT global error code */
   * @param[in]  u32EnableReset      Enable WDT time-out reset system function. Valid values are TRUE and FALSE.
   * @param[in]  u32EnableWakeup     Enable WDT time-out wake-up system function. Valid values are TRUE and FALSE.
   *
-  * @return     None
+  * @retval     WDT_OK              WDT operation OK.
+  * @retval     WDT_ERR_TIMEOUT     WDT operation abort due to timeout error.
   *
   * @details    This function makes WDT module start counting with different time-out interval, reset delay period and choose to \n
   *             enable or disable WDT time-out reset system or wake-up system.
   * @note       Please make sure that Register Write-Protection Function has been disabled before using this function.
-  * @note       This function sets g_WDT_i32ErrCode to WDT_TIMEOUT_ERR if waiting WDT time-out.
   */
-void WDT_Open(uint32_t u32TimeoutInterval,
+int32_t WDT_Open(uint32_t u32TimeoutInterval,
               uint32_t u32ResetDelay,
               uint32_t u32EnableReset,
               uint32_t u32EnableWakeup)
 {
-    uint32_t u32TimeOutCount = WDT_TIMEOUT;
+    uint32_t u32TimeOutCnt = WDT_TIMEOUT;
 
     WDT->ALTCTL = u32ResetDelay;
 
@@ -66,12 +64,10 @@ void WDT_Open(uint32_t u32TimeoutInterval,
 
     while((WDT->CTL & WDT_CTL_SYNC_Msk) == WDT_CTL_SYNC_Msk) /* Wait enable WDTEN bit completed, it needs 2 * WDT_CLK. */
     {
-        if(--u32TimeOutCount == 0)
-        {
-            g_WDT_i32ErrCode = WDT_TIMEOUT_ERR; /* Time-out error */
-            break;
-        }
+        if(--u32TimeOutCnt == 0) return WDT_ERR_TIMEOUT;
     }
+
+    return WDT_OK;
 }
 
 /**@}*/ /* end of group WDT_EXPORTED_FUNCTIONS */

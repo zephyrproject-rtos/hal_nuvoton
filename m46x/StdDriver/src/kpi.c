@@ -144,10 +144,10 @@ void KPI_IRQHandler()
 /**
  *    @brief        Open Keypad interface
  *
- *    @param[in]    kpi        The pointer of the specified KPI module.
- *    @param[in]    u32Rows    The number of key rows for key scan. it could be 2 ~ 6.
- *    @param[in]    u32Columns The number of key columns for key scan. it could be 1 ~ 8.
- *    @param[in]    keyQueue   The FIFO queue of the key press/release status.
+ *    @param[in]    u32Rows         The number of key rows for key scan. it could be 2 ~ 6.
+ *    @param[in]    u32Columns      The number of key columns for key scan. it could be 1 ~ 8.
+ *    @param[in]    pkeyQueue       The FIFO queue of the key press/release status.
+ *    @param[in]    u32MaxKeyCnt    Maximum key counts in the key queue.
  *
  *    @retval       0   Sucessful
  *    @retval       -1  Failure
@@ -164,13 +164,6 @@ int32_t KPI_Open(uint32_t u32Rows, uint32_t u32Columns, KPI_KEY_T *pkeyQueue, ui
     if(u32Columns > 8)
         return -1;
 
-    /* Enable KPI Clock */
-    CLK->APBCLK2 |= CLK_APBCLK2_KPICKEN_Msk;
-    
-    /* Seleck KPI Clock Source */
-    CLK->CLKSEL3 |= CLK_CLKSEL3_KPISEL_HIRC;
-
-    
     /* Reset KPI */
     SYS->IPRST3 |= SYS_IPRST3_KPIRST_Msk;
     SYS->IPRST3 ^= SYS_IPRST3_KPIRST_Msk;
@@ -257,12 +250,32 @@ KPI_KEY_T KPI_GetKey()
  */
 void KPI_SetSampleTime(uint32_t ms)
 {
+    uint32_t freq[] = {__HXT, __LIRC, __HIRC, 0};
+    
     if(ms >= 1398)
         ms = 1398;
     
-    KPI->DLYCTL = 0x1F | ((__HIRC / 1000)*ms << 8);
+    KPI->DLYCTL = 0x1F | ((freq[(CLK->CLKSEL3 & CLK_CLKSEL3_KPISEL_Msk) >> CLK_CLKSEL3_KPISEL_Pos] / 1000)*ms << 8);
 }
     
+
+/**
+ *    @brief        Set key scan timing for internal pull-up
+ *
+ *    @details      The internal pull-up is weak and slow. To use it, the key scan timing need to slow down.
+ */
+void KPI_EnableSlowScan()
+{
+    /* It is slow enough when using LIRC clock source */
+    if((CLK->CLKSEL3 & CLK_CLKSEL3_KPISEL_Msk) == CLK_CLKSEL3_KPISEL_LIRC)
+        return;
+    
+    KPI->CTL = (KPI->CTL & (~KPI_CTL_DBCLKSEL_Msk)) | (5 << KPI_CTL_DBCLKSEL_Pos);
+    KPI->DLYCTL = (KPI->DLYCTL & (~0xff)) | 127;
+}
+
+
+
 
 /*@}*/ /* end of group KPI_EXPORTED_FUNCTIONS */
 

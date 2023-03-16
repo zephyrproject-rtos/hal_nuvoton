@@ -6,7 +6,7 @@
  *           bits definitions and memory mapping for NuMicro M460 MCU.
  *
  * @copyright SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2021 Nuvoton Technology Corp. All rights reserved.
+ * @copyright (C) 2022 Nuvoton Technology Corp. All rights reserved.
  *****************************************************************************/
 /**
   \mainpage NuMicro M460 Driver Reference Guide
@@ -45,7 +45,7 @@
   *
   * <b>Copyright Notice</b>
   *
-  * Copyright (C) 2021 Nuvoton Technology Corp. All rights reserved.
+  * Copyright (C) 2022~2023 Nuvoton Technology Corp. All rights reserved.
   */
 #ifndef __M460_H__
 #define __M460_H__
@@ -169,7 +169,7 @@ typedef enum IRQn
     GPH_IRQn                      = 88,       /*!< GPIO Port H Interrupt                            */
     EINT7_IRQn                    = 89,       /*!< External Input 7 Interrupt                       */
     SDH1_IRQn                     = 90,       /*!< Secure Digital Host Controller 1 Interrupt       */
-    PSIO_IRQn                     = 91,       /*!< PSIO Interrupt                                   */    
+    PSIO_IRQn                     = 91,       /*!< PSIO Interrupt                                   */
     HSUSBH_IRQn                   = 92,       /*!< High speed USB host Interrupt                    */
     USBOTG20_IRQn                 = 93,       /*!< High speed USB OTG Interrupt                     */
     ECAP2_IRQn                    = 94,       /*!< ECAP2 Interrupt                                  */

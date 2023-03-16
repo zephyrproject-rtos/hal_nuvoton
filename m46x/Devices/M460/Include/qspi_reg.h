@@ -19,7 +19,7 @@
 */
 
 /**
-    @addtogroup QSPI Serial Peripheral Interface Controller(QSPI)
+    @addtogroup QSPI Serial Peripheral Interface Controller (QSPI)
     Memory Mapped Structure for QSPI Controller
 @{ */
 
