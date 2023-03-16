@@ -19,7 +19,7 @@
 */
 
 /**
-    @addtogroup I2C Inter-IC Bus Controller(I2C)
+    @addtogroup I2C Inter-IC Bus Controller (I2C)
     Memory Mapped Structure for I2C Controller
 @{ */
 

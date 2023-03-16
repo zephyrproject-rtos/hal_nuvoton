@@ -19,7 +19,7 @@
 */
 
 /**
-    @addtogroup SDH SD Card Host Interface(SDH)
+    @addtogroup SDH SD Card Host Interface (SDH)
     Memory Mapped Structure for SDH Controller
 @{ */
 
@@ -355,7 +355,7 @@ typedef struct
     /// @endcond //HIDDEN_SYMBOLS
     __IO uint32_t GCTL;                  /*!< [0x0800] Global Control and Status Register                               */
     __IO uint32_t GINTEN;                /*!< [0x0804] Global Interrupt Control Register                                */
-    __I  uint32_t GINTSTS;               /*!< [0x0808] Global Interrupt Status Register                                 */
+    __IO uint32_t GINTSTS;               /*!< [0x0808] Global Interrupt Status Register                                 */
     /// @cond HIDDEN_SYMBOLS
     __I  uint32_t RESERVE3[5];
     /// @endcond //HIDDEN_SYMBOLS

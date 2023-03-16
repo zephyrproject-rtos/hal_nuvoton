@@ -380,7 +380,6 @@ extern "C"
 /*  CLKDIV3 constant definitions.                                                                          */
 /*---------------------------------------------------------------------------------------------------------*/
 #define CLK_CLKDIV3_VSENSE(x)            (((x) - 1UL) << CLK_CLKDIV3_VSENSEDIV_Pos) /*!< CLKDIV3 Setting for VSENSE clock divider. It could be 1~256 \hideinitializer */
-#define CLK_CLKDIV3_EMAC0(x)             (((x) - 1UL) << CLK_CLKDIV3_EMAC0DIV_Pos)  /*!< CLKDIV3 Setting for EMAC0 clock divider. It could be 1~256 \hideinitializer */
 #define CLK_CLKDIV3_SDH1(x)              (((x) - 1UL) << CLK_CLKDIV3_SDH1DIV_Pos)   /*!< CLKDIV3 Setting for SDH1 clock divider. It could be 1~256 \hideinitializer */
 
 /*---------------------------------------------------------------------------------------------------------*/
@@ -457,7 +456,7 @@ extern "C"
 #define CLK_PLLCTL_180MHz_HIRC  (CLK_PLLCTL_PLLSRC_HIRC | CLK_PLLCTL_NR(3UL) | CLK_PLLCTL_NF( 45UL) | CLK_PLLCTL_NO_2) /*!< Predefined PLLCTL setting for 180MHz PLL output with HIRC(12MHz IRC) \hideinitializer */
 #define CLK_PLLCTL_192MHz_HIRC  (CLK_PLLCTL_PLLSRC_HIRC | CLK_PLLCTL_NR(2UL) | CLK_PLLCTL_NF( 32UL) | CLK_PLLCTL_NO_2) /*!< Predefined PLLCTL setting for 192MHz PLL output with HIRC(12MHz IRC) \hideinitializer */
 #define CLK_PLLCTL_200MHz_HIRC  (CLK_PLLCTL_PLLSRC_HIRC | CLK_PLLCTL_NR(3UL) | CLK_PLLCTL_NF( 25UL) | CLK_PLLCTL_NO_1) /*!< Predefined PLLCTL setting for 200MHz PLL output with HIRC(12MHz IRC) \hideinitializer */
-#define CLK_PLLCTL_384MHz_HIRC  (CLK_PLLCTL_PLLSRC_HIRC | CLK_PLLCTL_NR(1UL) | CLK_PLLCTL_NF( 32UL) | CLK_PLLCTL_NO_2) /*!< Predefined PLLCTL setting for 384MHz PLL output with HIRC(12MHz IRC) \hideinitializer */
+#define CLK_PLLCTL_384MHz_HIRC  (CLK_PLLCTL_PLLSRC_HIRC | CLK_PLLCTL_NR(2UL) | CLK_PLLCTL_NF( 48UL) | CLK_PLLCTL_NO_1) /*!< Predefined PLLCTL setting for 384MHz PLL output with HIRC(12MHz IRC) \hideinitializer */
 
 /*---------------------------------------------------------------------------------------------------------*/
 /*  PLLFNCTL constant definitions.                                                                         */
@@ -509,7 +508,7 @@ extern "C"
 
 #define EMAC0_MODULE   (MODULE_APBCLK_ENC( 0UL)|MODULE_IP_EN_Pos_ENC((uint32_t)CLK_AHBCLK0_EMAC0CKEN_Pos)|\
                         MODULE_CLKSEL_ENC(  NA)|MODULE_CLKSEL_Msk_ENC(    NA)|MODULE_CLKSEL_Pos_ENC(  NA)|\
-                        MODULE_CLKDIV_ENC( 3UL)|MODULE_CLKDIV_Msk_ENC(0x0FUL)|MODULE_CLKDIV_Pos_ENC(16UL))  /*!< EMAC0 Module */
+                        MODULE_CLKDIV_ENC(  NA)|MODULE_CLKDIV_Msk_ENC(    NA)|MODULE_CLKDIV_Pos_ENC(  NA))  /*!< EMAC0 Module */
 
 #define SDH0_MODULE    (MODULE_APBCLK_ENC( 0UL)|MODULE_IP_EN_Pos_ENC((uint32_t)CLK_AHBCLK0_SDH0CKEN_Pos)|\
                         MODULE_CLKSEL_ENC( 0UL)|MODULE_CLKSEL_Msk_ENC(   3UL)|MODULE_CLKSEL_Pos_ENC(20UL)|\
@@ -985,14 +984,8 @@ extern "C"
 #define CLK_SPDSRETSEL_128K         (0x4UL << CLK_PMUCTL_SRETSEL_Pos)     /*!< 128K SRAM retention when chip enter SPD mode \hideinitializer */
 #define CLK_SPDSRETSEL_256K         (0x5UL << CLK_PMUCTL_SRETSEL_Pos)     /*!< 256K SRAM retention when chip enter SPD mode \hideinitializer */
 
-/*---------------------------------------------------------------------------------------------------------*/
-/* CLK Time-out Handler Constant Definitions                                                               */
-/*---------------------------------------------------------------------------------------------------------*/
-#define CLK_TIMEOUT_ERR             (-1)     /*!< Clock timeout error value \hideinitializer */
 
 /*@}*/ /* end of group CLK_EXPORTED_CONSTANTS */
-
-extern int32_t g_CLK_i32ErrCode;
 
 /** @addtogroup CLK_EXPORTED_FUNCTIONS CLK Exported Functions
   @{
@@ -1144,59 +1137,44 @@ extern int32_t g_CLK_i32ErrCode;
 /* static inline functions                                                                                 */
 /*---------------------------------------------------------------------------------------------------------*/
 /* Declare these inline functions here to avoid MISRA C 2004 rule 8.1 error */
-__STATIC_INLINE int32_t CLK_SysTickDelay(uint32_t us);
-__STATIC_INLINE int32_t CLK_SysTickLongDelay(uint32_t us);
+__STATIC_INLINE void CLK_SysTickDelay(uint32_t us);
+__STATIC_INLINE void CLK_SysTickLongDelay(uint32_t us);
 
 /**
   * @brief      This function execute delay function.
   * @param[in]  us  Delay time. The Max value is 2^24 / CPU Clock(MHz). Ex:
   *                             200MHz => 83886us, 180MHz => 93206us ...
-  * @retval     0 Delay success. Target delay time reached.
-  * @retval     CLK_TIMEOUT_ERR Delay function execute failed due to SysTick stop working.
+  * @return     None
   * @details    Use the SysTick to generate the delay time and the unit is in us.
   *             The SysTick clock source is from HCLK, i.e the same as system core clock.
   *             User can use SystemCoreClockUpdate() to calculate CyclesPerUs automatically before using this function.
   */
-__STATIC_INLINE int32_t CLK_SysTickDelay(uint32_t us)
+__STATIC_INLINE void CLK_SysTickDelay(uint32_t us)
 {
-    /* The u32TimeOutCnt value must be greater than the max delay time of 1398ms if HCLK=12MHz */
-    uint32_t u32TimeOutCnt = SystemCoreClock<<1; /* 2 second time-out */
-
     SysTick->LOAD = us * CyclesPerUs;
-    SysTick->VAL  = (0x00);
+    SysTick->VAL  = 0x0UL;
     SysTick->CTRL = SysTick_CTRL_CLKSOURCE_Msk | SysTick_CTRL_ENABLE_Msk;
 
     /* Waiting for down-count to zero */
-    while ((SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk) == 0)
+    while((SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk) == 0UL)
     {
-        if(--u32TimeOutCnt == 0)
-        {
-            break;
-        }
     }
 
     /* Disable SysTick counter */
-    SysTick->CTRL = 0;
-
-    if(u32TimeOutCnt == 0)
-        return CLK_TIMEOUT_ERR;
-    else
-        return 0;
+    SysTick->CTRL = 0UL;
 }
 
 /**
   * @brief      This function execute long delay function.
   * @param[in]  us  Delay time.
-  * @retval     0 Delay success. Target delay time reached.
-  * @retval     CLK_TIMEOUT_ERR Delay function execute failed due to SysTick stop working.
+  * @return     None
   * @details    Use the SysTick to generate the long delay time and the UNIT is in us.
   *             The SysTick clock source is from HCLK, i.e the same as system core clock.
   *             User can use SystemCoreClockUpdate() to calculate CyclesPerUs automatically before using this function.
   */
-__STATIC_INLINE int32_t CLK_SysTickLongDelay(uint32_t us)
+__STATIC_INLINE void CLK_SysTickLongDelay(uint32_t us)
 {
-    /* The u32TimeOutCnt value must be greater than the max delay time of 1398ms if HCLK=12MHz */
-    uint32_t u32Delay, u32TimeOutCnt;
+    uint32_t u32Delay;
 
     /* It should <= 65536us for each delay loop */
     u32Delay = 65536UL;
@@ -1218,19 +1196,11 @@ __STATIC_INLINE int32_t CLK_SysTickLongDelay(uint32_t us)
         SysTick->CTRL = SysTick_CTRL_CLKSOURCE_Msk | SysTick_CTRL_ENABLE_Msk;
 
         /* Waiting for down-count to zero */
-        u32TimeOutCnt = SystemCoreClock<<1; /* 2 second time-out */
-        while((SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk) == 0UL)
-            if(--u32TimeOutCnt == 0) break;
+        while((SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk) == 0UL);
 
         /* Disable SysTick counter */
         SysTick->CTRL = 0UL;
-    }
-    while( (us > 0UL) && (u32TimeOutCnt != 0) );
-
-    if(u32TimeOutCnt == 0)
-        return CLK_TIMEOUT_ERR;
-    else
-        return 0;
+    }while(us > 0UL);
 }
 
 

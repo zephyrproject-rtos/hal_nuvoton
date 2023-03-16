@@ -53,14 +53,14 @@ extern "C"
 #define WDT_RESET_COUNTER_KEYWORD   (0x00005AA5UL)    /*!< Fill this value to WDT_RSTCNT register to free reset WDT counter \hideinitializer */
 
 /*---------------------------------------------------------------------------------------------------------*/
-/* WDT Time-out Handler Constant Definitions                                                               */
+/* WDT Define Error Code                                                                                   */
 /*---------------------------------------------------------------------------------------------------------*/
-#define WDT_TIMEOUT                 SystemCoreClock   /*!< 1 second time-out \hideinitializer */
-#define WDT_TIMEOUT_ERR             (-1L)             /*!< WDT operation abort due to timeout error \hideinitializer */
+#define WDT_TIMEOUT         SystemCoreClock     /*!< WDT time-out counter (1 second time-out) \hideinitializer */
+#define WDT_OK              ( 0L)               /*!< WDT operation OK \hideinitializer */
+#define WDT_FAIL            (-1L)               /*!< WDT operation failed \hideinitializer */
+#define WDT_ERR_TIMEOUT     (-2L)               /*!< WDT operation abort due to timeout error \hideinitializer */
 
 /**@}*/ /* end of group WDT_EXPORTED_CONSTANTS */
-
-extern int32_t g_WDT_i32ErrCode;
 
 /** @addtogroup WDT_EXPORTED_FUNCTIONS WDT Exported Functions
   @{
@@ -173,21 +173,15 @@ __STATIC_INLINE void WDT_DisableInt(void);
   * @return     None
   *
   * @details    This function will stop WDT counting and disable WDT module.
-  *
-  * @note       This function sets g_WDT_i32ErrCode to WDT_TIMEOUT_ERR if waiting WDT time-out.
   */
 __STATIC_INLINE void WDT_Close(void)
 {
-    uint32_t u32TimeOutCount = WDT_TIMEOUT;
+    uint32_t u32TimeOutCnt = WDT_TIMEOUT;
 
     WDT->CTL = 0UL;
     while(WDT->CTL & WDT_CTL_SYNC_Msk) /* Wait disable WDTEN bit completed, it needs 2 * WDT_CLK. */
     {
-        if(--u32TimeOutCount == 0)
-        {
-            g_WDT_i32ErrCode = WDT_TIMEOUT_ERR; /* Time-out error */
-            break;
-        }
+        if(--u32TimeOutCnt == 0) break;
     }
 }
 
@@ -220,7 +214,7 @@ __STATIC_INLINE void WDT_DisableInt(void)
     WDT->CTL &= ~(WDT_CTL_INTEN_Msk | WDT_CTL_RSTF_Msk | WDT_CTL_IF_Msk | WDT_CTL_WKF_Msk);
 }
 
-void WDT_Open(uint32_t u32TimeoutInterval, uint32_t u32ResetDelay, uint32_t u32EnableReset, uint32_t u32EnableWakeup);
+int32_t WDT_Open(uint32_t u32TimeoutInterval, uint32_t u32ResetDelay, uint32_t u32EnableReset, uint32_t u32EnableWakeup);
 
 /**@}*/ /* end of group WDT_EXPORTED_FUNCTIONS */
 

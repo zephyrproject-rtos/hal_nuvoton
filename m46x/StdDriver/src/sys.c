@@ -22,8 +22,6 @@ extern "C"
   @{
 */
 
-int32_t g_SYS_i32ErrCode = 0;       /*!< SYS global error code */
-
 /** @addtogroup SYS_EXPORTED_FUNCTIONS SYS Exported Functions
   @{
 */
@@ -72,7 +70,7 @@ uint32_t SYS_GetResetSrc(void)
 }
 
 /**
-  * @brief      Check if register is locked nor not
+  * @brief      Check if register is locked or not
   * @param      None
   * @retval     0 Write-protection function is disabled.
   *             1 Write-protection function is enabled.
@@ -214,11 +212,11 @@ void SYS_ResetModule(uint32_t u32ModuleIndex)
     /* Generate reset signal to the corresponding module */
     u32tmpVal = (1UL << (u32ModuleIndex & 0x00ffffffUL));
     u32tmpAddr = (uint32_t)&SYS->IPRST0 + ((u32ModuleIndex >> 24UL));
-    *(uint32_t *)u32tmpAddr |= u32tmpVal;
+    *(volatile uint32_t *)u32tmpAddr |= u32tmpVal;
 
     /* Release corresponding module from reset state */
     u32tmpVal = ~(1UL << (u32ModuleIndex & 0x00ffffffUL));
-    *(uint32_t *)u32tmpAddr &= u32tmpVal;
+    *(volatile uint32_t *)u32tmpAddr &= u32tmpVal;
 }
 
 /**
@@ -265,41 +263,33 @@ void SYS_DisableBOD(void)
   * @param[in]  u32PowerLevel is power level setting. Including :
   *             - \ref SYS_PLCTL_PLSEL_PL0  : Supports system clock up to 200MHz.
   *             - \ref SYS_PLCTL_PLSEL_PL1  : Supports system clock up to 180MHz.
-  * @return     None
+  * @retval      0  Power level setting success.
+  * @retval     -1  Power level setting failed.
   * @details    This function select power level.
   *             The register write-protection function should be disabled before using this function.
-  * @note       This function sets g_SYS_i32ErrCode to SYS_TIMEOUT_ERR if waiting SYS time-out.
   */
-void SYS_SetPowerLevel(uint32_t u32PowerLevel)
+int32_t SYS_SetPowerLevel(uint32_t u32PowerLevel)
 {
-    uint32_t u32TimeOutCount = 0;
-
-    g_SYS_i32ErrCode = 0;
+    uint32_t u32TimeOutCnt = 0;
 
     /* Wait for power level change busy flag is cleared */
-    u32TimeOutCount = SystemCoreClock; /* 1 second time-out */
+    u32TimeOutCnt = SystemCoreClock; /* 1 second time-out */
     while(SYS->PLSTS & SYS_PLSTS_PLCBUSY_Msk)
     {
-        if(--u32TimeOutCount == 0)
-        {
-            g_SYS_i32ErrCode = SYS_TIMEOUT_ERR; /* Time-out error */
-            break;
-        }
+        if(--u32TimeOutCnt == 0) return -1;
     }
 
     /* Set power voltage level */
     SYS->PLCTL = (SYS->PLCTL & (~SYS_PLCTL_PLSEL_Msk)) | (u32PowerLevel);
 
     /* Wait for power level change busy flag is cleared */
-    u32TimeOutCount = SystemCoreClock; /* 1 second time-out */
+    u32TimeOutCnt = SystemCoreClock; /* 1 second time-out */
     while(SYS->PLSTS & SYS_PLSTS_PLCBUSY_Msk)
     {
-        if(--u32TimeOutCount == 0)
-        {
-            g_SYS_i32ErrCode = SYS_TIMEOUT_ERR; /* Time-out error */
-            break;
-        }
+        if(--u32TimeOutCnt == 0) return -1;
     }
+
+    return 0;
 }
 
 /**

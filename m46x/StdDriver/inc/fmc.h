@@ -174,7 +174,7 @@ __STATIC_INLINE uint32_t FMC_GetVECMAP(void)
   * @brief    Read company ID
   * @param    None
   * @return   The company ID (32-bit). 0xFFFFFFFF means read failed.
-  * @details  The company ID of Nuvoton is fixed to be 0xDA
+  * @details  The company ID of Nuvoton is fixed to be 0x530000DA
   *
   * @note     Global error code g_FMC_i32ErrCode
   *           -1  Read time-out
@@ -188,9 +188,6 @@ __STATIC_INLINE uint32_t FMC_ReadCID(void)
     FMC->ISPCMD = FMC_ISPCMD_READ_CID;           /* Set ISP Command Code */
     FMC->ISPADDR = 0x0u;                         /* Must keep 0x0 when read CID */
     FMC->ISPTRG = FMC_ISPTRG_ISPGO_Msk;          /* Trigger to start ISP procedure */
-#if ISBEN
-    __ISB();
-#endif                                           /* To make sure ISP/CPU be Synchronized */
     while(FMC->ISPTRG & FMC_ISPTRG_ISPGO_Msk)    /* Waiting for ISP Done */
     {
         if( i32TimeOutCnt-- <= 0)
@@ -221,9 +218,6 @@ __STATIC_INLINE uint32_t FMC_ReadPID(void)
     FMC->ISPCMD = FMC_ISPCMD_READ_DID;          /* Set ISP Command Code */
     FMC->ISPADDR = 0x04u;                       /* Must keep 0x4 when read PID */
     FMC->ISPTRG = FMC_ISPTRG_ISPGO_Msk;         /* Trigger to start ISP procedure */
-#if ISBEN
-    __ISB();
-#endif                                          /* To make sure ISP/CPU be Synchronized */
     while(FMC->ISPTRG & FMC_ISPTRG_ISPGO_Msk)   /* Waiting for ISP Done */
     {
         if( i32TimeOutCnt-- <= 0)
@@ -255,9 +249,6 @@ __STATIC_INLINE uint32_t FMC_ReadUID(uint8_t u8Index)
     FMC->ISPADDR = ((uint32_t)u8Index << 2u);
     FMC->ISPDAT = 0u;
     FMC->ISPTRG = 0x1u;
-#if ISBEN
-    __ISB();
-#endif
     while(FMC->ISPTRG & FMC_ISPTRG_ISPGO_Msk)   /* Waiting for ISP Done */
     {
         if( i32TimeOutCnt-- <= 0)
@@ -288,9 +279,6 @@ __STATIC_INLINE uint32_t FMC_ReadUCID(uint32_t u32Index)
     FMC->ISPCMD = FMC_ISPCMD_READ_UID;            /* Set ISP Command Code */
     FMC->ISPADDR = (0x04u * u32Index) + 0x10u;    /* The UCID is at offset 0x10 with word alignment. */
     FMC->ISPTRG = FMC_ISPTRG_ISPGO_Msk;           /* Trigger to start ISP procedure */
-#if ISBEN
-    __ISB();
-#endif                                            /* To make sure ISP/CPU be Synchronized */
     while(FMC->ISPTRG & FMC_ISPTRG_ISPGO_Msk)     /* Waiting for ISP Done */
     {
         if( i32TimeOutCnt-- <= 0)
@@ -325,9 +313,6 @@ __STATIC_INLINE int32_t FMC_SetVectorPageAddr(uint32_t u32PageAddr)
     FMC->ISPCMD = FMC_ISPCMD_VECMAP;  /* Set ISP Command Code */
     FMC->ISPADDR = u32PageAddr;       /* The address of specified page which will be map to address 0x0. It must be page alignment. */
     FMC->ISPTRG = 0x1u;               /* Trigger to start ISP procedure */
-#if ISBEN
-    __ISB();
-#endif                                /* To make sure ISP/CPU be Synchronized */
     while(FMC->ISPTRG)                /* Waiting for ISP Done */
     {
         if( i32TimeOutCnt-- <= 0)

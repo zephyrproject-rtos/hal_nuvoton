@@ -33,6 +33,9 @@ extern "C"
 */
 
 /*---------------------------------------------------------------------------------------------------------*/
+/* HyperRAM memory mapping address*/
+#define HYPERRAM_BASE 0x80000000
+/*---------------------------------------------------------------------------------------------------------*/
 /* HyperRAM Register Space constant definitions
 Register Space Range:
    0x0000_0000 = Identification Register 0
@@ -50,8 +53,8 @@ Register Space Range:
 0010 = Read HyperRAM regsiter (16-Bit, Read Data[15:0]
 0101 = Exit From Hybrid Sleep and deep power down
 0111 = Write HyperRAM regsiter (16-Bit, Write Data[15:0]
-1000 = Read 1 word (Read Data[15:0]) from HyperRAM
-1001 = Read 2 word (Read Data[31:0]) from HyperRAM
+1000 = Read 2 Bytes (Read Data[15:0]) from HyperRAM
+1001 = Read 4 Bytes (Read Data[31:0]) from HyperRAM
 1100 = Write 1 Byte (Write Data[7:0]) to HyperRAM
 1101 = Write 2 Bytes (Write Data[15:0]) to HyperRAM
 1110 = Write 3 Byte (Write Data[23:0]) to HyperRAM
@@ -62,8 +65,8 @@ Register Space Range:
 #define HBI_CMD_READ_HRAM_REGISTER   0x2
 #define HBI_CMD_EXIT_HS_PD           0x5
 #define HBI_CMD_WRITE_HRAM_REGISTER  0x7
-#define HBI_CMD_READ_HRAM_1_WORD     0x8
-#define HBI_CMD_READ_HRAM_2_WORD     0x9
+#define HBI_CMD_READ_HRAM_2_BYTE     0x8
+#define HBI_CMD_READ_HRAM_4_BYTE     0x9
 #define HBI_CMD_WRITE_HRAM_1_BYTE    0xC
 #define HBI_CMD_WRITE_HRAM_2_BYTE    0xD
 #define HBI_CMD_WRITE_HRAM_3_BYTE    0xE
@@ -137,9 +140,16 @@ Register Space Range:
 #define HBI_CONFIG_CKDIV_HCLK_DIV4    (0x1 << HBI_CONFIG_CKDIV_Pos)
 /*---------------------------------------------------------------------------------------------------------*/
 
-#define HBI_TIMEOUT       SystemCoreClock   /*!< 1 second time-out \hideinitializer */
-#define HBI_TIMEOUT_ERR   (-2L)             /*!< HBI operation abort due to timeout error \hideinitializer */
+/*---------------------------------------------------------------------------------------------------------*/
+/* HBI Define Error Code                                                                                   */
+/*---------------------------------------------------------------------------------------------------------*/
 extern int32_t g_HBI_i32ErrCode;
+#define HBI_TIMEOUT         SystemCoreClock     /*!< HBI time-out counter (1 second time-out) */
+#define HBI_OK              ( 0L)               /*!< HBI operation OK */
+#define HBI_ERR_FAIL        (-1L)               /*!< HBI operation failed */
+#define HBI_ERR_TIMEOUT     (-2L)               /*!< HBI operation abort due to timeout error */
+#define HBI_ERR_ALIGN       (-3L)               /*!< HBI operation aligment error */
+
 
 /*---------------------------------------------------------------------------------------------------------*/
 /*  Define Macros and functions                                                                            */
@@ -275,8 +285,8 @@ void HBI_ResetHyperRAM(void);
 void HBI_ExitHSAndDPD(void);
 int32_t HBI_ReadHyperRAMReg(uint32_t u32Addr);
 int32_t HBI_WriteHyperRAMReg(uint32_t u32Addr, uint32_t u32Value);
-uint32_t HBI_Read1Word(uint32_t u32Addr);
-uint32_t HBI_Read2Word(uint32_t u32Addr);
+uint32_t HBI_Read2Byte(uint32_t u32Addr);
+uint32_t HBI_Read4Byte(uint32_t u32Addr);
 void HBI_Write1Byte(uint32_t u32Addr, uint8_t u8Data);
 void HBI_Write2Byte(uint32_t u32Addr, uint16_t u16Data);
 void HBI_Write3Byte(uint32_t u32Addr, uint32_t u32Data);

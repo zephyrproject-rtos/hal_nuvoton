@@ -89,7 +89,13 @@ typedef enum KSMEM
 #define KS_META_NONSECURE (0ul << KS_METADATA_SEC_Pos)    /*!< Non-secure key                                 */
 
 #define KS_TIMEOUT      SystemCoreClock /*!< 1 second time-out \hideinitializer */
-#define KS_TIMEOUT_ERR  (-1L)           /*!< KS operation abort due to timeout error \hideinitializer */
+
+#define KS_OK            ( 0L)
+#define KS_ERR_FAIL      (-1L)   /*!< KS failed */
+#define KS_ERR_TIMEOUT   (-2L)   /*!< KS operation abort due to timeout error */
+#define KS_ERR_INIT      (-3L)   /*!< KS intital fail */
+#define KS_ERR_BUSY      (-4L)   /*!< KS is in busy state */
+#define KS_ERR_PARAMETER (-5L)   /*!< Wrong input parameters */
 
 /**
   * @brief      Enable scramble function
@@ -109,7 +115,7 @@ extern int32_t g_KS_i32ErrCode;
   @{
 */
 
-void KS_Open(void);
+int32_t KS_Open(void);
 int32_t KS_Read(KS_MEM_Type type, int32_t i32KeyIdx, uint32_t au32Key[], uint32_t u32WordCnt);
 int32_t KS_Write(KS_MEM_Type eType, uint32_t u32Meta, uint32_t au32Key[]);
 int32_t KS_WriteOTP(int32_t i32KeyIdx, uint32_t u32Meta, uint32_t au32Key[]);

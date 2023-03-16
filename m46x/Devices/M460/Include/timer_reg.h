@@ -20,7 +20,7 @@
 
 /*---------------------- Timer Controller -------------------------*/
 /**
-    @addtogroup TIMER Timer Controller(TIMER)
+    @addtogroup TIMER Timer Controller (TIMER)
     Memory Mapped Structure for CRC Controller
   @{
 */
@@ -274,7 +274,7 @@ typedef struct
      * |        |          |1 = Timer controller is used as PWM function.
      * |        |          |Note: When timer is used as PWM, the clock source of time controller will be forced to PCLKx automatically.
      * @var TIMER_T::CAPNF
-     * Offset: 0x24  Timer Capture Input Noise Filter Register 
+     * Offset: 0x24  Timer Capture Input Noise Filter Register
      * ---------------------------------------------------------------------------------------------------
      * |Bits    |Field     |Descriptions
      * | :----: | :----:   | :---- |
@@ -666,7 +666,7 @@ typedef struct
      * |        |          |1 = PWMx_CH1 at level-detect brake state.
      * |        |          |Note: If TIMERx_PWM level-detect brake source has released, both PWMx_CH0 and PWMx_CH1 will release brake state when current PWM period finished and resume PWMx_CH0 and PWMx_CH1 output waveform start from next full PWM period.
      * @var TIMER_T::PWMTRGCTL
-     * Offset: 0x90  Timer PWM Trigger Control Register 
+     * Offset: 0x90  Timer PWM Trigger Control Register
      * ---------------------------------------------------------------------------------------------------
      * |Bits    |Field     |Descriptions
      * | :----: | :----:   | :---- |
@@ -750,7 +750,7 @@ typedef struct
      * |        |          |0 = PWM interrupt flag accumulator function Disabled.
      * |        |          |1 = PWM interrupt flag accumulator function Enabled.
      * @var TIMER_T::PWMAINTSTS
-     * Offset: 0xAC  Timer PWM Accumulator Interrupt Status Register 
+     * Offset: 0xAC  Timer PWM Accumulator Interrupt Status Register
      * ---------------------------------------------------------------------------------------------------
      * |Bits    |Field     |Descriptions
      * | :----: | :----:   | :---- |

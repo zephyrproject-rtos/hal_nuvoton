@@ -19,7 +19,7 @@
 
 /*---------------------- Cyclic Redundancy Check Controller -------------------------*/
 /**
-    @addtogroup CRC Cyclic Redundancy Check Controller(CRC)
+    @addtogroup CRC Cyclic Redundancy Check Controller (CRC)
     Memory Mapped Structure for CRC Controller
   @{
 */

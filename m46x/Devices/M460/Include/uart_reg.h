@@ -19,7 +19,7 @@
 */
 
 /**
-    @addtogroup UART Universal Asynchronous Receiver/Transmitter Controller(UART)
+    @addtogroup UART Universal Asynchronous Receiver/Transmitter Controller (UART)
     Memory Mapped Structure for UART Controller
 @{ */
 
@@ -628,7 +628,7 @@ typedef struct
      * |[6]     |DGE       |Deglitch Enable Bit
      * |        |          |0 = Deglitch Disabled.
      * |        |          |1 = Deglitch Enabled.
-     * |        |          |Note 1: When this bit is set to logic 1, any pulse width less than about 150 ns will be considered a glitch and will be removed in the serial data input (RX). 
+     * |        |          |Note 1: When this bit is set to logic 1, any pulse width less than about 150 ns will be considered a glitch and will be removed in the serial data input (RX).
      * |        |          |This bit acts only on RX line and has no effect on the transmitter logic.
      * |        |          |Note 2: It is recommended to set this bit only when operating at baud rate under 2.5 Mbps.
      * |[7]     |TXRXSWP   |TX and RX Swap Enable Bit
@@ -793,7 +793,7 @@ typedef struct
      * |        |          |Note 2: This bit is used for RS-485 Auto Address Detection (AAD) mode in RS-485 function mode and ADDRDEN (UART_ALTCTL[15]) is set to 1.
      * |[4]     |WKTOUTEN  |Received Data FIFO Reached Threshold Time-out Wake-up Enable Bit
      * |        |          |0 = Received Data FIFO reached threshold time-out wake-up system function Disabled.
-     * |        |          |1 = Received Data FIFO reached threshold time-out wake-up system function Enabled. 
+     * |        |          |1 = Received Data FIFO reached threshold time-out wake-up system function Enabled.
      * |        |          |Note 1: When the system is in Power-down mode, Received Data FIFO reached threshold time-out will wake up system from Power-down mode.
      * |        |          |Note 2: It is suggested the function is enabled when the WKRFRTEN (UART_WKCTL[2]) is set to 1.
      * @var UART_T::WKSTS
@@ -845,7 +845,7 @@ typedef struct
      * |Bits    |Field     |Descriptions
      * | :----: | :----:   | :---- |
      * |[15:0]  |RTSDDLY   |RS485 Transceiver Deactivate Delay Value
-     * |        |          |These bits field indicate how many clock cycles selected by UART_CLK do the UART controller delay the RS485 transceiver state trancing when the state trancing of RS485 transceiver is from TX to RX state. 
+     * |        |          |These bits field indicate how many clock cycles selected by UART_CLK do the UART controller delay the RS485 transceiver state trancing when the state trancing of RS485 transceiver is from TX to RX state.
      * |        |          |These bits field have no effect when the state trancing of RS485 transceiver is from RX to TX state.
      * |        |          |Note: It is valid only when RS485AUD (UART_ALTCTL[10]) is set.
      */

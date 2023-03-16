@@ -42,6 +42,7 @@ int32_t RNG_ECDSA_Init(uint32_t u32KeySize, uint32_t au32ECC_N[18]);
 int32_t RNG_ECDSA(uint32_t u32KeySize);
 int32_t RNG_ECDH_Init(uint32_t u32KeySize, uint32_t au32ECC_N[18]);
 int32_t RNG_ECDH(uint32_t u32KeySize);
+int32_t RNG_EntropyPoll(uint8_t* pu8Out, int32_t i32Len);
 
 /**@}*/ /* end of group RNG_EXPORTED_FUNCTIONS */
 

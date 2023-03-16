@@ -124,9 +124,13 @@ extern "C"
 #define RTC_IO_PULL_DOWN_ENABLE         0x2UL   /*!< I/O pull-down is enabled */
 
 /*---------------------------------------------------------------------------------------------------------*/
-/* RTC Time-out Handler Constant Definitions                                                               */
+/* RTC Define Error Code                                                                                   */
 /*---------------------------------------------------------------------------------------------------------*/
-#define RTC_TIMEOUT_ERR    (-1L)        /*!< RTC operation abort due to timeout error \hideinitializer */
+#define RTC_TIMEOUT         SystemCoreClock     /*!< RTC time-out counter (1 second time-out) */
+#define RTC_OK              ( 0L)               /*!< RTC operation OK */
+#define RTC_ERR_FAIL        (-1L)               /*!< RTC operation failed */
+#define RTC_ERR_TIMEOUT     (-2L)               /*!< RTC operation abort due to timeout error */
+
 
 /**@}*/ /* end of group RTC_EXPORTED_CONSTANTS */
 
@@ -208,7 +212,7 @@ extern int32_t g_RTC_i32ErrCode;
   *
   * @return     None
   *
-  * @details    This macro is used to clear RTC snooper pin interrupt flag.
+  * @details    This macro is used to clear RTC tamper pin interrupt flag.
   * \hideinitializer
   */
 #define RTC_CLEAR_TAMPER_INT_FLAG(u32TamperFlag)    (RTC->INTSTS = (u32TamperFlag))
@@ -358,7 +362,7 @@ extern int32_t g_RTC_i32ErrCode;
 
 int32_t RTC_Open(S_RTC_TIME_DATA_T *sPt);
 void RTC_Close(void);
-void RTC_32KCalibration(int32_t i32FrequencyX10000);
+int32_t RTC_32KCalibration(int32_t i32FrequencyX10000);
 void RTC_GetDateAndTime(S_RTC_TIME_DATA_T *sPt);
 void RTC_GetAlarmDateAndTime(S_RTC_TIME_DATA_T *sPt);
 void RTC_SetDateAndTime(S_RTC_TIME_DATA_T *sPt);

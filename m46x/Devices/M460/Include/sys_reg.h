@@ -21,7 +21,7 @@
 
 /*---------------------- System Manger Controller -------------------------*/
 /**
-    @addtogroup SYS System Manger Controller(SYS)
+    @addtogroup SYS System Manger Controller (SYS)
     Memory Mapped Structure for SYS Controller
 @{ */
 
@@ -401,13 +401,13 @@ typedef struct
      * |        |          |0 = Brown-out "INTERRUPT" function Enabled.
      * |        |          |1 = Brown-out "RESET" function Enabled.
      * |        |          |Note 1: While the Brown-out Detector function is enabled (BODEN high) and BOD reset function is enabled (BODRSTEN high), BOD will assert a signal to reset chip when the detected voltage is lower than the threshold (BODOUT high).
-     * |        |          |While the BOD function is enabled (BODEN high) and BOD interrupt function is enabled (BODRSTEN low), BOD will assert an interrupt if BODOUT is high
-     * |        |          |BOD interrupt will keep till to the BODEN set to 0.
+     * |        |          |While the BOD function is enabled (BODEN high) and BOD interrupt function is enabled (BODRSTEN low), BOD will assert an interrupt if BODIF is high.
+     * |        |          |BOD interrupt will keep till the BODIF set to 0.
      * |        |          |BOD interrupt can be blocked by disabling the NVIC BOD interrupt or disabling BOD function (set BODEN low).
      * |        |          |Note 2: This bit is write protected. Refer to the SYS_REGLCTL register.
      * |[4]     |BODIF     |Brown-out Detector Interrupt Flag
-     * |        |          |0 = Brown-out Detector does not detect any voltage draft at VDD down through or up through the voltage of BODVL setting.
-     * |        |          |1 = When Brown-out Detector detects the VDD is dropped down through the voltage of BODVL setting or the VDD is raised up through the voltage of BODVL setting, this bit is set to 1 and the brown-out interrupt is requested if brown-out interrupt is enabled.
+     * |        |          |0 = Brown-out Detector does not detect any voltage draft at AVDD down through or up through the voltage of BODVL setting.
+     * |        |          |1 = When Brown-out Detector detects the AVDD is dropped down through the voltage of BODVL setting or the AVDD is raised up through the voltage of BODVL setting, this bit is set to 1 and the brown-out interrupt is requested if brown-out interrupt is enabled.
      * |        |          |Note: Write 1 to clear this bit to 0.
      * |[5]     |BODLPM    |Brown-out Detector Low Power Mode (Write Protect)
      * |        |          |0 = BOD operate in normal mode (default).
@@ -421,11 +421,11 @@ typedef struct
      * |        |          |It means the detected voltage is lower than BODVL setting
      * |        |          |If the BODEN is 0, BOD function disabled, this bit always responds 0.
      * |[7]     |LVREN     |Low Voltage Reset Enable Bit (Write Protect)
-     * |        |          |The LVR function resets the chip when the input power voltage is lower than LVR circuit setting
-     * |        |          |LVR function is enabled by default.
-     * |        |          |0 = Low Voltage Reset function Disabled.
+     * |        |          |The LVR function resets the chip when the input power voltage is lower than LVR circuit setting.
+     * |        |          |0 = Low Voltage Reset function Disabled (default).
      * |        |          |1 = Low Voltage Reset function Enabled.
-     * |        |          |Note 1: After enabling the bit, the LVR function will be active with 100us delay for LVR output stable (default).
+     * |        |          |Note 1: After enabling the bit, the LVR function will be active with 100us ~ 200us delay for LVR output stable.
+     * |        |          |LVRRDY(SYS_BODCTL[15]) is used to indicate LVR ready status.
      * |        |          |Note 2: This bit is write protected. Refer to the SYS_REGLCTL register.
      * |[10:8]  |BODDGSEL  |Brown-out Detector Output De-glitch Time Select (Write Protect)
      * |        |          |000 = BOD output is sampled by LIRC clock.
@@ -524,7 +524,8 @@ typedef struct
      * |        |          |User can disable internal POR circuit to avoid unpredictable noise to cause chip reset by writing 0x5AA5 to this field.
      * |        |          |The POR function will be active again when this field is set to another value or chip is reset by other reset source, including:
      * |        |          |nRESET, Watchdog, LVR reset, BOD reset, ICE reset command and the software-chip reset function.
-     * |        |          |Note: This bit is write protected. Refer to the SYS_REGLCTL register.
+     * |        |          |Note 1: Need to disable LVR by setting LVREN(SYS_BODCTL[7]) to 0 when setting POROFF(SYS_PORCTL[15:0]) to 0x5AA5.
+     * |        |          |Note 2: These bits are write protected. Refer to the SYS_REGLCTL register.
      * @var SYS_T::VREFCTL
      * Offset: 0x28  VREF Control Register
      * ---------------------------------------------------------------------------------------------------
@@ -984,8 +985,8 @@ typedef struct
      * | :----: | :----:   | :---- |
      * |[7:0]   |VERSION   |Chip Series Version (Read Only)
      * |        |          |These bits indicate the series version of chip.
-     * |        |          |0x2 = M460HD.
-     * |        |          |0x3 = M460LD.
+     * |        |          |0x02 = M46xxI/M46xxJ.
+     * |        |          |0x03 = M46xxG.
      * |        |          |Others = Reserved.
      * @var SYS_T::PLCTL
      * Offset: 0x1F8  Power Level Control Register
@@ -993,7 +994,7 @@ typedef struct
      * |Bits    |Field     |Descriptions
      * | :----: | :----:   | :---- |
      * |[1:0]   |PLSEL     |Power Level Select (Write Protect)
-     * |        |          |These bits indicate the status of power level.
+     * |        |          |These bits set power level status.
      * |        |          |00 = Power level is PL0.
      * |        |          |01 = Power level is PL1.
      * |        |          |Others = Reserved.
@@ -1014,10 +1015,10 @@ typedef struct
      * |[0]     |PLCBUSY   |Power Level Change Busy Bit (Read Only)
      * |        |          |This bit is set by hardware when power level is changing.
      * |        |          |After power level change is completed, this bit will be cleared automatically by hardware.
-     * |        |          |0 = Core voltage change is completed.
-     * |        |          |1 = Core voltage change is ongoing.
+     * |        |          |0 = Power level change is completed.
+     * |        |          |1 = Power level change is ongoing.
      * |[9:8]   |PLSTATUS  |Power Level Status (Read Only)
-     * |        |          |This bit indicates the status of power level.
+     * |        |          |These bits indicate the status of power level.
      * |        |          |00 = Power level is PL0.
      * |        |          |01 = Power level is PL1.
      * |        |          |Others = Reserved.
@@ -1212,7 +1213,7 @@ typedef struct
      * |        |          |11 = ECAP0_IC1
      * |        |          |12 = I2S1_DI
      * |        |          |13 = TM2_EXT
-     * |        |          |15 = SWDH_DAT (for M460HD)
+     * |        |          |15 = SWDH_DAT (for M46xxI/M46xxJ)
      * |        |          |20 = BMC8
      * |[20:16] |PA10MFP   |PA.10 Multi-function Pin Selection
      * |        |          |00 = GPIO
@@ -1230,7 +1231,7 @@ typedef struct
      * |        |          |12 = I2S1_MCLK
      * |        |          |13 = TM1_EXT
      * |        |          |14 = DAC0_ST
-     * |        |          |15 = SWDH_CLK (for M460HD)
+     * |        |          |15 = SWDH_CLK (for M46xxI/M46xxJ)
      * |        |          |18 = KPI_ROW5
      * |        |          |20 = BMC7
      * |[28:24] |PA11MFP   |PA.11 Multi-function Pin Selection
@@ -1264,7 +1265,7 @@ typedef struct
      * |        |          |06 = CAN0_TXD
      * |        |          |07 = SC2_PWR
      * |        |          |08 = SD1_nCD
-     * |        |          |09 = SPI0_SS (for M460LD)
+     * |        |          |09 = SPI0_SS (for M46xxG)
      * |        |          |10 = QSPI1_MISO0
      * |        |          |11 = BPWM1_CH2
      * |        |          |12 = EQEI1_INDEX
@@ -1281,7 +1282,7 @@ typedef struct
      * |        |          |05 = SPI2_CLK
      * |        |          |06 = CAN0_RXD
      * |        |          |07 = SC2_RST
-     * |        |          |09 = SPI0_CLK (for M460LD)
+     * |        |          |09 = SPI0_CLK (for M46xxG)
      * |        |          |10 = QSPI1_MOSI0
      * |        |          |11 = BPWM1_CH3
      * |        |          |12 = EQEI1_A
@@ -1298,12 +1299,12 @@ typedef struct
      * |        |          |05 = SPI2_MISO
      * |        |          |06 = I2C2_SCL
      * |        |          |07 = SC2_DAT
-     * |        |          |09 = SPI0_MISO (for M460LD)
+     * |        |          |09 = SPI0_MISO (for M46xxG)
      * |        |          |11 = BPWM1_CH4
      * |        |          |12 = EQEI1_B
      * |        |          |13 = ECAP3_IC2
      * |        |          |14 = USB_D+
-     * |        |          |16 = I2C0_SCL (for M460LD)
+     * |        |          |16 = I2C0_SCL (for M46xxG)
      * |        |          |17 = PSIO0_CH6
      * |        |          |19 = SPI10_MISO
      * |        |          |20 = BMC14
@@ -1315,12 +1316,12 @@ typedef struct
      * |        |          |05 = SPI2_MOSI
      * |        |          |06 = I2C2_SDA
      * |        |          |07 = SC2_CLK
-     * |        |          |09 = SPI0_MOSI (for M460LD)
+     * |        |          |09 = SPI0_MOSI (for M46xxG)
      * |        |          |11 = BPWM1_CH5
      * |        |          |12 = EPWM0_SYNC_IN
      * |        |          |13 = EQEI3_INDEX
      * |        |          |14 = USB_OTG_ID
-     * |        |          |16 = I2C0_SDA (for M460LD)
+     * |        |          |16 = I2C0_SDA (for M46xxG)
      * |        |          |17 = PSIO0_CH7
      * |        |          |19 = SPI10_MOSI
      * |        |          |20 = BMC15
@@ -1461,7 +1462,7 @@ typedef struct
      * |        |          |13 = INT4
      * |        |          |14 = USB_VBUS_EN
      * |        |          |15 = ACMP1_O
-     * |        |          |16 = SPI3_MOSI (for M460LD)
+     * |        |          |16 = SPI3_MOSI (for M46xxG)
      * |        |          |18 = KPI_COL5
      * |        |          |19 = SPI1_SS
      * |        |          |20 = BMC31
@@ -1480,9 +1481,9 @@ typedef struct
      * |        |          |13 = INT5
      * |        |          |14 = USB_VBUS_ST
      * |        |          |15 = ACMP0_O
-     * |        |          |16 = SPI3_MISO (for M460LD)
+     * |        |          |16 = SPI3_MISO (for M46xxG)
      * |        |          |18 = KPI_COL4
-     * |        |          |19 = SPI1_CLK (for M460LD)
+     * |        |          |19 = SPI1_CLK (for M46xxG)
      * |        |          |20 = BMC30
      * @var SYS_T::GPB_MFP2
      * Offset: 0x518  GPIOB Multiple Function Control Register 2
@@ -1568,10 +1569,10 @@ typedef struct
      * |        |          |09 = SD0_nCD
      * |        |          |10 = CCAP_SCLK
      * |        |          |11 = EPWM1_CH3
-     * |        |          |12 = ETMC_TRACE_DATA3 (for M460HD)
+     * |        |          |12 = ETMC_TRACE_DATA3 (for M46xxI/M46xxJ)
      * |        |          |13 = TM3_EXT
      * |        |          |14 = CAN3_RXD
-     * |        |          |16 = SPI3_SS (for M460LD)
+     * |        |          |16 = SPI3_SS (for M46xxG)
      * |        |          |17 = PSIO0_CH3
      * |        |          |18 = KPI_COL3
      * |        |          |20 = BMC29
@@ -1587,10 +1588,10 @@ typedef struct
      * |        |          |08 = I2C2_SCL
      * |        |          |10 = CCAP_PIXCLK
      * |        |          |11 = EPWM1_CH2
-     * |        |          |12 = ETMC_TRACE_DATA2 (for M460HD)
+     * |        |          |12 = ETMC_TRACE_DATA2 (for M46xxI/M46xxJ)
      * |        |          |13 = TM2_EXT
      * |        |          |14 = CAN3_TXD
-     * |        |          |16 = SPI3_CLK (for M460LD)
+     * |        |          |16 = SPI3_CLK (for M46xxG)
      * |        |          |17 = PSIO0_CH2
      * |        |          |18 = KPI_COL2
      * |        |          |19 = SPI9_MISO
@@ -1607,7 +1608,7 @@ typedef struct
      * |        |          |08 = I2C2_SMBSUS
      * |        |          |09 = CCAP_DATA0
      * |        |          |11 = EPWM1_CH1
-     * |        |          |12 = ETMC_TRACE_DATA1 (for M460HD)
+     * |        |          |12 = ETMC_TRACE_DATA1 (for M46xxI/M46xxJ)
      * |        |          |13 = TM1_EXT
      * |        |          |14 = CLKO
      * |        |          |15 = USB_VBUS_ST
@@ -1627,10 +1628,10 @@ typedef struct
      * |        |          |09 = CCAP_DATA1
      * |        |          |10 = EPWM0_BRAKE1
      * |        |          |11 = EPWM1_CH0
-     * |        |          |12 = ETMC_TRACE_DATA0 (for M460HD)
+     * |        |          |12 = ETMC_TRACE_DATA0 (for M46xxI/M46xxJ)
      * |        |          |13 = TM0_EXT
      * |        |          |14 = USB_VBUS_EN
-     * |        |          |15 = HSUSB_VBUS_EN (for M460HD)
+     * |        |          |15 = HSUSB_VBUS_EN (for M46xxI/M46xxJ)
      * |        |          |17 = PSIO0_CH0
      * |        |          |18 = KPI_COL0
      * |        |          |19 = SPI9_CLK
@@ -1656,7 +1657,7 @@ typedef struct
      * |        |          |14 = ACMP1_O
      * |        |          |15 = EADC1_ST
      * |        |          |16 = HBI_D2
-     * |        |          |17 = QSPI1_CLK (for M460LD)
+     * |        |          |17 = QSPI1_CLK (for M46xxG)
      * |        |          |18 = KPI_ROW5
      * |        |          |19 = SPI7_MOSI
      * |        |          |20 = BMC25
@@ -1676,7 +1677,7 @@ typedef struct
      * |        |          |14 = ACMP0_O
      * |        |          |15 = EADC0_ST
      * |        |          |16 = HBI_RWDS
-     * |        |          |17 = QSPI1_SS (for M460LD)
+     * |        |          |17 = QSPI1_SS (for M46xxG)
      * |        |          |18 = KPI_ROW4
      * |        |          |19 = SPI7_MISO
      * |        |          |20 = BMC24
@@ -1893,10 +1894,10 @@ typedef struct
      * |        |          |06 = QSPI0_CLK
      * |        |          |10 = TRACE_SWO
      * |        |          |11 = EPWM0_SYNC_IN
-     * |        |          |12 = ETMC_TRACE_CLK (for M460HD)
+     * |        |          |12 = ETMC_TRACE_CLK (for M46xxI/M46xxJ)
      * |        |          |13 = TM1
      * |        |          |14 = USB_VBUS_ST
-     * |        |          |15 = HSUSB_VBUS_ST (for M460HD)
+     * |        |          |15 = HSUSB_VBUS_ST (for M46xxI/M46xxJ)
      * |        |          |19 = SPI9_MOSI
      * |        |          |20 = BMC26
      * |[28:24] |PC15MFP   |PC.15 Multi-function Pin Selection
@@ -1969,7 +1970,7 @@ typedef struct
      * |        |          |08 = SC1_DAT
      * |        |          |14 = ACMP1_O
      * |        |          |15 = EADC1_ST
-     * |        |          |16 = HBI_nRESET
+     * |        |          |16 = HBI_D7
      * |        |          |17 = PSIO0_CH6
      * |[20:16] |PD6MFP    |PD.6 Multi-function Pin Selection
      * |        |          |00 = GPIO
@@ -1981,7 +1982,7 @@ typedef struct
      * |        |          |08 = SC1_RST
      * |        |          |14 = ACMP0_O
      * |        |          |15 = EADC0_ST
-     * |        |          |16 = HBI_D0
+     * |        |          |16 = HBI_D6
      * |        |          |17 = PSIO0_CH5
      * |[28:24] |PD7MFP    |PD.7 Multi-function Pin Selection
      * |        |          |00 = GPIO
@@ -1992,7 +1993,7 @@ typedef struct
      * |        |          |06 = QSPI1_MISO0
      * |        |          |07 = CCAP_HSYNC
      * |        |          |08 = SC1_PWR
-     * |        |          |16 = HBI_D1
+     * |        |          |16 = HBI_D5
      * |        |          |17 = PSIO0_CH4
      * @var SYS_T::GPD_MFP2
      * Offset: 0x538  GPIOD Multiple Function Control Register 2
@@ -2072,7 +2073,7 @@ typedef struct
      * |        |          |13 = ECAP2_IC2
      * |        |          |14 = CLKO
      * |        |          |15 = EADC0_ST
-     * |        |          |19 = QSPI1_MOSI1 (for M460LD)
+     * |        |          |19 = QSPI1_MOSI1 (for M46xxG)
      * |[20:16] |PD14MFP   |PD.14 Multi-function Pin Selection
      * |        |          |00 = GPIO
      * |        |          |02 = EBI_nCS0
@@ -2320,7 +2321,7 @@ typedef struct
      * |        |          |13 = ACMP0_O
      * |        |          |14 = ICE_DAT
      * |        |          |15 = EADC0_ST
-     * |        |          |19 = QSPI1_MISO0 (for M460LD)
+     * |        |          |19 = QSPI1_MISO0 (for M46xxG)
      * |[12:8]  |PF1MFP    |PF.1 Multi-function Pin Selection
      * |        |          |00 = GPIO
      * |        |          |02 = UART1_RXD
@@ -2336,7 +2337,7 @@ typedef struct
      * |        |          |13 = ACMP1_O
      * |        |          |14 = ICE_CLK
      * |        |          |15 = EADC1_ST
-     * |        |          |19 = QSPI1_MOSI0 (for M460LD)
+     * |        |          |19 = QSPI1_MOSI0 (for M46xxG)
      * |[20:16] |PF2MFP    |PF.2 Multi-function Pin Selection
      * |        |          |00 = GPIO
      * |        |          |02 = EBI_nCS1
@@ -2649,7 +2650,7 @@ typedef struct
      * |        |          |14 = CLKO
      * |        |          |15 = EADC0_ST
      * |        |          |16 = HBI_D7
-     * |        |          |19 = QSPI1_MISO1 (for M460LD)
+     * |        |          |19 = QSPI1_MISO1 (for M46xxG)
      * @var SYS_T::GPH_MFP0
      * Offset: 0x570  GPIOH Multiple Function Control Register 0
      * ---------------------------------------------------------------------------------------------------
@@ -2776,19 +2777,19 @@ typedef struct
      * |        |          |06 = QSPI1_MOSI1
      * |        |          |07 = CCAP_SCLK
      * |        |          |10 = CAN3_RXD
-     * |        |          |16 = HBI_nCS
+     * |        |          |16 = HBI_CK
      * |[20:16] |PH14MFP   |PH.14 Multi-function Pin Selection
      * |        |          |00 = GPIO
      * |        |          |02 = EBI_AD2
      * |        |          |06 = QSPI1_SS
      * |        |          |07 = CCAP_SFIELD
-     * |        |          |16 = HBI_D3
+     * |        |          |16 = HBI_RWDS
      * |[28:24] |PH15MFP   |PH.15 Multi-function Pin Selection
      * |        |          |00 = GPIO
      * |        |          |02 = EBI_AD3
      * |        |          |06 = QSPI1_CLK
      * |        |          |07 = CCAP_VSYNC
-     * |        |          |16 = HBI_D2
+     * |        |          |16 = HBI_D4
      * @var SYS_T::GPI_MFP0
      * Offset: 0x580  GPIOI Multiple Function Control Register 0
      * ---------------------------------------------------------------------------------------------------
@@ -2922,7 +2923,7 @@ typedef struct
      * |        |          |06 = QSPI1_SS
      * |        |          |07 = CCAP_DATA5
      * |        |          |10 = CAN0_TXD
-     * |        |          |16 = HBI_RWDS
+     * |        |          |16 = HBI_nRESET
      * |[28:24] |PJ3MFP    |PJ.3 Multi-function Pin Selection
      * |        |          |00 = GPIO
      * |        |          |02 = EBI_AD4
@@ -2943,7 +2944,7 @@ typedef struct
      * |        |          |06 = QSPI1_MISO0
      * |        |          |07 = CCAP_DATA3
      * |        |          |10 = CAN1_TXD
-     * |        |          |16 = HBI_D6
+     * |        |          |16 = HBI_D2
      * |[12:8]  |PJ5MFP    |PJ.5 Multi-function Pin Selection
      * |        |          |00 = GPIO
      * |        |          |02 = EBI_AD2
@@ -2951,21 +2952,21 @@ typedef struct
      * |        |          |06 = QSPI1_MOSI0
      * |        |          |07 = CCAP_DATA2
      * |        |          |10 = CAN1_RXD
-     * |        |          |16 = HBI_D5
+     * |        |          |16 = HBI_D1
      * |[20:16] |PJ6MFP    |PJ.6 Multi-function Pin Selection
      * |        |          |00 = GPIO
      * |        |          |02 = EBI_AD1
      * |        |          |03 = UART9_nCTS
      * |        |          |07 = CCAP_DATA1
      * |        |          |10 = CAN2_TXD
-     * |        |          |16 = HBI_D4
+     * |        |          |16 = HBI_D0
      * |[28:24] |PJ7MFP    |PJ.7 Multi-function Pin Selection
      * |        |          |00 = GPIO
      * |        |          |02 = EBI_AD0
      * |        |          |03 = UART9_nRTS
      * |        |          |07 = CCAP_DATA0
      * |        |          |10 = CAN2_RXD
-     * |        |          |16 = HBI_CK
+     * |        |          |16 = HBI_nCS
      * @var SYS_T::GPJ_MFP2
      * Offset: 0x598  GPIOJ Multiple Function Control Register 2
      * ---------------------------------------------------------------------------------------------------

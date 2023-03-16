@@ -45,7 +45,12 @@
   */
 void ACMP_Open(ACMP_T *acmp, uint32_t u32ChNum, uint32_t u32NegSrc, uint32_t u32HysSel)
 {
-    acmp->CTL[u32ChNum] = (acmp->CTL[u32ChNum] & (~(ACMP_CTL_NEGSEL_Msk | ACMP_CTL_HYSSEL_Msk))) | (u32NegSrc | u32HysSel | ACMP_CTL_ACMPEN_Msk);
+    volatile int32_t delay;
+
+    acmp->CTL[u32ChNum] = (acmp->CTL[u32ChNum] & (~(ACMP_CTL_NEGSEL_Msk | ACMP_CTL_HYSSEL_Msk | ACMP_CTL_MODESEL_Msk))) | (2 << ACMP_CTL_MODESEL_Pos) | (u32NegSrc | u32HysSel | ACMP_CTL_ACMPEN_Msk);
+    
+    /* Delay for analog macro stable */
+    for(delay = SystemCoreClock / 0x40000; delay > 0; delay--) {}
 }
 
 /**

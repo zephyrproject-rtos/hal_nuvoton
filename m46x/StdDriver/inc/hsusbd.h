@@ -90,8 +90,13 @@ extern "C"
 #define HSUSBD_BCDC_DETSTS_SD_CDP               ((uint32_t)0x00000000ul)      /*!<CDP  \hideinitializer */
 #define HSUSBD_BCDC_DETSTS_SD_DCP               ((uint32_t)0x00000010ul)      /*!<DCP  \hideinitializer */
 
-#define HSUSBD_TIMEOUT      SystemCoreClock     /*!< 1 second time-out \hideinitializer */
-#define HSUSBD_TIMEOUT_ERR  (-2L)               /*!< HSUSBD operation abort due to timeout error \hideinitializer */
+/*---------------------------------------------------------------------------------------------------------*/
+/* HSUSBD Define Error Code                                                                                */
+/*---------------------------------------------------------------------------------------------------------*/
+#define HSUSBD_TIMEOUT                          SystemCoreClock               /*!< HSUSBD time-out counter (1 second time-out) \hideinitializer */
+#define HSUSBD_OK                               ( 0L)                         /*!< HSUSBD operation OK \hideinitializer */
+#define HSUSBD_ERR_FAIL                         (-1L)                         /*!< HSUSBD operation failed \hideinitializer */
+#define HSUSBD_ERR_TIMEOUT                      (-2L)                         /*!< HSUSBD operation abort due to timeout error \hideinitializer */
 
 /*@}*/ /* end of group HSUSBD_EXPORTED_CONSTANTS */
 
@@ -142,7 +147,7 @@ extern uint32_t volatile g_hsusbd_DmaDone;
 extern uint32_t g_hsusbd_CtrlInSize;
 extern S_HSUSBD_INFO_T gsHSInfo;
 extern S_HSUSBD_CMD_T gUsbCmd;
-extern int32_t g_HBI_i32ErrCode;
+extern volatile uint8_t g_hsusbd_RemoteWakeupEn;
 /** @endcond HIDDEN_SYMBOLS */
 
 
@@ -378,14 +383,14 @@ typedef void (*HSUSBD_VENDOR_REQ)(void); /*!<USB Vendor request callback functio
 typedef void (*HSUSBD_CLASS_REQ)(void); /*!<USB Class request callback function */
 typedef void (*HSUSBD_SET_INTERFACE_REQ)(uint32_t u32AltInterface); /*!<USB Standard request "Set Interface" callback function */
 
-void HSUSBD_Open(S_HSUSBD_INFO_T *param, HSUSBD_CLASS_REQ pfnClassReq, HSUSBD_SET_INTERFACE_REQ pfnSetInterface);
+int32_t HSUSBD_Open(S_HSUSBD_INFO_T *param, HSUSBD_CLASS_REQ pfnClassReq, HSUSBD_SET_INTERFACE_REQ pfnSetInterface);
 void HSUSBD_Start(void);
 void HSUSBD_ProcessSetupPacket(void);
 void HSUSBD_StandardRequest(void);
 void HSUSBD_UpdateDeviceState(void);
 void HSUSBD_PrepareCtrlIn(uint8_t pu8Buf[], uint32_t u32Size);
 void HSUSBD_CtrlIn(void);
-void HSUSBD_CtrlOut(uint8_t pu8Buf[], uint32_t u32Size);
+int32_t HSUSBD_CtrlOut(uint8_t pu8Buf[], uint32_t u32Size);
 void HSUSBD_SwReset(void);
 void HSUSBD_SetVendorRequest(HSUSBD_VENDOR_REQ pfnVendorReq);
 

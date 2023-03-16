@@ -84,7 +84,9 @@ extern "C"
 #define TIMER_CAPTURE_NOISE_FILTER_PCLK_DIV_64  (6UL)    /*!< Capture noise filter clock is PCLK divide by 64 \hideinitializer */
 #define TIMER_CAPTURE_NOISE_FILTER_PCLK_DIV_128 (7UL)    /*!< Capture noise filter clock is PCLK divide by 128 \hideinitializer */
 
-#define TIMER_TIMEOUT_ERR                       (-1L)    /*!< TIMER operation abort due to timeout error \hideinitializer */
+#define TIMER_OK                                ( 0L)    /*!< TIMER operation OK \hideinitializer */
+#define TIMER_ERR_FAIL                          (-1L)    /*!< TIMER operation failed \hideinitializer */
+#define TIMER_ERR_TIMEOUT                       (-2L)    /*!< TIMER operation abort due to timeout error \hideinitializer */
 
 /*@}*/ /* end of group TIMER_EXPORTED_CONSTANTS */
 

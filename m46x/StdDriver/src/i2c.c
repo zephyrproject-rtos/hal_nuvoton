@@ -201,7 +201,7 @@ uint32_t I2C_GetBusClockFreq(I2C_T *i2c)
     uint32_t u32Divider = i2c->CLKDIV;
     uint32_t u32Pclk;
 
-    if(i2c == I2C4)
+    if( (i2c == I2C1) || (i2c == I2C3) )
     {
         u32Pclk = CLK_GetPCLK1Freq();
     }
@@ -228,7 +228,7 @@ uint32_t I2C_SetBusClockFreq(I2C_T *i2c, uint32_t u32BusClock)
     uint32_t u32Div;
     uint32_t u32Pclk;
 
-    if(i2c == I2C4)
+    if( (i2c == I2C1) || (i2c == I2C3) )
     {
         u32Pclk = CLK_GetPCLK1Freq();
     }
@@ -312,67 +312,69 @@ void I2C_SetData(I2C_T *i2c, uint8_t u8Data)
 }
 
 /**
- * @brief      Set 7-bit Slave Address and GC Mode
+ * @brief      Set Slave Address and GC Mode
  *
  * @param[in]  i2c          Specify I2C port
  * @param[in]  u8SlaveNo    Set the number of I2C address register (0~3)
- * @param[in]  u8SlaveAddr  7-bit slave address
+ * @param[in]  u16SlaveAddr 7-bit or 10-bit slave address
  * @param[in]  u8GCMode     Enable/Disable GC mode (I2C_GCMODE_ENABLE / I2C_GCMODE_DISABLE)
  *
  * @return     None
  *
- * @details    This function is used to set 7-bit slave addresses in I2C SLAVE ADDRESS REGISTER (I2CADDR0~3)
+ * @details    This function is used to set slave addresses in I2C SLAVE ADDRESS REGISTER (I2CADDR0~3)
  *             and enable GC Mode.
  *
  */
-void I2C_SetSlaveAddr(I2C_T *i2c, uint8_t u8SlaveNo, uint8_t u8SlaveAddr, uint8_t u8GCMode)
+void I2C_SetSlaveAddr(I2C_T *i2c, uint8_t u8SlaveNo, uint16_t u16SlaveAddr, uint8_t u8GCMode)
 {
+    uint32_t u32AddrRegValue = ((uint32_t)(u16SlaveAddr&0x3ff) << 1U) | u8GCMode;
     switch(u8SlaveNo)
     {
     case 1:
-        i2c->ADDR1  = ((uint32_t)u8SlaveAddr << 1U) | u8GCMode;
+        i2c->ADDR1  = u32AddrRegValue;
         break;
     case 2:
-        i2c->ADDR2  = ((uint32_t)u8SlaveAddr << 1U) | u8GCMode;
+        i2c->ADDR2  = u32AddrRegValue;
         break;
     case 3:
-        i2c->ADDR3  = ((uint32_t)u8SlaveAddr << 1U) | u8GCMode;
+        i2c->ADDR3  = u32AddrRegValue;
         break;
     case 0:
     default:
-        i2c->ADDR0  = ((uint32_t)u8SlaveAddr << 1U) | u8GCMode;
+        i2c->ADDR0  = u32AddrRegValue;
         break;
     }
 }
 
 /**
- * @brief      Configure the mask bits of 7-bit Slave Address
+ * @brief      Configure the mask bits of Slave Address
  *
  * @param[in]  i2c              Specify I2C port
  * @param[in]  u8SlaveNo        Set the number of I2C address mask register (0~3)
- * @param[in]  u8SlaveAddrMask  A byte for slave address mask
+ * @param[in]  u16SlaveAddrMask  Slave address mask
  *
  * @return     None
  *
- * @details    This function is used to set 7-bit slave addresses.
+ * @details    This function is used to set slave addresses.
  *
  */
-void I2C_SetSlaveAddrMask(I2C_T *i2c, uint8_t u8SlaveNo, uint8_t u8SlaveAddrMask)
+void I2C_SetSlaveAddrMask(I2C_T *i2c, uint8_t u8SlaveNo, uint16_t u16SlaveAddrMask)
 {
+    uint32_t u32AddrMskRegValue = (uint32_t)(u16SlaveAddrMask&0x3ff) << 1U;
     switch(u8SlaveNo)
     {
     case 1:
-        i2c->ADDRMSK1  = (uint32_t)u8SlaveAddrMask << 1U;
+        i2c->ADDRMSK1  = u32AddrMskRegValue;
         break;
     case 2:
-        i2c->ADDRMSK2  = (uint32_t)u8SlaveAddrMask << 1U;
+        i2c->ADDRMSK2  = u32AddrMskRegValue;
         break;
     case 3:
-        i2c->ADDRMSK3  = (uint32_t)u8SlaveAddrMask << 1U;
+        i2c->ADDRMSK3  = u32AddrMskRegValue;
         break;
     case 0:
     default:
-        i2c->ADDRMSK0  = (uint32_t)u8SlaveAddrMask << 1U;
+        i2c->ADDRMSK0  = u32AddrMskRegValue;
         break;
     }
 }
@@ -694,7 +696,7 @@ void I2C_SMBusClockLoTimeout(I2C_T *i2c, uint32_t ms, uint32_t u32Pclk)
   *
   * @details    The function is used for I2C Master write a byte data to Slave.
   *
-  * @note       This function sets g_I2C_i32ErrCode to I2C_TIMEOUT_ERR if waiting I2C time-out.
+  * @note       This function sets g_I2C_i32ErrCode to I2C_ERR_TIMEOUT if waiting I2C time-out.
   *
   */
 
@@ -713,7 +715,7 @@ uint8_t I2C_WriteByte(I2C_T *i2c, uint8_t u8SlaveAddr, uint8_t data)
         {
             if(--u32TimeOutCount == 0)
             {
-                g_I2C_i32ErrCode = I2C_TIMEOUT_ERR;
+                g_I2C_i32ErrCode = I2C_ERR_TIMEOUT;
                 u8Err = 1u;
                 break;
             }
@@ -761,7 +763,7 @@ uint8_t I2C_WriteByte(I2C_T *i2c, uint8_t u8SlaveAddr, uint8_t data)
   *
   * @details    The function is used for I2C Master write multi bytes data to Slave.
   *
-  * @note       This function sets g_I2C_i32ErrCode to I2C_TIMEOUT_ERR if waiting I2C time-out.
+  * @note       This function sets g_I2C_i32ErrCode to I2C_ERR_TIMEOUT if waiting I2C time-out.
   *
   */
 
@@ -780,7 +782,7 @@ uint32_t I2C_WriteMultiBytes(I2C_T *i2c, uint8_t u8SlaveAddr, uint8_t data[], ui
         {
             if(--u32TimeOutCount == 0)
             {
-                g_I2C_i32ErrCode = I2C_TIMEOUT_ERR;
+                g_I2C_i32ErrCode = I2C_ERR_TIMEOUT;
                 u8Err = 1u;
                 break;
             }
@@ -834,7 +836,7 @@ uint32_t I2C_WriteMultiBytes(I2C_T *i2c, uint8_t u8SlaveAddr, uint8_t data[], ui
   *
   * @details    The function is used for I2C Master specify a address that data write to in Slave.
   *
-  * @note       This function sets g_I2C_i32ErrCode to I2C_TIMEOUT_ERR if waiting I2C time-out.
+  * @note       This function sets g_I2C_i32ErrCode to I2C_ERR_TIMEOUT if waiting I2C time-out.
   *
   */
 
@@ -853,7 +855,7 @@ uint8_t I2C_WriteByteOneReg(I2C_T *i2c, uint8_t u8SlaveAddr, uint8_t u8DataAddr,
         {
             if(--u32TimeOutCount == 0)
             {
-                g_I2C_i32ErrCode = I2C_TIMEOUT_ERR;
+                g_I2C_i32ErrCode = I2C_ERR_TIMEOUT;
                 u8Err = 1u;
                 break;
             }
@@ -911,7 +913,7 @@ uint8_t I2C_WriteByteOneReg(I2C_T *i2c, uint8_t u8SlaveAddr, uint8_t u8DataAddr,
   *
   * @details    The function is used for I2C Master specify a byte address that multi data bytes write to in Slave.
   *
-  * @note       This function sets g_I2C_i32ErrCode to I2C_TIMEOUT_ERR if waiting I2C time-out.
+  * @note       This function sets g_I2C_i32ErrCode to I2C_ERR_TIMEOUT if waiting I2C time-out.
   *
   */
 
@@ -930,7 +932,7 @@ uint32_t I2C_WriteMultiBytesOneReg(I2C_T *i2c, uint8_t u8SlaveAddr, uint8_t u8Da
         {
             if(--u32TimeOutCount == 0)
             {
-                g_I2C_i32ErrCode = I2C_TIMEOUT_ERR;
+                g_I2C_i32ErrCode = I2C_ERR_TIMEOUT;
                 u8Err = 1u;
                 break;
             }
@@ -987,7 +989,7 @@ uint32_t I2C_WriteMultiBytesOneReg(I2C_T *i2c, uint8_t u8SlaveAddr, uint8_t u8Da
   *
   * @details    The function is used for I2C Master specify two bytes address that data write to in Slave.
   *
-  * @note       This function sets g_I2C_i32ErrCode to I2C_TIMEOUT_ERR if waiting I2C time-out.
+  * @note       This function sets g_I2C_i32ErrCode to I2C_ERR_TIMEOUT if waiting I2C time-out.
   *
   */
 
@@ -1006,7 +1008,7 @@ uint8_t I2C_WriteByteTwoRegs(I2C_T *i2c, uint8_t u8SlaveAddr, uint16_t u16DataAd
         {
             if(--u32TimeOutCount == 0)
             {
-                g_I2C_i32ErrCode = I2C_TIMEOUT_ERR;
+                g_I2C_i32ErrCode = I2C_ERR_TIMEOUT;
                 u8Err = 1u;
                 break;
             }
@@ -1069,7 +1071,7 @@ uint8_t I2C_WriteByteTwoRegs(I2C_T *i2c, uint8_t u8SlaveAddr, uint16_t u16DataAd
   *
   * @details    The function is used for I2C Master specify a byte address that multi data write to in Slave.
   *
-  * @note       This function sets g_I2C_i32ErrCode to I2C_TIMEOUT_ERR if waiting I2C time-out.
+  * @note       This function sets g_I2C_i32ErrCode to I2C_ERR_TIMEOUT if waiting I2C time-out.
   *
   */
 
@@ -1088,7 +1090,7 @@ uint32_t I2C_WriteMultiBytesTwoRegs(I2C_T *i2c, uint8_t u8SlaveAddr, uint16_t u1
         {
             if(--u32TimeOutCount == 0)
             {
-                g_I2C_i32ErrCode = I2C_TIMEOUT_ERR;
+                g_I2C_i32ErrCode = I2C_ERR_TIMEOUT;
                 u8Err = 1u;
                 break;
             }
@@ -1146,7 +1148,7 @@ uint32_t I2C_WriteMultiBytesTwoRegs(I2C_T *i2c, uint8_t u8SlaveAddr, uint16_t u1
   *
   * @details    The function is used for I2C Master to read a byte data from Slave.
   *
-  * @note       This function sets g_I2C_i32ErrCode to I2C_TIMEOUT_ERR if waiting I2C time-out.
+  * @note       This function sets g_I2C_i32ErrCode to I2C_ERR_TIMEOUT if waiting I2C time-out.
   *
   */
 uint8_t I2C_ReadByte(I2C_T *i2c, uint8_t u8SlaveAddr)
@@ -1164,7 +1166,7 @@ uint8_t I2C_ReadByte(I2C_T *i2c, uint8_t u8SlaveAddr)
         {
             if(--u32TimeOutCount == 0)
             {
-                g_I2C_i32ErrCode = I2C_TIMEOUT_ERR;
+                g_I2C_i32ErrCode = I2C_ERR_TIMEOUT;
                 u8Err = 1u;
                 break;
             }
@@ -1217,7 +1219,7 @@ uint8_t I2C_ReadByte(I2C_T *i2c, uint8_t u8SlaveAddr)
   *
   * @details    The function is used for I2C Master to read multi data bytes from Slave.
   *
-  * @note       This function sets g_I2C_i32ErrCode to I2C_TIMEOUT_ERR if waiting I2C time-out.
+  * @note       This function sets g_I2C_i32ErrCode to I2C_ERR_TIMEOUT if waiting I2C time-out.
   *
   */
 uint32_t I2C_ReadMultiBytes(I2C_T *i2c, uint8_t u8SlaveAddr, uint8_t rdata[], uint32_t u32rLen)
@@ -1235,7 +1237,7 @@ uint32_t I2C_ReadMultiBytes(I2C_T *i2c, uint8_t u8SlaveAddr, uint8_t rdata[], ui
         {
             if(--u32TimeOutCount == 0)
             {
-                g_I2C_i32ErrCode = I2C_TIMEOUT_ERR;
+                g_I2C_i32ErrCode = I2C_ERR_TIMEOUT;
                 u8Err = 1u;
                 break;
             }
@@ -1294,7 +1296,7 @@ uint32_t I2C_ReadMultiBytes(I2C_T *i2c, uint8_t u8SlaveAddr, uint8_t rdata[], ui
   *
   * @details    The function is used for I2C Master specify a byte address that a data byte read from Slave.
   *
-  * @note       This function sets g_I2C_i32ErrCode to I2C_TIMEOUT_ERR if waiting I2C time-out.
+  * @note       This function sets g_I2C_i32ErrCode to I2C_ERR_TIMEOUT if waiting I2C time-out.
   *
   */
 uint8_t I2C_ReadByteOneReg(I2C_T *i2c, uint8_t u8SlaveAddr, uint8_t u8DataAddr)
@@ -1312,7 +1314,7 @@ uint8_t I2C_ReadByteOneReg(I2C_T *i2c, uint8_t u8SlaveAddr, uint8_t u8DataAddr)
         {
             if(--u32TimeOutCount == 0)
             {
-                g_I2C_i32ErrCode = I2C_TIMEOUT_ERR;
+                g_I2C_i32ErrCode = I2C_ERR_TIMEOUT;
                 u8Err = 1u;
                 break;
             }
@@ -1380,7 +1382,7 @@ uint8_t I2C_ReadByteOneReg(I2C_T *i2c, uint8_t u8SlaveAddr, uint8_t u8DataAddr)
   *
   * @details    The function is used for I2C Master specify a byte address that multi data bytes read from Slave.
   *
-  * @note       This function sets g_I2C_i32ErrCode to I2C_TIMEOUT_ERR if waiting I2C time-out.
+  * @note       This function sets g_I2C_i32ErrCode to I2C_ERR_TIMEOUT if waiting I2C time-out.
   *
   */
 uint32_t I2C_ReadMultiBytesOneReg(I2C_T *i2c, uint8_t u8SlaveAddr, uint8_t u8DataAddr, uint8_t rdata[], uint32_t u32rLen)
@@ -1398,7 +1400,7 @@ uint32_t I2C_ReadMultiBytesOneReg(I2C_T *i2c, uint8_t u8SlaveAddr, uint8_t u8Dat
         {
             if(--u32TimeOutCount == 0)
             {
-                g_I2C_i32ErrCode = I2C_TIMEOUT_ERR;
+                g_I2C_i32ErrCode = I2C_ERR_TIMEOUT;
                 u8Err = 1u;
                 break;
             }
@@ -1471,7 +1473,7 @@ uint32_t I2C_ReadMultiBytesOneReg(I2C_T *i2c, uint8_t u8SlaveAddr, uint8_t u8Dat
   *
   * @details    The function is used for I2C Master specify two bytes address that a data byte read from Slave.
   *
-  * @note       This function sets g_I2C_i32ErrCode to I2C_TIMEOUT_ERR if waiting I2C time-out.
+  * @note       This function sets g_I2C_i32ErrCode to I2C_ERR_TIMEOUT if waiting I2C time-out.
   *
   */
 uint8_t I2C_ReadByteTwoRegs(I2C_T *i2c, uint8_t u8SlaveAddr, uint16_t u16DataAddr)
@@ -1489,7 +1491,7 @@ uint8_t I2C_ReadByteTwoRegs(I2C_T *i2c, uint8_t u8SlaveAddr, uint16_t u16DataAdd
         {
             if(--u32TimeOutCount == 0)
             {
-                g_I2C_i32ErrCode = I2C_TIMEOUT_ERR;
+                g_I2C_i32ErrCode = I2C_ERR_TIMEOUT;
                 u8Err = 1u;
                 break;
             }
@@ -1565,7 +1567,7 @@ uint8_t I2C_ReadByteTwoRegs(I2C_T *i2c, uint8_t u8SlaveAddr, uint16_t u16DataAdd
   *
   * @details    The function is used for I2C Master specify two bytes address that multi data bytes read from Slave.
   *
-  * @note       This function sets g_I2C_i32ErrCode to I2C_TIMEOUT_ERR if waiting I2C time-out.
+  * @note       This function sets g_I2C_i32ErrCode to I2C_ERR_TIMEOUT if waiting I2C time-out.
   *
   */
 uint32_t I2C_ReadMultiBytesTwoRegs(I2C_T *i2c, uint8_t u8SlaveAddr, uint16_t u16DataAddr, uint8_t rdata[], uint32_t u32rLen)
@@ -1583,7 +1585,7 @@ uint32_t I2C_ReadMultiBytesTwoRegs(I2C_T *i2c, uint8_t u8SlaveAddr, uint16_t u16
         {
             if(--u32TimeOutCount == 0)
             {
-                g_I2C_i32ErrCode = I2C_TIMEOUT_ERR;
+                g_I2C_i32ErrCode = I2C_ERR_TIMEOUT;
                 u8Err = 1u;
                 break;
             }

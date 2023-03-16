@@ -17,7 +17,7 @@
 
 /*---------------------- True Random Number Generator -------------------------*/
 /**
-    @addtogroup TRNG True Random Number Generator(TRNG)
+    @addtogroup TRNG True Random Number Generator (TRNG)
     Memory Mapped Structure for TRNG Controller
 @{ */
 

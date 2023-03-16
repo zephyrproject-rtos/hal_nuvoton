@@ -19,7 +19,7 @@
 */
 
 /**
-    @addtogroup USPI SPI Mode of USCI Controller(USPI)
+    @addtogroup USPI SPI Mode of USCI Controller (USPI)
     Memory Mapped Structure for USPI Controller
 @{ */
 

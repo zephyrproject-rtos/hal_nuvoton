@@ -144,7 +144,7 @@ void TPWM_EnableDeadTimeWithPrescale(TIMER_T *timer, uint32_t u32DTCount)
   *
   * @return     None
   *
-  * @details    This function is used to enable Dead-time of selected channel.
+  * @details    This function is used to disable Dead-time of selected channel.
   * @note       The register write-protection function should be disabled before using this function.
   */
 void TPWM_DisableDeadTime(TIMER_T *timer)

@@ -19,7 +19,7 @@
 */
 
 /**
-    @addtogroup EQEI Quadrature Encoder Interface(EQEI)
+    @addtogroup EQEI Quadrature Encoder Interface (EQEI)
     Memory Mapped Structure for EQEI Controller
 @{ */
 

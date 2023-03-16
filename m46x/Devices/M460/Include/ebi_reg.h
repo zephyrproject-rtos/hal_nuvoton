@@ -19,7 +19,7 @@
 
 /*---------------------- External Bus Interface Controller -------------------------*/
 /**
-    @addtogroup EBI External Bus Interface Controller(EBI)
+    @addtogroup EBI External Bus Interface Controller (EBI)
     Memory Mapped Structure for EBI Controller
   @{
 */

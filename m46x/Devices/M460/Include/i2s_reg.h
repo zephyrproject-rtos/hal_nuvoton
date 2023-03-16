@@ -19,7 +19,7 @@
 */
 
 /**
-    @addtogroup I2S I2S Interface Controller(I2S)
+    @addtogroup I2S I2S Interface Controller (I2S)
     Memory Mapped Structure for I2S Controller
 @{ */
 

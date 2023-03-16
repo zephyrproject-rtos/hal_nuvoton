@@ -19,7 +19,7 @@
 */
 
 /**
-    @addtogroup HSUSBD USB 2.0 Device Controller(HSUSBD)
+    @addtogroup HSUSBD USB 2.0 Device Controller (HSUSBD)
     Memory Mapped Structure for HSUSBD Controller
 @{ */
 

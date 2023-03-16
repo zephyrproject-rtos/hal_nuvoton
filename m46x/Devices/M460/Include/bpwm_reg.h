@@ -19,7 +19,7 @@
 */
 
 /**
-    @addtogroup BPWM Basic Pulse Width Modulation Controller(BPWM)
+    @addtogroup BPWM Basic Pulse Width Modulation Controller (BPWM)
     Memory Mapped Structure for BPWM Controller
 @{ */
 

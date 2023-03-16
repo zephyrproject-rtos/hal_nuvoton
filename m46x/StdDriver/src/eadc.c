@@ -20,27 +20,25 @@
   @{
 */
 
-int32_t g_EADC_i32ErrCode = 0;   /*!< EADC global error code */
-
-
 /**
   * @brief This function make EADC_module be ready to convert.
   * @param[in] eadc The pointer of the specified EADC module.
   * @param[in] u32InputMode Decides the input mode.
   *                       - \ref EADC_CTL_DIFFEN_SINGLE_END      :Single end input mode.
   *                       - \ref EADC_CTL_DIFFEN_DIFFERENTIAL    :Differential input type.
-  * @return None
+  * @retval 0                EADC operation OK.
+  * @retval EADC_TIMEOUT_ERR EADC operation abort due to timeout error.
+  * @retval EADC_CAL_ERR     EADC has calibration error.
+  * @retval EADC_CLKDIV_ERR  EADC clock frequency is configured error.
   * @details This function is used to set analog input mode and enable A/D Converter.
   *         Before starting A/D conversion function, ADCEN bit (EADC_CTL[0]) should be set to 1.
   * @note This API will reset and calibrate EADC if EADC never be calibrated after chip power on.
-  * @note This function sets g_EADC_i32ErrCode to EADC_TIMEOUT_ERR if CALIF(CALSR[16]) is not set to 1.
+  * @note This function retrun EADC_TIMEOUT_ERR if CALIF(CALSR[16]) is not set to 1.
   */
-void EADC_Open(EADC_T *eadc, uint32_t u32InputMode)
+int32_t EADC_Open(EADC_T *eadc, uint32_t u32InputMode)
 {
     uint32_t u32Delay = SystemCoreClock >> 4;
-    uint32_t u32ClkSel0Backup, u32EadcDivBackup, u32PclkDivBackup, u32RegLockBackup = 0;
-
-    g_EADC_i32ErrCode = 0;
+    uint32_t u32ClkSel0Backup, u32ClkDivBackup, u32PclkDivBackup, u32RegLockBackup = 0, u32Apb1Div;
 
     eadc->CTL &= (~EADC_CTL_DIFFEN_Msk);
 
@@ -55,8 +53,7 @@ void EADC_Open(EADC_T *eadc, uint32_t u32InputMode)
         {
             if (--u32Delay == 0)
             {
-                g_EADC_i32ErrCode = EADC_TIMEOUT_ERR;
-                break;
+                return EADC_TIMEOUT_ERR;
             }
         }
 
@@ -69,23 +66,23 @@ void EADC_Open(EADC_T *eadc, uint32_t u32InputMode)
         /* Unlock protected registers */
         SYS_UnlockReg();
 
-        /* Set PCLK and EADC clock to the same frequency. */
+        /* Set EADC clock is less than 2*PCLK to do calibration correctly. */
         if (eadc == EADC0)
         {
-            u32EadcDivBackup = CLK->CLKDIV0;
-            CLK->CLKDIV0 = (CLK->CLKDIV0 & ~CLK_CLKDIV0_EADC0DIV_Msk);
+            u32ClkDivBackup = CLK->CLKDIV0;
+            CLK->CLKDIV0 = (CLK->CLKDIV0 & ~CLK_CLKDIV0_EADC0DIV_Msk) | (2 << CLK_CLKDIV0_EADC0DIV_Pos);
             CLK->CLKSEL0 = (CLK->CLKSEL0 & ~CLK_CLKSEL0_EADC0SEL_Msk) | CLK_CLKSEL0_EADC0SEL_HCLK;
         }
         else if (eadc == EADC1)
         {
-            u32EadcDivBackup = CLK->CLKDIV2;
-            CLK->CLKDIV2 = (CLK->CLKDIV2 & ~CLK_CLKDIV2_EADC1DIV_Msk);
+            u32ClkDivBackup = CLK->CLKDIV2;
+            CLK->CLKDIV2 = (CLK->CLKDIV2 & ~CLK_CLKDIV2_EADC1DIV_Msk) | (2 << CLK_CLKDIV2_EADC1DIV_Pos);
             CLK->CLKSEL0 = (CLK->CLKSEL0 & ~CLK_CLKSEL0_EADC1SEL_Msk) | CLK_CLKSEL0_EADC1SEL_HCLK;
         }
         else if (eadc == EADC2)
         {
-            u32EadcDivBackup = CLK->CLKDIV5;
-            CLK->CLKDIV5 = (CLK->CLKDIV5 & ~CLK_CLKDIV5_EADC2DIV_Msk);
+            u32ClkDivBackup = CLK->CLKDIV5;
+            CLK->CLKDIV5 = (CLK->CLKDIV5 & ~CLK_CLKDIV5_EADC2DIV_Msk) | (2 << CLK_CLKDIV5_EADC2DIV_Pos);
             CLK->CLKSEL0 = (CLK->CLKSEL0 & ~CLK_CLKSEL0_EADC2SEL_Msk) | CLK_CLKSEL0_EADC2SEL_HCLK;
         }
         CLK->PCLKDIV = (CLK->PCLKDIV & ~CLK_PCLKDIV_APB1DIV_Msk);
@@ -99,28 +96,24 @@ void EADC_Open(EADC_T *eadc, uint32_t u32InputMode)
         {
             if (--u32Delay == 0)
             {
-                g_EADC_i32ErrCode = EADC_TIMEOUT_ERR;
-
-                break;
+                return EADC_CAL_ERR;
             }
         }
 
         /* Restore registers */
-        CLK->PCLKDIV = (CLK->PCLKDIV & ~CLK_PCLKDIV_APB1DIV_Msk) | (u32PclkDivBackup & CLK_PCLKDIV_APB1DIV_Msk);
+        CLK->PCLKDIV = u32PclkDivBackup;
+        CLK->CLKSEL0 = u32ClkSel0Backup;
         if (eadc == EADC0)
         {
-            CLK->CLKDIV0 = (u32EadcDivBackup & CLK_CLKDIV0_EADC0DIV_Msk);
-            CLK->CLKSEL0 = (CLK->CLKSEL0 & ~CLK_CLKSEL0_EADC0SEL_Msk) | (u32ClkSel0Backup & CLK_CLKSEL0_EADC0SEL_Msk);
+            CLK->CLKDIV0 = u32ClkDivBackup;
         }
         else if (eadc == EADC1)
         {
-            CLK->CLKDIV2 = (u32EadcDivBackup & CLK_CLKDIV2_EADC1DIV_Msk);
-            CLK->CLKSEL0 = (CLK->CLKSEL0 & ~CLK_CLKSEL0_EADC1SEL_Msk) | (u32ClkSel0Backup & CLK_CLKSEL0_EADC1SEL_Msk);
+            CLK->CLKDIV2 = u32ClkDivBackup;
         }
         else if (eadc == EADC2)
         {
-            CLK->CLKDIV5 = (u32EadcDivBackup & CLK_CLKDIV5_EADC2DIV_Msk);
-            CLK->CLKSEL0 = (CLK->CLKSEL0 & ~CLK_CLKSEL0_EADC2SEL_Msk) | (u32ClkSel0Backup & CLK_CLKSEL0_EADC2SEL_Msk);
+            CLK->CLKDIV5 = u32ClkDivBackup;
         }
         if (u32RegLockBackup)
         {
@@ -128,6 +121,32 @@ void EADC_Open(EADC_T *eadc, uint32_t u32InputMode)
             SYS_LockReg();
         }
     }
+
+    /* Check EADC clock frequency must not faster than PCLK */
+    u32Apb1Div = (CLK->PCLKDIV & CLK_PCLKDIV_APB1DIV_Msk) >> CLK_PCLKDIV_APB1DIV_Pos;
+    if (eadc == EADC0)
+    {
+        if (u32Apb1Div > ((CLK->CLKDIV0 & CLK_CLKDIV0_EADC0DIV_Msk) >> CLK_CLKDIV0_EADC0DIV_Pos))
+        {
+            return EADC_CLKDIV_ERR;
+        }
+    }
+    else if (eadc == EADC1)
+    {
+        if (u32Apb1Div > ((CLK->CLKDIV2 & CLK_CLKDIV2_EADC1DIV_Msk) >> CLK_CLKDIV2_EADC1DIV_Pos))
+        {
+            return EADC_CLKDIV_ERR;
+        }
+    }
+    else if (eadc == EADC2)
+    {
+        if (u32Apb1Div > ((CLK->CLKDIV5 & CLK_CLKDIV5_EADC2DIV_Msk) >> CLK_CLKDIV5_EADC2DIV_Pos))
+        {
+            return EADC_CLKDIV_ERR;
+        }
+    }
+
+    return 0;
 }
 
 /**

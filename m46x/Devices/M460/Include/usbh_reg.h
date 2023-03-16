@@ -19,7 +19,7 @@
 */
 
 /**
-    @addtogroup USBH USB Host Controller(USBH)
+    @addtogroup USBH USB Host Controller (USBH)
     Memory Mapped Structure for USBH Controller
 @{ */
 

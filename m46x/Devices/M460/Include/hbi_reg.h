@@ -68,8 +68,8 @@ typedef struct
      * |        |          |1110 = 3 CK cycles.
      * |        |          |1111 = 4 CK cycles.
      * |        |          |Others = Reserved.
-     * |        |          |Note: This field must be set to the same value as “I
-     * |        |          |initial Latency in HyperRAM’s Configuration Register 0.
+     * |        |          |Note: This field must be set to the same value as
+     * |        |          |initial Latency in HyperRAM Configuration Register 0.
      * |[7:6]   |CSH       |Chip Select Hold Time After CK Falling Edge
      * |        |          |This field indicates the hold time between the last CK falling edge and chip select
      * |        |          |00 = 0.5 HCLK cycles.
@@ -84,15 +84,15 @@ typedef struct
      * |        |          |0011 = 4 HCLK cycles.
      * |        |          |...
      * |        |          |1111 = 16 HCLK cycles.
-     * |        |          |Note : This field must meet the HyperRAM device’s specification of tCSHI.
+     * |        |          |Note : This field must meet the HyperRAM device specification of tCSHI.
      * |[13:12]	|BGSIZE	   |Burst Group Size
      * |        |          |This field indicates the burst length on the Hyper Bus transaction
      * |        |          |00 = 128 Bytes.
      * |        |          |01 = 64 Bytes.
      * |        |          |10 = 16 Bytes.
      * |        |          |11 = 32 Bytes.
-     * |        |          |Note : This field must be set to the same value as “Burst Length” in HyperRAM’s Configuration Regsiter 0.
-     * |[14]	  |ENDIAN	   |Endian Condition on the Hyper Bus Data Pipe
+     * |        |          |Note : This field must be set to the same value as Burst Length? in HyperRAM Configuration Regsiter 0.
+     * |[14]    |ENDIAN	   |Endian Condition on the Hyper Bus Data Pipe
      * |        |          |0 = Little-Endian.
      * |        |          |   Byte A = Bits[7:0] of a 16-Bit  ..........word
      * |        |          |   Byte B = Bits[15:8] of a 16-Bit ..........word
@@ -207,13 +207,13 @@ typedef struct
 #define HBI_CONFIG_CSMAXLT_Msk           (0x7fful << HBI_CONFIG_CSMAXLT_Pos)            /*!< HBI_T::CONFIG: CSMAXLT Mask         */
 
 #define HBI_ADR_ADR_Pos                  (0)                                            /*!< HBI_T::ADR: ADR Position            */
-#define HBI_ADR_ADR_Msk                  (0xfffffffful << HBI_ADR_ADR_Pos)                  /*!< HBI_T::ADR: ADR Mask                */
+#define HBI_ADR_ADR_Msk                  (0xfffffffful << HBI_ADR_ADR_Pos)              /*!< HBI_T::ADR: ADR Mask                */
 
 #define HBI_WDATA_WDATA_Pos              (0)                                            /*!< HBI_T::WDATA: WDATA Position        */
-#define HBI_WDATA_WDATA_Msk              (0xfffffffful << HBI_WDATA_WDATA_Pos)              /*!< HBI_T::WDATA: WDATA Mask            */
+#define HBI_WDATA_WDATA_Msk              (0xfffffffful << HBI_WDATA_WDATA_Pos)          /*!< HBI_T::WDATA: WDATA Mask            */
 
 #define HBI_RDATA_RDATA_Pos              (0)                                            /*!< HBI_T::RDATA: RDATA Position        */
-#define HBI_RDATA_RDATA_Msk              (0xfffffffful << HBI_RDATA_RDATA_Pos)              /*!< HBI_T::RDATA: RDATA Mask            */
+#define HBI_RDATA_RDATA_Msk              (0xfffffffful << HBI_RDATA_RDATA_Pos)          /*!< HBI_T::RDATA: RDATA Mask            */
 
 #define HBI_INTEN_OPINTEN_Pos            (0)                                            /*!< HBI_T::INTEN: OPINTEN Position      */
 #define HBI_INTEN_OPINTEN_Msk            (0x1ul << HBI_INTEN_OPINTEN_Pos)               /*!< HBI_T::INTEN: OPINTEN Mask          */

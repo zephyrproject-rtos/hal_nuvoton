@@ -19,7 +19,7 @@
 */
 
 /**
-    @addtogroup EMAC Ethernet MAC Controller(EMAC)
+    @addtogroup EMAC Ethernet MAC Controller (EMAC)
     Memory Mapped Structure for EMAC Controller
 @{ */
 

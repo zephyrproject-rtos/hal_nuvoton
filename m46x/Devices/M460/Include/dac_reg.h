@@ -19,7 +19,7 @@
 */
 
 /**
-    @addtogroup DAC Digital to Analog Converter(DAC)
+    @addtogroup DAC Digital to Analog Converter (DAC)
     Memory Mapped Structure for DAC Controller
 @{ */
 

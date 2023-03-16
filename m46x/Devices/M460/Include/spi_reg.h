@@ -19,7 +19,7 @@
 */
 
 /**
-    @addtogroup SPI Serial Peripheral Interface Controller(SPI)
+    @addtogroup SPI Serial Peripheral Interface Controller (SPI)
     Memory Mapped Structure for SPI Controller
 @{ */
 

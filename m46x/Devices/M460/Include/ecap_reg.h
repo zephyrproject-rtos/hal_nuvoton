@@ -19,7 +19,7 @@
 */
 
 /**
-    @addtogroup ECAP Enhanced Input Capture Timer(ECAP)
+    @addtogroup ECAP Enhanced Input Capture Timer (ECAP)
     Memory Mapped Structure for ECAP Controller
 @{ */
 

@@ -134,11 +134,14 @@ E_MFGID;
 
 /** @endcond HIDDEN_SYMBOLS */
 
-#define SPIM_TIMEOUT_ERR        (-1L)   /*!< SPIM operation abort due to timeout error \hideinitializer */
+/* SPIM Define Error Code */
+#define SPIM_TIMEOUT            SystemCoreClock     /*!< SPIM time-out counter (1 second time-out) */
+#define SPIM_OK                 ( 0L)               /*!< SPIM operation OK */
+#define SPIM_ERR_FAIL           (-1L)               /*!< SPIM operation failed */
+#define SPIM_ERR_TIMEOUT        (-2L)               /*!< SPIM operation abort due to timeout error */
+
 
 /*@}*/ /* end of group SPIM_EXPORTED_CONSTANTS */
-
-extern int32_t g_SPIM_i32ErrCode;
 
 /** @addtogroup SPIM_EXPORTED_FUNCTIONS SPIM Exported Functions
   @{
@@ -610,7 +613,7 @@ void SPIM_IO_Write(uint32_t u32Addr, int is4ByteAddr, uint32_t u32NTx, uint8_t p
 void SPIM_IO_Read(uint32_t u32Addr, int is4ByteAddr, uint32_t u32NRx, uint8_t pu8RxBuf[], uint8_t rdCmd, uint32_t u32NBitCmd, uint32_t u32NBitAddr, uint32_t u32NBitDat, int u32NDummy);
 
 void SPIM_DMA_Write(uint32_t u32Addr, int is4ByteAddr, uint32_t u32NTx, uint8_t pu8TxBuf[], uint32_t wrCmd);
-void SPIM_DMA_Read(uint32_t u32Addr, int is4ByteAddr, uint32_t u32NRx, uint8_t pu8RxBuf[], uint32_t u32RdCmd, int isSync);
+int32_t SPIM_DMA_Read(uint32_t u32Addr, int is4ByteAddr, uint32_t u32NRx, uint8_t pu8RxBuf[], uint32_t u32RdCmd, int isSync);
 
 void SPIM_EnterDirectMapMode(int is4ByteAddr, uint32_t u32RdCmd, uint32_t u32IdleIntvl);
 void SPIM_ExitDirectMapMode(void);

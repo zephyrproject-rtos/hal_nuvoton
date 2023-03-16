@@ -16,8 +16,6 @@
   @{
 */
 
-int32_t g_CCAP_i32ErrCode = 0;       /*!< CCAP global error code */
-
 /** @addtogroup CCAP_EXPORTED_FUNCTIONS CCAP Exported Functions
   @{
 */
@@ -157,7 +155,7 @@ void CCAP_DisableInt(uint32_t u32IntMask)
  */
 void CCAP_EnableMono(uint32_t u32Interface)
 {
-    CCAP->CTL = (CCAP->CTL & ~CCAP_CTL_MY8_MY4) | CCAP_CTL_MONO_Msk |u32Interface;
+    CCAP->CTL = (CCAP->CTL & ~CCAP_CTL_MY8_MY4_Msk) | CCAP_CTL_MONO_Msk |u32Interface;
 }
 
 /**
@@ -225,15 +223,14 @@ void CCAP_Start(void)
  *             - \ref TRUE:  Capture module disables the CCAP module automatically after a frame had been captured.
  *             - \ref FALSE: Stop Capture module now.
  *
- * @return     None
+ * @retval     CCAP_OK          CCAP operation OK.
+ * @retval     CCAP_ERR_TIMEOUT CCAP operation abort due to timeout error.
  *
  * @details    If u32FrameComplete is set to TRUE then get a new frame and disable CCAP module.
- *
- * @note       This function sets g_CCAP_i32ErrCode to CCAP_TIMEOUT_ERR if the CCAP_IS_STOPPED() longer than expected.
  */
-void CCAP_Stop(uint32_t u32FrameComplete)
+int32_t CCAP_Stop(uint32_t u32FrameComplete)
 {
-    uint32_t u32TimeOutCount = SystemCoreClock<<1;  /* 2 second */
+    uint32_t u32TimeOutCnt = SystemCoreClock<<1;  /* 2 second */
 
     if(u32FrameComplete==FALSE)
         CCAP->CTL &= ~CCAP_CTL_CCAPEN;
@@ -242,12 +239,11 @@ void CCAP_Stop(uint32_t u32FrameComplete)
         CCAP->CTL |= CCAP_CTL_SHUTTER_Msk;
         while(!CCAP_IS_STOPPED())
         {
-            if(--u32TimeOutCount == 0){
-                g_CCAP_i32ErrCode = CCAP_TIMEOUT_ERR;
-                break;
-            }
+            if(--u32TimeOutCnt == 0) return CCAP_ERR_TIMEOUT;
         }
     }
+
+    return CCAP_OK;
 }
 
 /**
