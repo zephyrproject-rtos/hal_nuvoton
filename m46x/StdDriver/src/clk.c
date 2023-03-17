@@ -1635,7 +1635,7 @@ void CLK_DisablePLLFN(void)
   */
 uint32_t CLK_EnablePLLFN(uint32_t u32PllClkSrc, uint32_t u32PllFreq)
 {
-    uint32_t u32FIN, u32FVCO, u32FREF, u32PllClk;
+    uint32_t u32FIN, u32FVCO, u32FREF, u32PllClk = 0UL;
     uint32_t u32NR = 0UL, u32NF = 0UL, u32NO, u32X = 0UL;
     float fNX_X = 0.0, fX = 0.0;
 

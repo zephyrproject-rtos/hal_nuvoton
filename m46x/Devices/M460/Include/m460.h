@@ -702,8 +702,14 @@ typedef volatile unsigned int   vu32;       ///< Define 32-bit unsigned volatile
 #define NULL           (0)      ///< NULL pointer
 #endif
 
-#define TRUE           (1UL)      ///< Boolean true, define to use in API parameters or return value
-#define FALSE          (0UL)      ///< Boolean false, define to use in API parameters or return value
+/**
+  * Avoid redefined warning in the integration with RTOS, so change to enum{ FALSE, TRUE }
+  * #define TRUE           (1UL)      ///< Boolean true, define to use in API parameters or return value
+  * #define FALSE          (0UL)      ///< Boolean false, define to use in API parameters or return value
+  */
+#ifndef TRUE
+enum { FALSE, TRUE };
+#endif
 
 #define ENABLE         (1UL)      ///< Enable, define to use in API parameters
 #define DISABLE        (0UL)      ///< Disable, define to use in API parameters
