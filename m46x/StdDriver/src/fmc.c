@@ -202,7 +202,7 @@ int32_t FMC_Erase(uint32_t u32PageAddr)
   * @note     Global error code g_FMC_i32ErrCode
   *           -1  Erase failed or erase time-out
   */
-int32_t FMC_EraseBank(uint32_t u32BankAddr)
+int32_t FMC_Erase_Bank(uint32_t u32BankAddr)
 {
     int32_t  ret = 0;
     int32_t i32TimeOutCnt;
