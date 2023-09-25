@@ -171,6 +171,7 @@ s32 synopGMAC_phy_loopback(synopGMACdevice *gmacdev, bool loopback)
 s32 synopGMAC_read_version (synopGMACdevice * gmacdev)
 {
     u32 data = 0;
+    
     data = synopGMACReadReg((u32 *)gmacdev->MacBase, GmacVersion );
     gmacdev->Version = data;
     TR("The data read from %08x is %08x\n",(gmacdev->MacBase+GmacVersion),data);
@@ -202,7 +203,6 @@ s32 synopGMAC_reset (synopGMACdevice * gmacdev )
 
 s32 synopGMAC_reset_nocheck (synopGMACdevice * gmacdev )
 {
-    u32 data = 0;
     synopGMACWriteReg((u32 *)gmacdev->DmaBase, DmaBusMode ,DmaResetOn);
     plat_delay(DEFAULT_LOOP_VARIABLE);
 
@@ -1648,26 +1648,26 @@ s32 synopGMAC_set_rx_qptr(synopGMACdevice * gmacdev, u32 Buffer1, u32 Length1, u
     if(!synopGMAC_is_desc_empty(rxdesc))
         return -1;
 
-	rxdesc->length |= ((Length1 <<DescSize1Shift) & DescSize1Mask);
+    rxdesc->length |= ((Length1 <<DescSize1Shift) & DescSize1Mask);
 
-	rxdesc->buffer1 = Buffer1;
-	//rxdesc->data1 = Data1;
+    rxdesc->buffer1 = Buffer1;
+    //rxdesc->data1 = Data1;
 
-	rxdesc->extstatus = 0;
-	rxdesc->reserved1 = 0;
-	rxdesc->timestamplow = 0;
-	rxdesc->timestamphigh = 0;
+    rxdesc->extstatus = 0;
+    rxdesc->reserved1 = 0;
+    rxdesc->timestamplow = 0;
+    rxdesc->timestamphigh = 0;
 
-	rxdesc->buffer2 = 0;
-	//rxdesc->data2 = 0;
+    rxdesc->buffer2 = 0;
+    //rxdesc->data2 = 0;
 
-	if((rxnext % MODULO_INTERRUPT) !=0)
-		rxdesc->length |= RxDisIntCompl;
+    if((rxnext % MODULO_INTERRUPT) !=0)
+        rxdesc->length |= RxDisIntCompl;
 
-	rxdesc->status = DescOwnByDma;
+    rxdesc->status = DescOwnByDma;
 
-	gmacdev->RxNext     = synopGMAC_is_last_rx_desc(gmacdev,rxdesc) ? 0 : rxnext + 1;
-	gmacdev->RxNextDesc = synopGMAC_is_last_rx_desc(gmacdev,rxdesc) ? gmacdev->RxDesc : (rxdesc + 1);
+    gmacdev->RxNext     = synopGMAC_is_last_rx_desc(gmacdev,rxdesc) ? 0 : rxnext + 1;
+    gmacdev->RxNextDesc = synopGMAC_is_last_rx_desc(gmacdev,rxdesc) ? gmacdev->RxDesc : (rxdesc + 1);
 
     TR("%02d %08x %08x %08x %08x %08x %08x %08x\n",rxnext,(u32)((u64)rxdesc & 0xFFFFFFFF),rxdesc->status,rxdesc->length,rxdesc->buffer1,rxdesc->buffer2,rxdesc->data1,rxdesc->data2);
 
