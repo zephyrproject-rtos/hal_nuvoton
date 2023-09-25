@@ -152,7 +152,6 @@ s32 synopGMAC_setup_tx_desc_queue(synopGMACdevice * gmacdev,u32 no_of_desc, u32 
     s32 i;
 
     DmaDesc *first_desc = &tx_desc[gmacdev->Intf][0];
-    dma_addr_t dma_addr;
     gmacdev->TxDescCount = 0;
 
 	TR("Total size of memory required for Tx Descriptors in Ring Mode = 0x%08x\n",((sizeof(DmaDesc) * no_of_desc)));
@@ -206,9 +205,7 @@ s32 synopGMAC_setup_tx_desc_queue(synopGMACdevice * gmacdev,u32 no_of_desc, u32 
 s32 synopGMAC_setup_rx_desc_queue(synopGMACdevice * gmacdev,u32 no_of_desc, u32 desc_mode)
 {
     s32 i;
-
     DmaDesc *first_desc = &rx_desc[gmacdev->Intf][0];
-    dma_addr_t dma_addr;
     gmacdev->RxDescCount = 0;
 
 
@@ -236,7 +233,6 @@ s32 synopGMAC_setup_rx_desc_queue(synopGMACdevice * gmacdev,u32 no_of_desc, u32 
 
     return 0;
 }
-
 
 /**
   * This gives up the receive Descriptor queue in ring or chain mode.
@@ -538,7 +534,6 @@ void synopGMAC0_intr_handler(void)
     synopGMACdevice * gmacdev = &GMACdev[0];
     u32 interrupt,dma_status_reg, mac_status_reg;
     s32 status;
-    u32 dma_addr;
 
     // Check GMAC interrupt
     mac_status_reg = synopGMACReadReg((u32 *)gmacdev->MacBase, GmacInterruptStatus);
@@ -616,7 +611,7 @@ void synopGMAC0_intr_handler(void)
 
 
     if(interrupt & synopGMACDmaRxNormal) {
-        u8 **buf
+        u8 **buf = NULL;
     	//printf("rx\n");
         TR("%s:: Rx Normal \n", __FUNCTION__);
         synop_handle_received_data(0, buf);     // Chris, to get RX buffer pointer
@@ -728,10 +723,8 @@ void synopGMAC_set_speed(int intf)
 s32 synopGMAC_open(int intf)
 {
     //s32 status = 0;
-    s32 retval = 0;
     s32 i;
     //s32 reserve_len=2;
-    u32 dma_addr;
     struct sk_buff *skb;
     synopGMACdevice * gmacdev = &GMACdev[intf];
 
