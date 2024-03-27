@@ -116,6 +116,24 @@ extern "C"
 #define SPI_CLR_UNIT_TRANS_INT_FLAG(spi)   ((spi)->STATUS = SPI_STATUS_UNITIF_Msk)
 
 /**
+  * @brief      Disable Slave 3-wire mode.
+  * @param[in]  spi The pointer of the specified SPI module.
+  * @return     None.
+  * @details    Clear SLV3WIRE bit of SPI_SSCTL register to disable Slave 3-wire mode.
+  * \hideinitializer
+  */
+#define SPI_DISABLE_3WIRE_MODE(spi)   ((spi)->SSCTL &= ~SPI_SSCTL_SLV3WIRE_Msk)
+
+/**
+  * @brief      Enable Slave 3-wire mode.
+  * @param[in]  spi The pointer of the specified SPI module.
+  * @return     None.
+  * @details    Set SLV3WIRE bit of SPI_SSCTL register to enable Slave 3-wire mode.
+  * \hideinitializer
+  */
+#define SPI_ENABLE_3WIRE_MODE(spi)   ((spi)->SSCTL |= SPI_SSCTL_SLV3WIRE_Msk)
+
+/**
   * @brief      Trigger RX PDMA function.
   * @param[in]  spi The pointer of the specified SPI module.
   * @return     None.
@@ -149,7 +167,7 @@ extern "C"
   * @details    Clear RXPDMAEN bit of SPI_PDMACTL register to disable RX PDMA transfer function.
   * \hideinitializer
   */
-#define SPI_DISABLE_RX_PDMA(spi) ( (spi)->PDMACTL &= ~SPI_PDMACTL_RXPDMAEN_Msk )
+#define SPI_DISABLE_RX_PDMA(spi) ((spi)->PDMACTL &= ~SPI_PDMACTL_RXPDMAEN_Msk)
 
 /**
   * @brief      Disable TX PDMA transfer.
@@ -158,7 +176,7 @@ extern "C"
   * @details    Clear TXPDMAEN bit of SPI_PDMACTL register to disable TX PDMA transfer function.
   * \hideinitializer
   */
-#define SPI_DISABLE_TX_PDMA(spi) ( (spi)->PDMACTL &= ~SPI_PDMACTL_TXPDMAEN_Msk )
+#define SPI_DISABLE_TX_PDMA(spi) ((spi)->PDMACTL &= ~SPI_PDMACTL_TXPDMAEN_Msk)
 
 /**
   * @brief      Disable TX and RX PDMA transfer.
@@ -167,7 +185,7 @@ extern "C"
   * @details    Clear TXPDMAEN bit and RXPDMAEN bit of SPI_PDMACTL register to disable TX and RX PDMA transfer function.
   * \hideinitializer
   */
-#define SPI_DISABLE_TX_RX_PDMA(spi) ( (spi)->PDMACTL &= ~(SPI_PDMACTL_TXPDMAEN_Msk | SPI_PDMACTL_RXPDMAEN_Msk) )
+#define SPI_DISABLE_TX_RX_PDMA(spi) ((spi)->PDMACTL &= ~(SPI_PDMACTL_TXPDMAEN_Msk | SPI_PDMACTL_RXPDMAEN_Msk))
 
 /**
   * @brief      Get the count of available data in RX FIFO.
@@ -310,7 +328,7 @@ extern "C"
   * @details    This macro will return the busy state of SPI controller.
   * \hideinitializer
   */
-#define SPI_IS_BUSY(spi)   ( ((spi)->STATUS & SPI_STATUS_BUSY_Msk)>>SPI_STATUS_BUSY_Pos )
+#define SPI_IS_BUSY(spi)   (((spi)->STATUS & SPI_STATUS_BUSY_Msk)>>SPI_STATUS_BUSY_Pos)
 
 /**
   * @brief      Enable SPI controller.
@@ -384,7 +402,7 @@ __STATIC_INLINE void SPII2S_DISABLE_TX_ZCD(SPI_T *i2s, uint32_t u32ChMask)
   * @details This macro will set TXPDMAEN bit of SPI_PDMACTL register to transmit data with PDMA.
   * \hideinitializer
   */
-#define SPII2S_ENABLE_TXDMA(i2s)  ( (i2s)->PDMACTL |= SPI_PDMACTL_TXPDMAEN_Msk )
+#define SPII2S_ENABLE_TXDMA(i2s)  ((i2s)->PDMACTL |= SPI_PDMACTL_TXPDMAEN_Msk)
 
 /**
   * @brief  Disable I2S TX DMA function.
@@ -393,7 +411,7 @@ __STATIC_INLINE void SPII2S_DISABLE_TX_ZCD(SPI_T *i2s, uint32_t u32ChMask)
   * @details This macro will clear TXPDMAEN bit of SPI_PDMACTL register to disable TX DMA function.
   * \hideinitializer
   */
-#define SPII2S_DISABLE_TXDMA(i2s) ( (i2s)->PDMACTL &= ~SPI_PDMACTL_TXPDMAEN_Msk )
+#define SPII2S_DISABLE_TXDMA(i2s) ((i2s)->PDMACTL &= ~SPI_PDMACTL_TXPDMAEN_Msk)
 
 /**
   * @brief  Enable I2S RX DMA function.
@@ -402,7 +420,7 @@ __STATIC_INLINE void SPII2S_DISABLE_TX_ZCD(SPI_T *i2s, uint32_t u32ChMask)
   * @details This macro will set RXPDMAEN bit of SPI_PDMACTL register to receive data with PDMA.
   * \hideinitializer
   */
-#define SPII2S_ENABLE_RXDMA(i2s) ( (i2s)->PDMACTL |= SPI_PDMACTL_RXPDMAEN_Msk )
+#define SPII2S_ENABLE_RXDMA(i2s) ((i2s)->PDMACTL |= SPI_PDMACTL_RXPDMAEN_Msk)
 
 /**
   * @brief  Disable I2S RX DMA function.
@@ -411,7 +429,7 @@ __STATIC_INLINE void SPII2S_DISABLE_TX_ZCD(SPI_T *i2s, uint32_t u32ChMask)
   * @details This macro will clear RXPDMAEN bit of SPI_PDMACTL register to disable RX DMA function.
   * \hideinitializer
   */
-#define SPII2S_DISABLE_RXDMA(i2s) ( (i2s)->PDMACTL &= ~SPI_PDMACTL_RXPDMAEN_Msk )
+#define SPII2S_DISABLE_RXDMA(i2s) ((i2s)->PDMACTL &= ~SPI_PDMACTL_RXPDMAEN_Msk)
 
 /**
   * @brief  Enable I2S TX function.
@@ -420,7 +438,7 @@ __STATIC_INLINE void SPII2S_DISABLE_TX_ZCD(SPI_T *i2s, uint32_t u32ChMask)
   * @details This macro will set TXEN bit of SPI_I2SCTL register to enable I2S TX function.
   * \hideinitializer
   */
-#define SPII2S_ENABLE_TX(i2s) ( (i2s)->I2SCTL |= SPI_I2SCTL_TXEN_Msk )
+#define SPII2S_ENABLE_TX(i2s) ((i2s)->I2SCTL |= SPI_I2SCTL_TXEN_Msk)
 
 /**
   * @brief  Disable I2S TX function.
@@ -429,7 +447,7 @@ __STATIC_INLINE void SPII2S_DISABLE_TX_ZCD(SPI_T *i2s, uint32_t u32ChMask)
   * @details This macro will clear TXEN bit of SPI_I2SCTL register to disable I2S TX function.
   * \hideinitializer
   */
-#define SPII2S_DISABLE_TX(i2s) ( (i2s)->I2SCTL &= ~SPI_I2SCTL_TXEN_Msk )
+#define SPII2S_DISABLE_TX(i2s) ((i2s)->I2SCTL &= ~SPI_I2SCTL_TXEN_Msk)
 
 /**
   * @brief  Enable I2S RX function.
@@ -438,7 +456,7 @@ __STATIC_INLINE void SPII2S_DISABLE_TX_ZCD(SPI_T *i2s, uint32_t u32ChMask)
   * @details This macro will set RXEN bit of SPI_I2SCTL register to enable I2S RX function.
   * \hideinitializer
   */
-#define SPII2S_ENABLE_RX(i2s) ( (i2s)->I2SCTL |= SPI_I2SCTL_RXEN_Msk )
+#define SPII2S_ENABLE_RX(i2s) ((i2s)->I2SCTL |= SPI_I2SCTL_RXEN_Msk)
 
 /**
   * @brief  Disable I2S RX function.
@@ -447,7 +465,7 @@ __STATIC_INLINE void SPII2S_DISABLE_TX_ZCD(SPI_T *i2s, uint32_t u32ChMask)
   * @details This macro will clear RXEN bit of SPI_I2SCTL register to disable I2S RX function.
   * \hideinitializer
   */
-#define SPII2S_DISABLE_RX(i2s) ( (i2s)->I2SCTL &= ~SPI_I2SCTL_RXEN_Msk )
+#define SPII2S_DISABLE_RX(i2s) ((i2s)->I2SCTL &= ~SPI_I2SCTL_RXEN_Msk)
 
 /**
   * @brief  Enable TX Mute function.
@@ -456,7 +474,7 @@ __STATIC_INLINE void SPII2S_DISABLE_TX_ZCD(SPI_T *i2s, uint32_t u32ChMask)
   * @details This macro will set MUTE bit of SPI_I2SCTL register to enable I2S TX mute function.
   * \hideinitializer
   */
-#define SPII2S_ENABLE_TX_MUTE(i2s)  ( (i2s)->I2SCTL |= SPI_I2SCTL_MUTE_Msk )
+#define SPII2S_ENABLE_TX_MUTE(i2s)  ((i2s)->I2SCTL |= SPI_I2SCTL_MUTE_Msk)
 
 /**
   * @brief  Disable TX Mute function.
@@ -465,7 +483,7 @@ __STATIC_INLINE void SPII2S_DISABLE_TX_ZCD(SPI_T *i2s, uint32_t u32ChMask)
   * @details This macro will clear MUTE bit of SPI_I2SCTL register to disable I2S TX mute function.
   * \hideinitializer
   */
-#define SPII2S_DISABLE_TX_MUTE(i2s) ( (i2s)->I2SCTL &= ~SPI_I2SCTL_MUTE_Msk )
+#define SPII2S_DISABLE_TX_MUTE(i2s) ((i2s)->I2SCTL &= ~SPI_I2SCTL_MUTE_Msk)
 
 /**
   * @brief  Clear TX FIFO.
@@ -474,7 +492,7 @@ __STATIC_INLINE void SPII2S_DISABLE_TX_ZCD(SPI_T *i2s, uint32_t u32ChMask)
   * @details This macro will clear TX FIFO. The internal TX FIFO pointer will be reset to FIFO start point.
   * \hideinitializer
   */
-#define SPII2S_CLR_TX_FIFO(i2s) ( (i2s)->FIFOCTL |= SPI_FIFOCTL_TXFBCLR_Msk )
+#define SPII2S_CLR_TX_FIFO(i2s) ((i2s)->FIFOCTL |= SPI_FIFOCTL_TXFBCLR_Msk)
 
 /**
   * @brief  Clear RX FIFO.
@@ -483,7 +501,7 @@ __STATIC_INLINE void SPII2S_DISABLE_TX_ZCD(SPI_T *i2s, uint32_t u32ChMask)
   * @details This macro will clear RX FIFO. The internal RX FIFO pointer will be reset to FIFO start point.
   * \hideinitializer
   */
-#define SPII2S_CLR_RX_FIFO(i2s) ( (i2s)->FIFOCTL |= SPI_FIFOCTL_RXFBCLR_Msk )
+#define SPII2S_CLR_RX_FIFO(i2s) ((i2s)->FIFOCTL |= SPI_FIFOCTL_RXFBCLR_Msk)
 
 /**
   * @brief  This function sets the recording source channel when mono mode is used.
@@ -510,7 +528,7 @@ __STATIC_INLINE void SPII2S_SET_MONO_RX_CHANNEL(SPI_T *i2s, uint32_t u32Ch)
   * @details This macro will write a value to TX FIFO.
   * \hideinitializer
   */
-#define SPII2S_WRITE_TX_FIFO(i2s, u32Data)  ( (i2s)->TX = (u32Data) )
+#define SPII2S_WRITE_TX_FIFO(i2s, u32Data)  ((i2s)->TX = (u32Data))
 
 /**
   * @brief  Read RX FIFO.
@@ -519,7 +537,7 @@ __STATIC_INLINE void SPII2S_SET_MONO_RX_CHANNEL(SPI_T *i2s, uint32_t u32Ch)
   * @details This function will return a value read from RX FIFO.
   * \hideinitializer
   */
-#define SPII2S_READ_RX_FIFO(i2s) ( (i2s)->RX )
+#define SPII2S_READ_RX_FIFO(i2s) ((i2s)->RX)
 
 /**
   * @brief  Get the interrupt flag.
@@ -529,7 +547,7 @@ __STATIC_INLINE void SPII2S_SET_MONO_RX_CHANNEL(SPI_T *i2s, uint32_t u32Ch)
   * @details This macro will return the combination interrupt flags of SPI_I2SSTS register. The flags are specified by the u32mask parameter.
   * \hideinitializer
   */
-#define SPII2S_GET_INT_FLAG(i2s, u32Mask) ( (i2s)->I2SSTS & (u32Mask) )
+#define SPII2S_GET_INT_FLAG(i2s, u32Mask) ((i2s)->I2SSTS & (u32Mask))
 
 /**
   * @brief  Clear the interrupt flag.
@@ -540,7 +558,7 @@ __STATIC_INLINE void SPII2S_SET_MONO_RX_CHANNEL(SPI_T *i2s, uint32_t u32Ch)
   * @note Except TX and RX FIFO threshold interrupt flags, the other interrupt flags can be cleared by writing 1 to itself.
   * \hideinitializer
   */
-#define SPII2S_CLR_INT_FLAG(i2s, u32Mask) ( (i2s)->I2SSTS = (u32Mask) )
+#define SPII2S_CLR_INT_FLAG(i2s, u32Mask) ((i2s)->I2SSTS = (u32Mask))
 
 /**
   * @brief  Get transmit FIFO level
@@ -549,7 +567,7 @@ __STATIC_INLINE void SPII2S_SET_MONO_RX_CHANNEL(SPI_T *i2s, uint32_t u32Ch)
   * @details This macro will return the number of available words in TX FIFO.
   * \hideinitializer
   */
-#define SPII2S_GET_TX_FIFO_LEVEL(i2s) ( ((i2s)->I2SSTS & SPI_I2SSTS_TXCNT_Msk) >> SPI_I2SSTS_TXCNT_Pos  )
+#define SPII2S_GET_TX_FIFO_LEVEL(i2s) (((i2s)->I2SSTS & SPI_I2SSTS_TXCNT_Msk) >> SPI_I2SSTS_TXCNT_Pos)
 
 /**
   * @brief  Get receive FIFO level
@@ -558,7 +576,7 @@ __STATIC_INLINE void SPII2S_SET_MONO_RX_CHANNEL(SPI_T *i2s, uint32_t u32Ch)
   * @details This macro will return the number of available words in RX FIFO.
   * \hideinitializer
   */
-#define SPII2S_GET_RX_FIFO_LEVEL(i2s) ( ((i2s)->I2SSTS & SPI_I2SSTS_RXCNT_Msk) >> SPI_I2SSTS_RXCNT_Pos )
+#define SPII2S_GET_RX_FIFO_LEVEL(i2s) (((i2s)->I2SSTS & SPI_I2SSTS_RXCNT_Msk) >> SPI_I2SSTS_RXCNT_Pos)
 
 /* Function prototype declaration */
 uint32_t SPI_Open(SPI_T *spi, uint32_t u32MasterSlave, uint32_t u32SPIMode, uint32_t u32DataWidth, uint32_t u32BusClock);
