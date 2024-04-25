@@ -1067,10 +1067,15 @@ uint32_t RTC_SetClockSource(uint32_t u32ClkSrc)
     }
     else
     {
-        /* Set the default RTC clock source is LIRC */
-        RTC->LXTCTL |= RTC_LXTCTL_RTCCKSEL_Msk;
+        /* Load LIRC32 trim setting */
+        RTC->LXTCTL = ((RTC->LXTCTL & ~(0x1FFul << 16)) | ((u32TrimDefault & 0x1FFul) << 16));
 
-        return RTC_CLOCK_SOURCE_LIRC;
+        /* RTC clock source is LIRC32K */
+        RTC->LXTCTL |= RTC_LXTCTL_LIRC32KEN_Msk;
+        RTC->LXTCTL &= ~RTC_LXTCTL_RTCCKSEL_Msk;
+        RTC->LXTCTL |= RTC_LXTCTL_C32KSEL_Msk;
+
+        return (RTC_CLOCK_SOURCE_LIRC + 1);
     }
 }
 
