@@ -722,8 +722,13 @@ typedef volatile unsigned short vu16;
     #define NULL      (0)                  ///< NULL pointer
 #endif
 
-#define TRUE          (1UL)                ///< Boolean true, define to use in API parameters or return value
-#define FALSE         (0UL)                ///< Boolean false, define to use in API parameters or return value
+/*
+ * Avoid redefined warning in the integration with cmsis_rtos_v2, so to match wrapper.h
+ * #define TRUE           (1UL)      ///< Boolean true, define to use in API parameters or return value
+ * #define FALSE          (0UL)      ///< Boolean false, define to use in API parameters or return value
+ */
+#define TRUE    1
+#define FALSE   0
 
 #define ENABLE        (1UL)                ///< Enable, define to use in API parameters
 #define DISABLE       (0UL)                ///< Disable, define to use in API parameters
