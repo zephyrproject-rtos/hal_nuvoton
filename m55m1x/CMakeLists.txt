@@ -3,7 +3,7 @@
 # Copyright (c) 2025 Nuvoton Technology Corporation.
 
 zephyr_include_directories(StdDriver/inc)
-zephyr_include_directories(StdDriver/inc/emac)
+zephyr_include_directories(StdDriver/drv_emac)
 zephyr_include_directories(Devices/M55M1/Include)
 zephyr_include_directories(dt-bindings/pinctrl)
 
