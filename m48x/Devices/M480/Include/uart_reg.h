@@ -102,6 +102,11 @@ typedef struct
      * |        |          |Note: If RLSIEN (UART_INTEN[2]) is enabled and HWRLSINT (UART_INTSTS[26]) is set to 1, the RLS (Receive Line Status) Interrupt is caused
      * |        |          |If RLS interrupt is caused by Break Error Flag BIF(UART_FIFOSTS[6]), Frame Error Flag FEF(UART_FIFO[5]) or Parity Error Flag PEF(UART_FIFOSTS[4]) , UART PDMA receive request operation is stop
      * |        |          |Clear Break Error Flag BIF or Frame Error Flag FEF or Parity Error Flag PEF by writing '1' to corresponding BIF, FEF and PEF to make UART PDMA receive request operation continue.
+     * |[16]    |SWBEIEN   |Single-wire Bit Error Detection Interrupt Enable Bit
+     * |        |          |Set this bit, the Single-wire Half Duplex Bit Error Detection Interrupt SWBEINT(UART_INTSTS[24]) is generated when Single-wire Bit Error Detection SWBEIF(UART_INTSTS[16]) is set.
+     * |        |          |0 = Single-wire Bit Error Detect Interrupt Disabled.
+     * |        |          |1 = Single-wire Bit Error Detect Interrupt Enabled.
+     * |        |          |Note: This bit is valid when FUNCSEL (UART_FUNCSEL[2:0]) is select UART Single-wire mode.
      * |[18]    |ABRIEN    |Auto-baud Rate Interrupt Enable Bit
      * |        |          |0 = Auto-baud rate interrupt Disabled.
      * |        |          |1 = Auto-baud rate interrupt Enabled.
@@ -428,6 +433,11 @@ typedef struct
      * |        |          |This bit is set if LINIEN (UART_INTEN[8]) and LINIF(UART_INTSTS[7]) are both set to 1.
      * |        |          |0 = No LIN Bus interrupt is generated.
      * |        |          |1 = The LIN Bus interrupt is generated.
+     * |[16]    |SWBEIF    |Single-wire Bit Error Detection Interrupt Flag
+     * |        |          |This bit is set when the single wire bus state not equals to UART controller TX state in Single-wire mode.
+     * |        |          |0 = No single-wire bit error detection interrupt flag is generated.
+     * |        |          |1 = Single-wire bit error detection interrupt flag is generated.
+     * |        |          |Note 1: This bit is active when FUNCSEL (UART_FUNCSEL[2:0]) is select UART Single-wire mode.
      * |[18]    |HWRLSIF   |PDMA Mode Receive Line Status Flag (Read Only)
      * |        |          |This bit is set when the RX receive data have parity error, frame error or break error (at least one of 3 bits, BIF (UART_FIFOSTS[6]), FEF (UART_FIFOSTS[5]) and PEF (UART_FIFOSTS[4]) is set)
      * |        |          |If RLSIEN (UART_INTEN [2]) is enabled, the RLS interrupt will be generated.
@@ -461,6 +471,10 @@ typedef struct
      * |        |          |0 = No transmitter empty interrupt flag is generated.
      * |        |          |1 = Transmitter empty interrupt flag is generated.
      * |        |          |Note: This bit is cleared automatically when TX FIFO is not empty or the last byte transmission has not completed.
+     * |[24]    |SWBEINT   |Single-wire Bit Error Detect Interrupt Indicator (Read Only)
+     * |        |          |Single-wire Bit Error Detect Interrupt Indicator (Read Only)
+     * |        |          |This bit is set if SWBEIEN (UART_INTEN[16]) and SWBEIF (UART_INTSTS[16]) are both set to 1.
+     * |        |          |0 = No Single-wire Bit Error Detection Interrupt generated.
      * |[26]    |HWRLSINT  |PDMA Mode Receive Line Status Interrupt Indicator (Read Only)
      * |        |          |This bit is set if RLSIEN (UART_INTEN[2]) and HWRLSIF(UART_INTSTS[18]) are both set to 1.
      * |        |          |0 = No RLS interrupt is generated in PDMA mode.
@@ -899,6 +913,9 @@ typedef struct
 #define UART_INTEN_RXPDMAEN_Pos          (15)                                              /*!< UART_T::INTEN: RXPDMAEN Position       */
 #define UART_INTEN_RXPDMAEN_Msk          (0x1ul << UART_INTEN_RXPDMAEN_Pos)                /*!< UART_T::INTEN: RXPDMAEN Mask           */
 
+#define UART_INTEN_SWBEIEN_Pos           (16)                                              /*!< UART_T::INTEN: SWBEIEN Position        */
+#define UART_INTEN_SWBEIEN_Msk           (0x1ul << UART_INTEN_SWBEIEN_Pos)                 /*!< UART_T::INTEN: SWBEIEN Mask            */
+
 #define UART_INTEN_ABRIEN_Pos            (18)                                              /*!< UART_T::INTEN: ABRIEN Position         */
 #define UART_INTEN_ABRIEN_Msk            (0x1ul << UART_INTEN_ABRIEN_Pos)                  /*!< UART_T::INTEN: ABRIEN Mask             */
 
@@ -1064,6 +1081,9 @@ typedef struct
 #define UART_INTSTS_LININT_Pos           (15)                                              /*!< UART_T::INTSTS: LININT Position        */
 #define UART_INTSTS_LININT_Msk           (0x1ul << UART_INTSTS_LININT_Pos)                 /*!< UART_T::INTSTS: LININT Mask            */
 
+#define UART_INTSTS_SWBEIF_Pos           (16)                                              /*!< UART_T::INTSTS: SWBEIF Position        */
+#define UART_INTSTS_SWBEIF_Msk           (0x1ul << UART_INTSTS_SWBEIF_Pos)                 /*!< UART_T::INTSTS: SWBEIF Mask            */
+
 #define UART_INTSTS_HWRLSIF_Pos          (18)                                              /*!< UART_T::INTSTS: HWRLSIF Position       */
 #define UART_INTSTS_HWRLSIF_Msk          (0x1ul << UART_INTSTS_HWRLSIF_Pos)                /*!< UART_T::INTSTS: HWRLSIF Mask           */
 
@@ -1078,6 +1098,9 @@ typedef struct
 
 #define UART_INTSTS_TXENDIF_Pos          (22)                                              /*!< UART_T::INTSTS: TXENDIF Position       */
 #define UART_INTSTS_TXENDIF_Msk          (0x1ul << UART_INTSTS_TXENDIF_Pos)                /*!< UART_T::INTSTS: TXENDIF Mask           */
+
+#define UART_INTSTS_SWBEINT_Pos          (24)                                              /*!< UART_T::INTSTS: SWBEINT Position       */
+#define UART_INTSTS_SWBEINT_Msk          (0x1ul << UART_INTSTS_SWBEINT_Pos)                /*!< UART_T::INTSTS: SWBEINT Mask           */
 
 #define UART_INTSTS_HWRLSINT_Pos         (26)                                              /*!< UART_T::INTSTS: HWRLSINT Position      */
 #define UART_INTSTS_HWRLSINT_Msk         (0x1ul << UART_INTSTS_HWRLSINT_Pos)               /*!< UART_T::INTSTS: HWRLSINT Mask          */
