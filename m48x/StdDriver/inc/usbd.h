@@ -145,6 +145,7 @@ extern const S_USBD_INFO_T gsInfo;
 #define USBD_INT_USB            USBD_INTEN_USBIEN_Msk       /*!< USB Event Interrupt \hideinitializer */
 #define USBD_INT_FLDET          USBD_INTEN_VBDETIEN_Msk     /*!< USB VBUS Detection Interrupt \hideinitializer */
 #define USBD_INT_WAKEUP         (USBD_INTEN_NEVWKIEN_Msk | USBD_INTEN_WKEN_Msk)     /*!< USB No-Event-Wake-Up Interrupt \hideinitializer */
+#define USBD_INT_SOF            USBD_INTEN_SOFIEN_Msk       /*!< USB Start of Frame Interrupt \hideinitializer */
 
 #define USBD_INTSTS_WAKEUP      USBD_INTSTS_NEVWKIF_Msk     /*!< USB No-Event-Wake-Up Interrupt Status \hideinitializer */
 #define USBD_INTSTS_FLDET       USBD_INTSTS_VBDETIF_Msk     /*!< USB Float Detect Interrupt Status \hideinitializer */
