@@ -1238,8 +1238,6 @@ typedef volatile unsigned int   vu32;       ///< Define 32-bit unsigned volatile
 #include "sdh.h"
 #include "hsusbd.h"
 #include "hsotg.h"
-#include "llsi.h"
-#include "ellsi.h"
 #include "cache.h"
 #ifndef __NONSECURE_CODE
 #include "scu.h"
