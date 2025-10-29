@@ -22,7 +22,13 @@
   @{
 */
 
-#define SPIM_HYPER_TRIM_HYPERDLL                (1)
+#ifndef SPIM_HYPER_TRIM_HYPERDLL
+    #define SPIM_HYPER_TRIM_HYPERDLL            (1)
+#endif
+
+#ifndef SPIM_HYPER_MLDOPL0_ADJ_OFFSET
+    #define SPIM_HYPER_MLDOPL0_ADJ_OFFSET       (0)
+#endif
 
 #define SPIM_HYPER_ALTCTL0_DLL0TMEN_Pos         (8)
 #define SPIM_HYPER_ALTCTL0_DLL0TMEN_Msk         (0x1ul << SPIM_HYPER_ALTCTL0_DLL0TMEN_Pos)
@@ -30,40 +36,81 @@
 #define SPIM_HYPER_DLL0ATCTL0_TUDOFF_Pos        (9)
 #define SPIM_HYPER_DLL0ATCTL0_TUDOFF_Msk        (0x1ul << SPIM_HYPER_DLL0ATCTL0_TUDOFF_Pos)
 
-#define SPIM_HYPER_ENABLE_SYSDLL0TMEN() \
-    do{ \
-        uint32_t u32Value = ((inpw(SYS_BASE + 0xE00)) | SPIM_HYPER_ALTCTL0_DLL0TMEN_Msk);\
-        outpw((SYS_BASE + 0xE00), u32Value);\
+#define SPIM_HYPER_MLDOTCTL_MLDOPL0VT_Pos       (0)
+#define SPIM_HYPER_MLDOTCTL_MLDOPL0VT_Msk       (0x3Ful << SPIM_HYPER_MLDOTCTL_MLDOPL0VT_Pos)
+
+#define SPIM_HYPER_MLDOTCTL_WRBUSY_Pos          (31)
+#define SPIM_HYPER_MLDOTCTL_WRBUSY_Msk          (0x1ul << SPIM_HYPER_MLDOTCTL_WRBUSY_Pos)
+
+#define SPIM_HYPER_DLLTCTL_DLL0OLDOTRIM_Pos     (0)
+#define SPIM_HYPER_DLLTCTL_DLL0OLDOTRIM_Msk     (0xFul << SPIM_HYPER_DLLTCTL_DLL0OLDOTRIM_Pos)
+
+#define SPIM_HYPER_ENABLE_SYSDLL0TMEN()                                                     \
+    do{                                                                                     \
+        uint32_t u32Value = ((inpw(SYS_BASE + 0xE00)) | SPIM_HYPER_ALTCTL0_DLL0TMEN_Msk);   \
+        outpw((SYS_BASE + 0xE00), u32Value);                                                \
     }while(0)
 
-#define SPIM_HYPER_DISABLE_SYSDLL0TMEN() \
-    do{ \
-        uint32_t u32Value = ((inpw(SYS_BASE + 0xE00)) & ~SPIM_HYPER_ALTCTL0_DLL0TMEN_Msk);\
-        outpw((SYS_BASE + 0xE00), u32Value);\
+#define SPIM_HYPER_DISABLE_SYSDLL0TMEN()                                                    \
+    do{                                                                                     \
+        uint32_t u32Value = ((inpw(SYS_BASE + 0xE00)) & ~SPIM_HYPER_ALTCTL0_DLL0TMEN_Msk);  \
+        outpw((SYS_BASE + 0xE00), u32Value);                                                                                                \
     }while(0)
 
-#define SPIM_HYPER_ENABLE_SYSDLL0ATCTL0_TRIMUPDOFF()                                \
-    do{ \
-        uint32_t u32Value = ((inpw(SYS_BASE + 0xF84)) & ~SPIM_HYPER_DLL0ATCTL0_TUDOFF_Msk);\
-        outpw((SYS_BASE + 0xF84), u32Value);\
+#define SPIM_HYPER_ENABLE_SYSDLL0ATCTL0_TRIMUPDOFF()                                        \
+    do{                                                                                     \
+        uint32_t u32Value = ((inpw(SYS_BASE + 0xF84)) & ~SPIM_HYPER_DLL0ATCTL0_TUDOFF_Msk); \
+        outpw((SYS_BASE + 0xF84), u32Value); \
     }while(0)
 
-#define SPIM_HYPER_DISABLE_SYSDLL0ATCTL0_TRIMUPDOFF()                                \
-    do{ \
-        uint32_t u32Value = ((inpw(SYS_BASE + 0xF84)) | SPIM_HYPER_DLL0ATCTL0_TUDOFF_Msk);\
-        outpw((SYS_BASE + 0xF84), u32Value);\
+#define SPIM_HYPER_DISABLE_SYSDLL0ATCTL0_TRIMUPDOFF()                                       \
+    do{                                                                                     \
+        uint32_t u32Value = ((inpw(SYS_BASE + 0xF84)) | SPIM_HYPER_DLL0ATCTL0_TUDOFF_Msk);  \
+        outpw((SYS_BASE + 0xF84), u32Value);                                                \
     }while(0)
 
+#define SPIM_HYPER_GET_MLDOTCTL_MLDOPL0VT() \
+    (((inpw(SYS_BASE + 0xF54)) & SPIM_HYPER_MLDOTCTL_MLDOPL0VT_Msk) >> SPIM_HYPER_MLDOTCTL_MLDOPL0VT_Pos)
+
+#define SPIM_HYPER_SET_MLDOTCTL_MLDOPL0VT(x)                                                  \
+    do{                                                                                       \
+        uint32_t u32Value = ((inpw(SYS_BASE + 0xF54)) & ~SPIM_HYPER_MLDOTCTL_MLDOPL0VT_Msk) | \
+                            ((x) << SPIM_HYPER_MLDOTCTL_MLDOPL0VT_Pos);                       \
+        outpw((SYS_BASE + 0xF54), u32Value);                                                  \
+    }while(0)
+
+#define SPIM_HYPER_GET_MLDOTCTL_WRBUSY()    \
+    (((inpw(SYS_BASE + 0xF54)) & SPIM_HYPER_MLDOTCTL_WRBUSY_Msk) >> SPIM_HYPER_MLDOTCTL_WRBUSY_Pos)
+
+#define SPIM_HYPER_GET_DLLTCTL_DLL0OLDOTRIM()   \
+    (((inpw(SYS_BASE + 0xF80)) & SPIM_HYPER_DLLTCTL_DLL0OLDOTRIM_Msk) >> SPIM_HYPER_DLLTCTL_DLL0OLDOTRIM_Pos)
+
+#define SPIM_HYPER_SET_DLLTCTL_DLL0OLDOTRIM(x)                                                  \
+    do {                                                                                        \
+        uint32_t u32Value = ((inpw(SYS_BASE + 0xF80)) & ~SPIM_HYPER_DLLTCTL_DLL0OLDOTRIM_Msk) | \
+                            ((x) << SPIM_HYPER_DLLTCTL_DLL0OLDOTRIM_Pos);                       \
+        outpw((SYS_BASE + 0xF80), u32Value);                                                    \
+    } while (0)
+
+#define SPIM_HYPER_MLDOPL0_TRIM_OFFSET          (3U)
+#define SPIM_HYPER_DLLTCTL_TRIM_OFFSET          (5U)
+
+#define SPIM_HYPER_CEIL_DIV(x, y)               (((x) + (y) - 1) / (y))
+
+// Timing margin in permille (1000 = 100%). Set to 1100 to apply a +10% safety margin.
+#define SPIM_HYPER_TRIM_MARGIN                  (1000)
+
+//------------------------------------------------------------------------------
 /**
   * @brief      Wait Hyper Bus interface Idle
-  * @param      spim     Specify SPIM peripheral
-  * @retval     SPIM_HYPER_OK          SPIM operation OK.
-  *             SPIM_HYPER_ERR_TIMEOUT SPIM operation abort due to timeout error.
+  * @param      spim    Pointer to the SPIM peripheral.
+  * @retval     SPIM_HYPER_OK          Operation completed successfully.
+  *             SPIM_HYPER_ERR_TIMEOUT Operation aborted due to timeout error.
   * @details    This function is used to wait Hyper Bus interface idle.
   */
 static int32_t spim_hyper_wait_cmdidle(SPIM_T *spim)
 {
-    volatile int32_t i32TimeOutCnt = SPIM_HYPER_TIMEOUT;
+    volatile int32_t i32TimeOutCnt = (int32_t)SPIM_HYPER_TIMEOUT;
 
     while (spim->HYPER_CMD != SPIM_HYPER_CMD_IDLE)
     {
@@ -76,9 +123,73 @@ static int32_t spim_hyper_wait_cmdidle(SPIM_T *spim)
     return SPIM_HYPER_OK;
 }
 
+#if (SPIM_HYPER_MLDOPL0_ADJ_OFFSET == 1)
+
+/**
+  * @brief      Adjust Power Level for Hyper Bus
+  * @retval     None.
+  * @details    This function is used to adjust the power level for Hyper Bus.
+  *             It raises the MLDOPL0 voltage level to enhance signal integrity and stability.
+  */
+static void SPIM_HYPER_AdjustPowerLevelForHyperBus(void)
+{
+    volatile int32_t i32TimeOutCnt = (SystemCoreClock >> 1); /* 500ms time-out */
+    uint32_t u32MLDOPL0 = 0;
+    uint32_t u32RegLockLevel = SYS_IsRegLocked();
+
+    if (u32RegLockLevel)
+    {
+        /* Unlock protected registers */
+        SYS_UnlockReg();
+    }
+
+    /*
+        Raise PL0 voltage level (MLDOPL0) by predefined offset to reach ~ 1.2V,
+        enhancing HyperBus signal integrity and stability under high-speed access.
+    */
+    u32MLDOPL0 = (SPIM_HYPER_GET_MLDOTCTL_MLDOPL0VT() + SPIM_HYPER_MLDOPL0_TRIM_OFFSET);
+    SPIM_HYPER_SET_MLDOTCTL_MLDOPL0VT(u32MLDOPL0);
+
+    i32TimeOutCnt = (SystemCoreClock >> 1);
+
+    /*
+        Wait until the MLDOTCTL_WRBUSY flag is cleared,
+        indicating that the operation is complete
+    */
+    while (SPIM_HYPER_GET_MLDOTCTL_WRBUSY() == SPIM_OP_ENABLE)
+        if (i32TimeOutCnt-- <= 0) break;
+
+    i32TimeOutCnt = (SystemCoreClock >> 1);
+
+    /* Wait for power level change busy flag is cleared */
+    while (*(volatile uint32_t *)PMC_PLCTL_BUSY_FLAG & BIT31)
+        if (i32TimeOutCnt-- <= 0) break;
+
+    /* Set power voltage level 0 */
+    PMC->PLCTL = (PMC->PLCTL & (~PMC_PLCTL_PLSEL_Msk)) | (PMC_PLCTL_PLSEL_PL0);
+
+    i32TimeOutCnt = (SystemCoreClock >> 1);
+
+    /* Wait for power level change busy flag is cleared */
+    while (*(volatile uint32_t *)PMC_PLCTL_BUSY_FLAG & BIT31)
+        if (i32TimeOutCnt-- <= 0) break;
+
+    /* Increase DLL0 output voltage by predefined offset to reach ~1.2V for better timing margin */
+    u32MLDOPL0 = (SPIM_HYPER_GET_DLLTCTL_DLL0OLDOTRIM() + SPIM_HYPER_DLLTCTL_TRIM_OFFSET);
+    SPIM_HYPER_SET_DLLTCTL_DLL0OLDOTRIM(u32MLDOPL0);
+
+    if (u32RegLockLevel)
+    {
+        /* Lock protected registers */
+        SYS_LockReg();
+    }
+}
+
+#endif
+
 /**
   * @brief      Enable Hyper Bus Mode
-  * @param      spim         Specify SPIM peripheral
+  * @param      spim         Pointer to the SPIM peripheral.
   * @param[in]  u32HyperMode Select HyperRAM or HyperFlash Device
   *                         - \ref SPIM_HYPERRAM_MODE
   *                         - \ref SPIM_HYPERFLASH_MODE
@@ -88,22 +199,28 @@ static int32_t spim_hyper_wait_cmdidle(SPIM_T *spim)
   */
 void SPIM_HYPER_Init(SPIM_T *spim, uint32_t u32HyperMode, uint32_t u32Div)
 {
+#if (SPIM_HYPER_MLDOPL0_ADJ_OFFSET == 1)
+    /* Adjusts the power level for the HyperBus interface. */
+    SPIM_HYPER_AdjustPowerLevelForHyperBus();
+#endif
+
     /* Enable SPIM Hyper Bus Mode */
     SPIM_HYPER_ENABLE_HYPMODE(spim, u32HyperMode);
 
+    /* Sets the clock divider for the SPIM hyper interface. */
     SPIM_HYPER_SET_CLKDIV(spim, (((u32Div != 1) && (u32Div != 2)) ? 1 : u32Div));
 }
 
 /**
   * @brief      SPIM Start Transfer And Wait Busy Status.
-  * @param      spim
+  * @param      spim        Pointer to the SPIM peripheral.
   * @param      u32IsSync   Wait Busy Status
   * @return     SPIM_HYPER_OK          SPIM write done.
-  *             SPIM_HYPER_ERR_TIMEOUT SPIM operation abort due to timeout error.
+  *             SPIM_HYPER_ERR_TIMEOUT Operation aborted due to timeout error.
   */
 int32_t SPIM_HYPER_WaitSPIMENDone(SPIM_T *spim, uint32_t u32IsSync)
 {
-    volatile int32_t i32TimeOutCount = SPIM_HYPER_TIMEOUT;
+    volatile int32_t i32TimeOutCount = (int32_t)SPIM_HYPER_TIMEOUT;
 
     /* Start SPIM Transfer, wait for operation complete according to u32IsSync */
     SPIM_HYPER_SET_GO(spim);
@@ -124,9 +241,9 @@ int32_t SPIM_HYPER_WaitSPIMENDone(SPIM_T *spim, uint32_t u32IsSync)
 
 /**
   * @brief  Reset hyper chip function
-  * @param  spim
-  * @return SPIM_HYPER_OK          SPIM operation OK.
-  *         SPIM_HYPER_ERR_TIMEOUT SPIM operation abort due to timeout error.
+  * @param  spim    Pointer to the SPIM peripheral.
+  * @return SPIM_HYPER_OK          Operation completed successfully.
+  *         SPIM_HYPER_ERR_TIMEOUT Operation aborted due to timeout error.
   * @note   if waiting Hyper Chip time-out.
   */
 int32_t SPIM_HYPER_Reset(SPIM_T *spim)
@@ -146,9 +263,9 @@ int32_t SPIM_HYPER_Reset(SPIM_T *spim)
 
 /**
   * @brief  Exit from Hybrid sleep and deep Power down function
-  * @param  spim
-  * @return SPIM_HYPER_OK          SPIM operation OK.
-  *         SPIM_HYPER_ERR_TIMEOUT SPIM operation abort due to timeout error.
+  * @param  spim    Pointer to the SPIM peripheral.
+  * @return SPIM_HYPER_OK          Operation completed successfully.
+  *         SPIM_HYPER_ERR_TIMEOUT Operation aborted due to timeout error.
   * @note   This function sets SPIM_HYPER_ERR_TIMEOUT, if waiting Hyper Chip time-out.
   */
 int32_t SPIM_HYPER_ExitHSAndDPD(SPIM_T *spim)
@@ -160,15 +277,15 @@ int32_t SPIM_HYPER_ExitHSAndDPD(SPIM_T *spim)
 
 /**
   * @brief  Read hyper chip register space
-  * @param  spim
+  * @param  spim    Pointer to the SPIM peripheral.
   * @param  u32Addr Address of hyper chip register space
   *                 - \ref SPIM_HYPER_HRAM_ID_REG0       : 0x0000_0000 = Identification Register 0
   *                 - \ref SPIM_HYPER_HRAM_ID_REG1       : 0x0000_0002 = Identification Register 1
   *                 - \ref SPIM_HYPER_HRAM_CONFIG_REG0   : 0x0000_1000 = Configuration Register 0
   *                 - \ref SPIM_HYPER_HRAM_CONFIG_REG1   : 0x0000_1002 = Configuration Register 1
-  * @return SPIM_HYPER_OK          SPIM operation OK.
+  * @return SPIM_HYPER_OK          Operation completed successfully.
   *         SPIM_HYPER_ERR_FAIL    SPIM operation Fail.
-  *         SPIM_HYPER_ERR_TIMEOUT SPIM operation abort due to timeout error.
+  *         SPIM_HYPER_ERR_TIMEOUT Operation aborted due to timeout error.
   * @note   This function sets SPIM_HYPER_ERR_TIMEOUT, if waiting Hyper Chip time-out.
   */
 int32_t SPIM_HYPER_ReadHyperRAMReg(SPIM_T *spim, uint32_t u32Addr)
@@ -192,16 +309,16 @@ int32_t SPIM_HYPER_ReadHyperRAMReg(SPIM_T *spim, uint32_t u32Addr)
 
 /**
   * @brief  Write Hyper Chip register space
-  * @param  spim
+  * @param  spim    Pointer to the SPIM peripheral.
   * @param  u32Addr Address of Hyper Chip register space
   *                 - \ref SPIM_HYPER_HRAM_ID_REG0     : 0x0000_0000 = Identification Register 0
   *                 - \ref SPIM_HYPER_HRAM_ID_REG1     : 0x0000_0002 = Identification Register 1
   *                 - \ref SPIM_HYPER_HRAM_CONFIG_REG0 : 0x0000_1000 = Configuration Register 0
   *                 - \ref SPIM_HYPER_HRAM_CONFIG_REG1 : 0x0000_1002 = Configuration Register 1
   * @param  u32Value Configure HyperRAM Register Value
-  * @return SPIM_HYPER_OK      SPIM operation OK.
+  * @return SPIM_HYPER_OK      Operation completed successfully.
   *         SPIM_HYPER_ERR_FAIL    SPIM operation Fail.
-  *         SPIM_HYPER_ERR_TIMEOUT SPIM operation abort due to timeout error.
+  *         SPIM_HYPER_ERR_TIMEOUT Operation aborted due to timeout error.
   * @note   This function sets SPIM_HYPER_ERR_TIMEOUT, if waiting Hyper Chip time-out.
   */
 int32_t SPIM_HYPER_WriteHyperRAMReg(SPIM_T *spim, uint32_t u32Addr, uint32_t u32Value)
@@ -228,12 +345,12 @@ int32_t SPIM_HYPER_WriteHyperRAMReg(SPIM_T *spim, uint32_t u32Addr, uint32_t u32
 
 /**
   * @brief  Read 1 word from hyper chip space
-  * @param  spim
-  * @param  u32Addr  Address of hyper chip space
+  * @param  spim    Pointer to the SPIM peripheral.
+  * @param  u32Addr Address of hyper chip space
   * @return The 16 bit data of hyper chip space.
   * @note   This function sets SPIM_HYPER_ERR_TIMEOUT if waiting Hyper Chip time-out.
   */
-int16_t SPIM_HYPER_Read1Word(SPIM_T *spim, uint32_t u32Addr)
+uint16_t SPIM_HYPER_Read1Word(SPIM_T *spim, uint32_t u32Addr)
 {
     spim->HYPER_ADR = u32Addr;
 
@@ -241,16 +358,16 @@ int16_t SPIM_HYPER_Read1Word(SPIM_T *spim, uint32_t u32Addr)
 
     spim_hyper_wait_cmdidle(spim);
 
-    return (spim->HYPER_RDATA & 0xFFFF);
+    return (uint16_t)(spim->HYPER_RDATA & 0xFFFF);
 }
 
 /**
   * @brief  Read 2 word from hyper chip space
-  * @param  spim
-  * @param  u32Addr  Address of hyper chip space
+  * @param  spim    Pointer to the SPIM peripheral.
+  * @param  u32Addr Address of hyper chip space
   * @return The 32bit data of hyper chip space.
   */
-int32_t SPIM_HYPER_Read2Word(SPIM_T *spim, uint32_t u32Addr)
+uint32_t SPIM_HYPER_Read2Word(SPIM_T *spim, uint32_t u32Addr)
 {
     spim->HYPER_ADR = u32Addr;
 
@@ -258,16 +375,16 @@ int32_t SPIM_HYPER_Read2Word(SPIM_T *spim, uint32_t u32Addr)
 
     spim_hyper_wait_cmdidle(spim);
 
-    return (spim->HYPER_RDATA & 0xFFFFFFFF);
+    return (uint32_t)(spim->HYPER_RDATA & 0xFFFFFFFF);
 }
 
 /**
   * @brief  Write 1 byte to hyper chip space
-  * @param  spim
-  * @param  u32Addr  Address of hyper chip space
-  * @param  u8Data   8 bits data to be written to hyper chip space
-  * @return SPIM_HYPER_OK      SPIM operation OK.
-  *         SPIM_HYPER_ERR_TIMEOUT SPIM operation abort due to timeout error.
+  * @param  spim    Pointer to the SPIM peripheral.
+  * @param  u32Addr Address of hyper chip space
+  * @param  u8Data  8 bits data to be written to hyper chip space
+  * @return SPIM_HYPER_OK      Operation completed successfully.
+  *         SPIM_HYPER_ERR_TIMEOUT Operation aborted due to timeout error.
   * @note   This function sets SPIM_HYPER_ERR_TIMEOUT, if waiting Hyper Chip time-out.
   */
 int32_t SPIM_HYPER_Write1Byte(SPIM_T *spim, uint32_t u32Addr, uint8_t u8Data)
@@ -284,11 +401,11 @@ int32_t SPIM_HYPER_Write1Byte(SPIM_T *spim, uint32_t u32Addr, uint8_t u8Data)
 
 /**
   * @brief  Write 2 bytes to Hyper Chip space
-  * @param  spim
-  * @param  u32Addr  Address of Hyper Chip space
-  * @param  u16Data  16 bits data to be written to Hyper Chip space
-  * @return SPIM_HYPER_OK          SPIM operation OK.
-  *         SPIM_HYPER_ERR_TIMEOUT SPIM operation abort due to timeout error.
+  * @param  spim    Pointer to the SPIM peripheral.
+  * @param  u32Addr Address of Hyper Chip space
+  * @param  u16Data 16 bits data to be written to Hyper Chip space
+  * @return SPIM_HYPER_OK          Operation completed successfully.
+  *         SPIM_HYPER_ERR_TIMEOUT Operation aborted due to timeout error.
   * @note   This function sets SPIM_HYPER_ERR_TIMEOUT, if waiting Hyper Chip time-out.
   */
 int32_t SPIM_HYPER_Write2Byte(SPIM_T *spim, uint32_t u32Addr, uint16_t u16Data)
@@ -305,11 +422,11 @@ int32_t SPIM_HYPER_Write2Byte(SPIM_T *spim, uint32_t u32Addr, uint16_t u16Data)
 
 /**
   * @brief  Write 3 bytes to Hyper Chip space
-  * @param  spim
-  * @param  u32Addr  Address of Hyper Chip space
-  * @param  u32Data  24 bits data to be written to Hyper Chip space
-  * @return SPIM_HYPER_OK          SPIM operation OK.
-  *         SPIM_HYPER_ERR_TIMEOUT SPIM operation abort due to timeout error.
+  * @param  spim    Pointer to the SPIM peripheral.
+  * @param  u32Addr Address of Hyper Chip space
+  * @param  u32Data 24 bits data to be written to Hyper Chip space
+  * @return SPIM_HYPER_OK          Operation completed successfully.
+  *         SPIM_HYPER_ERR_TIMEOUT Operation aborted due to timeout error.
   * @note   This function sets SPIM_HYPER_ERR_TIMEOUT, if waiting Hyper Chip time-out.
   */
 int32_t SPIM_HYPER_Write3Byte(SPIM_T *spim, uint32_t u32Addr, uint32_t u32Data)
@@ -326,11 +443,11 @@ int32_t SPIM_HYPER_Write3Byte(SPIM_T *spim, uint32_t u32Addr, uint32_t u32Data)
 
 /**
   * @brief  Write 4 byte to hyper chip space
-  * @param  spim
-  * @param  u32Addr  Address of hyper chip space
-  * @param  u32Data  32 bits data to be written to hyper chip space
-  * @return SPIM_HYPER_OK          SPIM operation OK.
-  *         SPIM_HYPER_ERR_TIMEOUT SPIM operation abort due to timeout error.
+  * @param  spim    Pointer to the SPIM peripheral.
+  * @param  u32Addr Address of hyper chip space
+  * @param  u32Data 32 bits data to be written to hyper chip space
+  * @return SPIM_HYPER_OK          Operation completed successfully.
+  *         SPIM_HYPER_ERR_TIMEOUT Operation aborted due to timeout error.
   * @note   This function sets SPIM_HYPER_ERR_TIMEOUT, if waiting Hyper Chip time-out.
   */
 int32_t SPIM_HYPER_Write4Byte(SPIM_T *spim, uint32_t u32Addr, uint32_t u32Data)
@@ -346,61 +463,62 @@ int32_t SPIM_HYPER_Write4Byte(SPIM_T *spim, uint32_t u32Addr, uint32_t u32Data)
 }
 
 /**
-  * @brief  Write data to HyperBus Module.
-  * @param  spim
-  * @param  u32Addr     Start address to write.
-  * @param  pu8WrBuf    Transmit buffer.
+  * @brief  Write data to the HyperBus module using DMA.
+  * @param  spim        Pointer to the SPIM peripheral.
+  * @param  u32Addr     Start address to write to (HyperBus address).
+  * @param  pu8WrBuf    Pointer to the transmit buffer.
   * @param  u32NTx      Number of bytes to write.
-  * @return SPIM_HYPER_OK          SPIM operation OK.
-  *         SPIM_HYPER_ERR_TIMEOUT SPIM operation abort due to timeout error.
-  * @note   This function sets SPIM_HYPER_ERR_TIMEOUT, if waiting Hyper Chip time-out.
+  * @return SPIM_HYPER_OK           Operation completed successfully.
+  *         SPIM_HYPER_ERR_TIMEOUT  Operation aborted due to timeout error.
+  * @note   This function returns SPIM_HYPER_ERR_TIMEOUT if the HyperBus device times out.
+  *         The number of bytes to write must be a multiple of 8 (for DMA alignment).
   */
 int32_t SPIM_HYPER_DMAWrite(SPIM_T *spim, uint32_t u32Addr, uint8_t *pu8WrBuf, uint32_t u32NTx)
 {
-    SPIM_HYPER_SET_OPMODE(spim, SPIM_HYPER_OPMODE_PAGEWRITE);  /* Switch to DMA Write mode.   */
+    SPIM_HYPER_SET_OPMODE(spim, SPIM_HYPER_OPMODE_PAGEWRITE);  /* Switch to DMA write mode. */
 
-    spim->SRAMADDR = (uint32_t) pu8WrBuf;
-    spim->DMACNT = u32NTx;
-    spim->FADDR = u32Addr;
+    spim->SRAMADDR = (uint32_t)pu8WrBuf;  /* Set the SRAM buffer address. */
+    spim->DMACNT   = u32NTx;              /* Set the transfer length. */
+    spim->FADDR    = u32Addr;             /* Set the HyperBus target address. */
 
     return SPIM_HYPER_WaitSPIMENDone(spim, SPIM_HYPER_OP_ENABLE);
 }
 
 /**
-  * @brief  Read data from HyperBus Module.
-  * @param  spim
-  * @param  u32Addr     Start address to read.
-  * @param  pu8RdBuf    Receive buffer.
+  * @brief  Read data from the HyperBus module using DMA.
+  * @param  spim        Pointer to the SPIM peripheral.
+  * @param  u32Addr     Start address to read from (HyperBus address).
+  * @param  pu8RdBuf    Pointer to the receive buffer.
   * @param  u32NRx      Number of bytes to read.
-  * @return SPIM_HYPER_OK          SPIM operation OK.
-  *         SPIM_HYPER_ERR_TIMEOUT SPIM operation abort due to timeout error.
-  * @note   This function sets SPIM_HYPER_ERR_TIMEOUT, if waiting Hyper Chip time-out.
+  * @return SPIM_HYPER_OK           Operation completed successfully.
+  *         SPIM_HYPER_ERR_TIMEOUT  Operation aborted due to timeout error.
+  * @note   This function returns SPIM_HYPER_ERR_TIMEOUT if the HyperBus device times out.
+  *         The number of bytes to read must be a multiple of 8 (for DMA alignment).
   */
 int32_t SPIM_HYPER_DMARead(SPIM_T *spim, uint32_t u32Addr, uint8_t *pu8RdBuf, uint32_t u32NRx)
 {
-    SPIM_HYPER_SET_OPMODE(spim, SPIM_HYPER_OPMODE_PAGEREAD);   /* Switch to DMA Read mode.  */
-    spim->SRAMADDR = (uint32_t) pu8RdBuf;               /* SRAM u32Address. */
-    spim->DMACNT = u32NRx;                              /* Transfer length. */
-    spim->FADDR = u32Addr;                              /* Flash u32Address. */
+    SPIM_HYPER_SET_OPMODE(spim, SPIM_HYPER_OPMODE_PAGEREAD);  /* Switch to DMA read mode. */
+    spim->SRAMADDR = (uint32_t)pu8RdBuf;                      /* Set the SRAM buffer address. */
+    spim->DMACNT   = u32NRx;                                  /* Set the transfer length. */
+    spim->FADDR    = u32Addr;                                 /* Set the HyperBus target address. */
 
     return SPIM_HYPER_WaitSPIMENDone(spim, SPIM_HYPER_OP_ENABLE);
 }
 
 /**
   * @brief  SPIM Hyper Mode Enter DMM Mode
-  * @param  spim
+  * @param  spim    Pointer to the SPIM peripheral.
   * @return None.
   * @note   This function sets SPIM_HYPER_ERR_TIMEOUT if waiting Hyper Chip time-out.
   */
 void SPIM_HYPER_EnterDirectMapMode(SPIM_T *spim)
 {
-    SPIM_HYPER_CLR_DMM_TIMEOUT_STS(spim);
     SPIM_HYPER_SET_OPMODE(spim, SPIM_HYPER_OPMODE_DIRECTMAP);  /* Switch to DMA Write mode.   */
 }
 
 /**
   * @brief  SPIM Hyper Mode Exit DMM Mode
-  * @param  spim
+  * @param  spim    Pointer to the SPIM peripheral.
   * @return None.
   * @note   This function sets SPIM_HYPER_ERR_TIMEOUT if waiting Hyper Chip time-out.
   */
@@ -411,162 +529,143 @@ void SPIM_HYPER_ExitDirectMapMode(SPIM_T *spim)
 
 /**
   * @brief      Initialize SPIM Hyper DLL.
-  * @param      spim     SPIM port handler
-  * @retval     SPIM_HYPER_OK          SPIM operation OK.
-  *             SPIM_HYPER_ERR_TIMEOUT SPIM operation abort due to timeout error.
+  * @param      spim    Pointer to the SPIM peripheral.
+  * @return     SPIM_HYPER_OK          Operation completed successfully.
+  *             SPIM_HYPER_ERR_TIMEOUT Operation aborted due to timeout error.
   * @details    This function is used to initialize SPIM Hyper bus DLL.
   * @note       When system wake up reset, please calling this function reinintialize DLL.
   */
 int32_t SPIM_HYPER_INIT_DLL(SPIM_T *spim)
 {
-    volatile int i32TimeoutCount = SPIM_HYPER_TIMEOUT;
-    uint32_t u32Div = SPIM_HYPER_GET_CLKDIV(spim);
-    uint32_t u32FastEn = ((((CLK_GetSCLKFreq() / 1000000) / (SPIM_HYPER_GET_CLKDIV(spim) * 2)) <= 100) ? SPIM_HYPER_OP_DISABLE : SPIM_HYPER_OP_ENABLE);
+    volatile int32_t i32TimeoutCount;
+    uint32_t u32BusClkHz = CLK_GetSCLKFreq() / (SPIM_HYPER_GET_CLKDIV(spim) * 2);
+    uint32_t u32ClkNs = 1000000000UL / u32BusClkHz;
+    uint32_t u32DelayCycleCount = 0;
+    const uint32_t u32DllLockUs  = 20;
+    const uint32_t u32DllValidUs = 50;
+    const uint32_t u32DllClkOnUs = 20;
+    const uint32_t u32DllTrimUs  = 20;
 
+    // Convert to cycles
+    uint32_t u32DLLLKNUM = SPIM_HYPER_CEIL_DIV((u32DllLockUs * SPIM_HYPER_TRIM_MARGIN), u32ClkNs);
+    uint32_t u32DLLOVNUM = SPIM_HYPER_CEIL_DIV((u32DllValidUs * SPIM_HYPER_TRIM_MARGIN), u32ClkNs);
+    uint32_t u32CLKONNUM = SPIM_HYPER_CEIL_DIV((u32DllClkOnUs * SPIM_HYPER_TRIM_MARGIN), u32ClkNs);
+    uint32_t u32TRIMNUM  = SPIM_HYPER_CEIL_DIV((u32DllTrimUs * SPIM_HYPER_TRIM_MARGIN), u32ClkNs);
+
+    uint32_t u32Div = (SPIM_HYPER_GET_CLKDIV(spim) * 2);
+    uint32_t u32FreqMHz = u32BusClkHz / 1000000;
+    uint32_t u32FastEn = (u32FreqMHz <= 100) ? SPIM_HYPER_OP_DISABLE : SPIM_HYPER_OP_ENABLE;
+
+    uint32_t u32DllDivCode = (u32Div <= 1) ? 0 : (u32Div == 2) ? 1 : (u32Div == 4) ? 2 : 3;
     uint32_t u32RegLockLevel = SYS_IsRegLocked();
 
-    if (u32RegLockLevel)
-    {
-        /* Unlock protected registers */
-        SYS_UnlockReg();
-    }
+    if (u32RegLockLevel) SYS_UnlockReg();
+
+    // DLL timing setup
+    SPIM_HYPER_SET_DLLLOCK_NUM(spim, u32DLLLKNUM);
+    SPIM_HYPER_SET_DLLOV_NUM(spim, u32DLLOVNUM);
+    SPIM_HYPER_SET_DLLCLKON_NUM(spim, u32CLKONNUM);
+    SPIM_HYPER_SET_DLLTRIM_NUM(spim, u32TRIMNUM);
 
 #if (SPIM_HYPER_TRIM_HYPERDLL == 1)
     SPIM_HYPER_ENABLE_SYSDLL0ATCTL0_TRIMUPDOFF();
 #endif
 
-    SPIM_HYPER_SET_DLLDIV(spim, ((u32Div > 3) ? 3 : u32Div));
-
+    SPIM_HYPER_SET_DLLDIV(spim, u32DllDivCode);
     SPIM_HYPER_SET_DLLFAST(spim, u32FastEn);
-
-    /* SPIM starts to send DLL reference clock to DLL circuit
-    that the frequency is the same as the SPIM output bus clock. */
     SPIM_HYPER_ENABLE_DLLOLDO(spim, SPIM_HYPER_OP_ENABLE);
 
 #if (SPIM_HYPER_TRIM_HYPERDLL == 1)
-    SPIM_HYPER_SET_AUTO_TRIM_DLL(spim, SPIM_OP_ENABLE);
-
     SPIM_HYPER_SET_INTERNAL_RWDS(spim, SPIM_OP_ENABLE);
+    SPIM_HYPER_SET_AUTO_TRIM_DLL(spim, SPIM_OP_ENABLE);
 #endif
 
-    /* User asserts this control register to 0x1,
-       the DLL circuit begins searching for lock with DLL reference clock. */
+    // Start DLL output valid countdown
     SPIM_HYPER_ENABLE_DLLOVRST(spim, SPIM_HYPER_OP_ENABLE);
 
-    i32TimeoutCount = SPIM_HYPER_TIMEOUT;
+    // Wait DLLOVRST auto-clear
+    i32TimeoutCount = (int32_t)SPIM_HYPER_TIMEOUT;
 
-    /* Polling the DLL status register DLLCKON to 0x1,
-       and the value 0x1 indicates that clock divider circuit inside DLL is enabled. */
-    while (SPIM_HYPER_GET_DLLOVRST(spim) == SPIM_HYPER_OP_ENABLE)
-    {
-        if (--i32TimeoutCount <= 0)
-        {
-            return SPIM_HYPER_ERR_TIMEOUT;
-        }
-    }
+    while (SPIM_HYPER_GET_DLLOVRST(spim))
+        if (--i32TimeoutCount <= 0) return SPIM_HYPER_ERR_TIMEOUT;
 
-    i32TimeoutCount = SPIM_HYPER_TIMEOUT;
+    // Wait clock divider ON
+    i32TimeoutCount = (int32_t)SPIM_HYPER_TIMEOUT;
 
-    /* Polling the DLL status register DLLCKON to 0x1,
-       and the value 0x1 indicates that clock divider circuit inside DLL is enabled. */
-    while (SPIM_HYPER_GET_DLLCLKON(spim) != SPIM_HYPER_OP_ENABLE)
-    {
-        if (--i32TimeoutCount <= 0)
-        {
-            return SPIM_HYPER_ERR_TIMEOUT;
-        }
-    }
+    while (SPIM_HYPER_GET_DLLCLKON(spim) != SPIM_OP_ENABLE)
+        if (--i32TimeoutCount <= 0) return SPIM_HYPER_ERR_TIMEOUT;
 
-    i32TimeoutCount = SPIM_HYPER_TIMEOUT;
+    // Wait DLL LOCK
+    i32TimeoutCount = (int32_t)SPIM_HYPER_TIMEOUT;
 
-    /* Polling the DLL status register DLLLOCK to 0x1,
-       and the value 0x1 indicates that DLL circuit is in lock state */
-    while (SPIM_HYPER_GET_DLLLOCK(spim) != SPIM_HYPER_OP_ENABLE)
-    {
-        if (--i32TimeoutCount <= 0)
-        {
-            return SPIM_HYPER_ERR_TIMEOUT;
-        }
-    }
+    while (SPIM_HYPER_GET_DLLLOCK(spim) != SPIM_OP_ENABLE)
+        if (--i32TimeoutCount <= 0) return SPIM_HYPER_ERR_TIMEOUT;
 
-    i32TimeoutCount = SPIM_HYPER_TIMEOUT;
+    // Wait DLL output READY
+    i32TimeoutCount = (int32_t)SPIM_HYPER_TIMEOUT;
 
-    /* Polling the DLL status register DLLREADY to 0x1,
-       and the value 0x1 indicates that output of DLL circuit is ready. */
-    while (SPIM_HYPER_GET_DLLREADY(spim) != SPIM_HYPER_OP_ENABLE)
-    {
-        if (--i32TimeoutCount <= 0)
-        {
-            return SPIM_HYPER_ERR_TIMEOUT;
-        }
-    }
+    while (SPIM_HYPER_GET_DLLREADY(spim) != SPIM_OP_ENABLE)
+        if (--i32TimeoutCount <= 0) return SPIM_HYPER_ERR_TIMEOUT;
 
 #if (SPIM_HYPER_TRIM_HYPERDLL == 1)
-    i32TimeoutCount = SPIM_TIMEOUT;
+    // Wait auto-trim ready
+    i32TimeoutCount = (int32_t)SPIM_HYPER_TIMEOUT;
 
-    /* Polling the DLL status register DLLREADY to 0x1,
-    and the value 0x1 indicates that output of DLL circuit is ready. */
     while (SPIM_HYPER_GET_DLLATRDY(spim) != SPIM_OP_ENABLE)
-    {
-        if (--i32TimeoutCount <= 0)
-        {
-            return SPIM_ERR_TIMEOUT;
-        }
-    }
+        if (--i32TimeoutCount <= 0) return SPIM_HYPER_ERR_TIMEOUT;
 
-    /* wait for auto trim setting */
-    for (i32TimeoutCount = 0; i32TimeoutCount < 0x200000; i32TimeoutCount++)
-    {
+    u32DelayCycleCount = (uint32_t)(u32BusClkHz / 1000) * 3;  // 3ms = 3 * (Hz / 1000)
+
+    for (i32TimeoutCount = 0; i32TimeoutCount < (int32_t)u32DelayCycleCount; i32TimeoutCount++)
         __NOP();
-    }
 
     SPIM_HYPER_DISABLE_SYSDLL0ATCTL0_TRIMUPDOFF();
-
     SPIM_HYPER_SET_INTERNAL_RWDS(spim, SPIM_HYPER_OP_DISABLE);
 #endif
 
-    if (u32RegLockLevel)
-    {
-        /* Lock protected registers */
-        SYS_LockReg();
-    }
+    if (u32RegLockLevel) SYS_LockReg();
 
     return SPIM_HYPER_OK;
 }
 
 /**
   * @brief      Set SPIM DLL delay number.
-  * @param      spim   SPIM port handler
-  * @param      u32DelayNum   The delay number of SPIM DLL.
-  * @retval     SPIM_HYPER_OK          SPIM operation OK.
-  *             SPIM_HYPER_ERR_TIMEOUT SPIM operation abort due to timeout error.
+  * @param      spim    Pointer to the SPIM peripheral.
+  * @param      u32DelayNum The delay number of SPIM DLL.
+  * @return     SPIM_HYPER_OK          Operation completed successfully.
+  *             SPIM_HYPER_ERR_TIMEOUT Operation aborted due to timeout error.
   * @details    This function is used to set SPIM DLL delay number.
   *             The delay number is used to adjust the sampling edge of input clock
   *             to SPIM.
   */
 int32_t SPIM_HYPER_SetDLLDelayNum(SPIM_T *spim, uint32_t u32DelayNum)
 {
-    volatile int i32Timeout = SPIM_HYPER_TIMEOUT;
+    volatile int i32TimeoutCount = (int32_t)SPIM_HYPER_TIMEOUT;
 
     if (SPIM_HYPER_GET_DLLOLDO(spim) != SPIM_HYPER_OP_ENABLE)
     {
-        SPIM_HYPER_INIT_DLL(spim);
+        if (SPIM_HYPER_INIT_DLL(spim) != SPIM_HYPER_OK)
+        {
+            return SPIM_HYPER_ERR_FAIL;
+        }
     }
 
-    /* Set this valid delay number to control register DLL_DNUM. */
-    SPIM_HYPER_SET_DLLDLY_NUM(spim, u32DelayNum);
-
-    i32Timeout = SPIM_HYPER_TIMEOUT;
+    i32TimeoutCount = (int32_t)SPIM_HYPER_TIMEOUT;
 
     /* Polling DLL status register DLL_REF to 0
        to know the updating flow of DLL delay step number is finish or not. */
     while (SPIM_HYPER_GET_DLLREF(spim) != SPIM_HYPER_OP_DISABLE)
-    {
-        if (--i32Timeout <= 0)
-        {
-            return SPIM_HYPER_ERR_TIMEOUT;
-        }
-    }
+        if (--i32TimeoutCount <= 0) return SPIM_HYPER_ERR_TIMEOUT;
+
+    /* Set this valid delay number to control register DLL_DNUM. */
+    SPIM_HYPER_SET_DLLDLY_NUM(spim, u32DelayNum);
+
+    i32TimeoutCount = (int32_t)SPIM_HYPER_TIMEOUT;
+
+    /* Polling DLL status register DLL_REF to 0
+       to know the updating flow of DLL delay step number is finish or not. */
+    while (SPIM_HYPER_GET_DLLREF(spim) != SPIM_HYPER_OP_DISABLE)
+        if (--i32TimeoutCount <= 0) return SPIM_HYPER_ERR_TIMEOUT;
 
     return SPIM_HYPER_OK;
 }
