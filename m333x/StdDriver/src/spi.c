@@ -368,8 +368,8 @@ void SPI_EnableAutoSS(SPI_T *spi, uint32_t u32SSPinMask, uint32_t u32ActiveLevel
   */
 uint32_t SPI_SetBusClock(SPI_T *spi, uint32_t u32BusClock)
 {
-    uint32_t u32ClkSrc, u32HCLKFreq;
-    uint32_t u32Div, u32RetValue;
+    uint32_t u32ClkSrc = 0, u32HCLKFreq;
+    uint32_t u32Div, u32RetValue = 0;
 
     /* Get system clock frequency */
     u32HCLKFreq = CLK_GetHCLKFreq();
@@ -519,7 +519,7 @@ void SPI_SetFIFO(SPI_T *spi, uint32_t u32TxThreshold, uint32_t u32RxThreshold)
 uint32_t SPI_GetBusClock(SPI_T *spi)
 {
     uint32_t u32Div;
-    uint32_t u32ClkSrc;
+    uint32_t u32ClkSrc = 0;
 
     /* Get DIVIDER setting */
     u32Div = (spi->CLKDIV & SPI_CLKDIV_DIVIDER_Msk) >> SPI_CLKDIV_DIVIDER_Pos;
@@ -1016,7 +1016,7 @@ uint32_t SPI_GetStatus2(SPI_T *spi, uint32_t u32Mask)
   */
 static uint32_t SPII2S_GetSourceClockFreq(SPI_T *i2s)
 {
-    uint32_t u32Freq;
+    uint32_t u32Freq = 0;
 
     if((i2s == SPI0) || (i2s == SPI0_NS))
     {
@@ -1109,7 +1109,7 @@ static uint32_t SPII2S_GetSourceClockFreq(SPI_T *i2s)
 uint32_t SPII2S_Open(SPI_T *i2s, uint32_t u32MasterSlave, uint32_t u32SampleRate, uint32_t u32WordWidth, uint32_t u32Channels, uint32_t u32DataFormat)
 {
     uint32_t u32Divider;
-    uint32_t u32BitRate, u32SrcClk, u32RetValue;
+    uint32_t u32BitRate, u32SrcClk, u32RetValue = 0;
     uint32_t u32PCLK0Freq, u32PCLK1Freq;
 
     if(!(__PC() & NS_OFFSET))
