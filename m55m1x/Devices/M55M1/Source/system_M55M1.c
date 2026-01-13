@@ -334,7 +334,8 @@ void SystemInit(void)
     SCB_CleanDCache();
 #endif
 
-    SCB->VTOR = 0x100000;
+    /* Set SCB->VTOR should be in zephyr/arch/arm/core/cortex_m/scb.c, especially build with BOOTLOADER_MCUBOOT */
+    //SCB->VTOR = 0x100000;
 
 #if 0
 #if defined (__VTOR_PRESENT) && (__VTOR_PRESENT == 1U)
