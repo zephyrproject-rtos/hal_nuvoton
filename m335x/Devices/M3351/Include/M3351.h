@@ -1296,6 +1296,7 @@ typedef volatile uint64_t vu64;   ///< Define 64-bit unsigned volatile data type
 #include "i3c.h"
 #include "pdma.h"
 #include "pwm.h"
+#include "epwm.h"
 #include "qspi.h"
 #include "rng.h"
 #include "rtc.h"
