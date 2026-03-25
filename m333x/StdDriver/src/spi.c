@@ -109,7 +109,7 @@ uint32_t SPI_Open(SPI_T *spi,
             }
             else if((CLK_GetModuleClockSource(SPI0_MODULE) << CLK_CLKSEL2_SPI0SEL_Pos) == CLK_CLKSEL2_SPI0SEL_PCLK1)
             {
-                u32ClkSrc = CLK_GetPCLK0Freq(); /* Clock source is PCLK0 */
+                u32ClkSrc = CLK_GetPCLK1Freq(); /* Clock source is PCLK1 */
             }
             else
             {
@@ -128,7 +128,7 @@ uint32_t SPI_Open(SPI_T *spi,
             }
             else if((CLK_GetModuleClockSource(SPI1_MODULE) << CLK_CLKSEL2_SPI1SEL_Pos) == CLK_CLKSEL2_SPI1SEL_PCLK0)
             {
-                u32ClkSrc = CLK_GetPCLK1Freq(); /* Clock source is PCLK1 */
+                u32ClkSrc = CLK_GetPCLK0Freq(); /* Clock source is PCLK0 */
             }
             else
             {
@@ -147,7 +147,7 @@ uint32_t SPI_Open(SPI_T *spi,
             }
             else if((CLK_GetModuleClockSource(SPI2_MODULE) << CLK_CLKSEL2_SPI2SEL_Pos) == CLK_CLKSEL2_SPI2SEL_PCLK1)
             {
-                u32ClkSrc = CLK_GetPCLK0Freq(); /* Clock source is PCLK0 */
+                u32ClkSrc = CLK_GetPCLK1Freq(); /* Clock source is PCLK1 */
             }
             else
             {
@@ -212,19 +212,19 @@ uint32_t SPI_Open(SPI_T *spi,
             {
                 CLK->CLKSEL2 = (CLK->CLKSEL2 & (~CLK_CLKSEL2_SPI0SEL_Msk)) | CLK_CLKSEL2_SPI0SEL_PCLK1;
                 /* Return slave peripheral clock rate */
-                u32RetValue = u32PCLK0Freq;
+                u32RetValue = u32PCLK1Freq;
             }
             else if((spi == SPI1) || (spi == SPI1_NS))
             {
                 CLK->CLKSEL2 = (CLK->CLKSEL2 & (~CLK_CLKSEL2_SPI1SEL_Msk)) | CLK_CLKSEL2_SPI1SEL_PCLK0;
                 /* Return slave peripheral clock rate */
-                u32RetValue = u32PCLK1Freq;
+                u32RetValue = u32PCLK0Freq;
             }
             else if((spi == SPI2) || (spi == SPI2_NS))
             {
                 CLK->CLKSEL2 = (CLK->CLKSEL2 & (~CLK_CLKSEL2_SPI2SEL_Msk)) | CLK_CLKSEL2_SPI2SEL_PCLK1;
                 /* Return slave peripheral clock rate */
-                u32RetValue = u32PCLK0Freq;
+                u32RetValue = u32PCLK1Freq;
             }
         }
         else
@@ -242,7 +242,7 @@ uint32_t SPI_Open(SPI_T *spi,
                 }
                 else if((CLK_GetModuleClockSource(SPI0_MODULE) << CLK_CLKSEL2_SPI0SEL_Pos) == CLK_CLKSEL2_SPI0SEL_PCLK1)
                 {
-                    u32RetValue = u32PCLK0Freq; /* Clock source is PCLK0 */
+                    u32RetValue = u32PCLK1Freq; /* Clock source is PCLK1 */
                 }
                 else
                 {
@@ -261,7 +261,7 @@ uint32_t SPI_Open(SPI_T *spi,
                 }
                 else if((CLK_GetModuleClockSource(SPI1_MODULE) << CLK_CLKSEL2_SPI1SEL_Pos) == CLK_CLKSEL2_SPI1SEL_PCLK0)
                 {
-                    u32RetValue = u32PCLK1Freq; /* Clock source is PCLK1 */
+                    u32RetValue = u32PCLK0Freq; /* Clock source is PCLK0 */
                 }
                 else
                 {
@@ -280,7 +280,7 @@ uint32_t SPI_Open(SPI_T *spi,
                 }
                 else if((CLK_GetModuleClockSource(SPI2_MODULE) << CLK_CLKSEL2_SPI2SEL_Pos) == CLK_CLKSEL2_SPI2SEL_PCLK1)
                 {
-                    u32RetValue = u32PCLK0Freq; /* Clock source is PCLK0 */
+                    u32RetValue = u32PCLK1Freq; /* Clock source is PCLK1 */
                 }
                 else
                 {
@@ -407,7 +407,7 @@ uint32_t SPI_SetBusClock(SPI_T *spi, uint32_t u32BusClock)
         }
         else if((CLK_GetModuleClockSource(SPI0_MODULE) << CLK_CLKSEL2_SPI0SEL_Pos) == CLK_CLKSEL2_SPI0SEL_PCLK1)
         {
-            u32ClkSrc = CLK_GetPCLK0Freq(); /* Clock source is PCLK0 */
+            u32ClkSrc = CLK_GetPCLK1Freq(); /* Clock source is PCLK1 */
         }
         else
         {
@@ -426,7 +426,7 @@ uint32_t SPI_SetBusClock(SPI_T *spi, uint32_t u32BusClock)
         }
         else if((CLK_GetModuleClockSource(SPI1_MODULE) << CLK_CLKSEL2_SPI1SEL_Pos) == CLK_CLKSEL2_SPI1SEL_PCLK0)
         {
-            u32ClkSrc = CLK_GetPCLK1Freq(); /* Clock source is PCLK1 */
+            u32ClkSrc = CLK_GetPCLK0Freq(); /* Clock source is PCLK0 */
         }
         else
         {
@@ -445,7 +445,7 @@ uint32_t SPI_SetBusClock(SPI_T *spi, uint32_t u32BusClock)
         }
         else if((CLK_GetModuleClockSource(SPI2_MODULE) << CLK_CLKSEL2_SPI2SEL_Pos) == CLK_CLKSEL2_SPI2SEL_PCLK1)
         {
-            u32ClkSrc = CLK_GetPCLK0Freq(); /* Clock source is PCLK0 */
+            u32ClkSrc = CLK_GetPCLK1Freq(); /* Clock source is PCLK1 */
         }
         else
         {
@@ -537,7 +537,7 @@ uint32_t SPI_GetBusClock(SPI_T *spi)
         }
         else if((CLK_GetModuleClockSource(SPI0_MODULE) << CLK_CLKSEL2_SPI0SEL_Pos) == CLK_CLKSEL2_SPI0SEL_PCLK1)
         {
-            u32ClkSrc = CLK_GetPCLK0Freq(); /* Clock source is PCLK0 */
+            u32ClkSrc = CLK_GetPCLK1Freq(); /* Clock source is PCLK1 */
         }
         else
         {
@@ -556,7 +556,7 @@ uint32_t SPI_GetBusClock(SPI_T *spi)
         }
         else if((CLK_GetModuleClockSource(SPI1_MODULE) << CLK_CLKSEL2_SPI1SEL_Pos) == CLK_CLKSEL2_SPI1SEL_PCLK0)
         {
-            u32ClkSrc = CLK_GetPCLK1Freq(); /* Clock source is PCLK1 */
+            u32ClkSrc = CLK_GetPCLK0Freq(); /* Clock source is PCLK0 */
         }
         else
         {
@@ -575,7 +575,7 @@ uint32_t SPI_GetBusClock(SPI_T *spi)
         }
         else if((CLK_GetModuleClockSource(SPI2_MODULE) << CLK_CLKSEL2_SPI2SEL_Pos) == CLK_CLKSEL2_SPI2SEL_PCLK1)
         {
-            u32ClkSrc = CLK_GetPCLK0Freq(); /* Clock source is PCLK0 */
+            u32ClkSrc = CLK_GetPCLK1Freq(); /* Clock source is PCLK1 */
         }
         else
         {
@@ -1030,7 +1030,7 @@ static uint32_t SPII2S_GetSourceClockFreq(SPI_T *i2s)
         }
         else if((CLK_GetModuleClockSource(SPI0_MODULE) << CLK_CLKSEL2_SPI0SEL_Pos) == CLK_CLKSEL2_SPI0SEL_PCLK1)
         {
-            u32Freq = CLK_GetPCLK0Freq(); /* Clock source is PCLK0 */
+            u32Freq = CLK_GetPCLK1Freq(); /* Clock source is PCLK1 */
         }
         else
         {
@@ -1049,7 +1049,7 @@ static uint32_t SPII2S_GetSourceClockFreq(SPI_T *i2s)
         }
         else if((CLK_GetModuleClockSource(SPI1_MODULE) << CLK_CLKSEL2_SPI1SEL_Pos) == CLK_CLKSEL2_SPI1SEL_PCLK0)
         {
-            u32Freq = CLK_GetPCLK1Freq(); /* Clock source is PCLK1 */
+            u32Freq = CLK_GetPCLK0Freq(); /* Clock source is PCLK0 */
         }
         else
         {
@@ -1068,7 +1068,7 @@ static uint32_t SPII2S_GetSourceClockFreq(SPI_T *i2s)
         }
         else if((CLK_GetModuleClockSource(SPI2_MODULE) << CLK_CLKSEL2_SPI2SEL_Pos) == CLK_CLKSEL2_SPI2SEL_PCLK1)
         {
-            u32Freq = CLK_GetPCLK0Freq(); /* Clock source is PCLK0 */
+            u32Freq = CLK_GetPCLK1Freq(); /* Clock source is PCLK1 */
         }
         else
         {
@@ -1177,7 +1177,7 @@ uint32_t SPII2S_Open(SPI_T *i2s, uint32_t u32MasterSlave, uint32_t u32SampleRate
                 /* Set the peripheral clock rate to equal APB clock rate */
                 CLK->CLKSEL2 = (CLK->CLKSEL2 & (~CLK_CLKSEL2_SPI0SEL_Msk)) | CLK_CLKSEL2_SPI0SEL_PCLK1;
                 /* Return slave peripheral clock rate */
-                u32RetValue = u32PCLK0Freq;
+                u32RetValue = u32PCLK1Freq;
             }
             else
             {
@@ -1192,7 +1192,7 @@ uint32_t SPII2S_Open(SPI_T *i2s, uint32_t u32MasterSlave, uint32_t u32SampleRate
                 }
                 else if((CLK_GetModuleClockSource(SPI0_MODULE) << CLK_CLKSEL2_SPI0SEL_Pos) == CLK_CLKSEL2_SPI0SEL_PCLK1)
                 {
-                    u32RetValue = CLK_GetPCLK0Freq(); /* Clock source is PCLK0 */
+                    u32RetValue = CLK_GetPCLK1Freq(); /* Clock source is PCLK1 */
                 }
                 else
                 {
@@ -1211,7 +1211,7 @@ uint32_t SPII2S_Open(SPI_T *i2s, uint32_t u32MasterSlave, uint32_t u32SampleRate
                 /* Set the peripheral clock rate to equal APB clock rate */
                 CLK->CLKSEL2 = (CLK->CLKSEL2 & (~CLK_CLKSEL2_SPI1SEL_Msk)) | CLK_CLKSEL2_SPI1SEL_PCLK0;
                 /* Return slave peripheral clock rate */
-                u32RetValue = u32PCLK1Freq;
+                u32RetValue = u32PCLK0Freq;
             }
             else
             {
@@ -1226,7 +1226,7 @@ uint32_t SPII2S_Open(SPI_T *i2s, uint32_t u32MasterSlave, uint32_t u32SampleRate
                 }
                 else if((CLK_GetModuleClockSource(SPI1_MODULE) << CLK_CLKSEL2_SPI1SEL_Pos) == CLK_CLKSEL2_SPI1SEL_PCLK0)
                 {
-                    u32RetValue = CLK_GetPCLK1Freq(); /* Clock source is PCLK1 */
+                    u32RetValue = CLK_GetPCLK0Freq(); /* Clock source is PCLK0 */
                 }
                 else
                 {
@@ -1245,7 +1245,7 @@ uint32_t SPII2S_Open(SPI_T *i2s, uint32_t u32MasterSlave, uint32_t u32SampleRate
                 /* Set the peripheral clock rate to equal APB clock rate */
                 CLK->CLKSEL2 = (CLK->CLKSEL2 & (~CLK_CLKSEL2_SPI2SEL_Msk)) | CLK_CLKSEL2_SPI2SEL_PCLK1;
                 /* Return slave peripheral clock rate */
-                u32RetValue = u32PCLK0Freq;
+                u32RetValue = u32PCLK1Freq;
             }
             else
             {
@@ -1260,7 +1260,7 @@ uint32_t SPII2S_Open(SPI_T *i2s, uint32_t u32MasterSlave, uint32_t u32SampleRate
                 }
                 else if((CLK_GetModuleClockSource(SPI2_MODULE) << CLK_CLKSEL2_SPI2SEL_Pos) == CLK_CLKSEL2_SPI2SEL_PCLK1)
                 {
-                    u32RetValue = CLK_GetPCLK0Freq(); /* Clock source is PCLK0 */
+                    u32RetValue = CLK_GetPCLK1Freq(); /* Clock source is PCLK1 */
                 }
                 else
                 {
