@@ -43,14 +43,14 @@ typedef struct
      * |        |          |0 = Bit order reverse for CRC checksum Disabled.
      * |        |          |1 = Bit order reverse for CRC checksum Enabled.
      * |        |          |Note: If the checksum result is 0xDD7B0F2E, the bit order reverse for CRC checksum is 0x74F0DEBB.
-     * |[26]    |DATFMT    |Write Data 1’s Complement
-     * |        |          |This bit is used to enable the 1’s complement function for write data value in CRC_DAT register.
-     * |        |          |0 = 1’s complement for CRC writes data in Disabled.
-     * |        |          |1 = 1’s complement for CRC writes data in Enabled.
-     * |[27]    |CHKSFMT   |Checksum 1’s Complement
-     * |        |          |This bit is used to enable the 1’s complement function for checksum result in CRC_CHECKSUM register.
-     * |        |          |0 = 1’s complement for CRC checksum Disabled.
-     * |        |          |1 = 1’s complement for CRC checksum Enabled.
+     * |[26]    |DATFMT    |Write Data 1's Complement
+     * |        |          |This bit is used to enable the 1's complement function for write data value in CRC_DAT register.
+     * |        |          |0 = 1's complement for CRC writes data in Disabled.
+     * |        |          |1 = 1's complement for CRC writes data in Enabled.
+     * |[27]    |CHKSFMT   |Checksum 1's Complement
+     * |        |          |This bit is used to enable the 1's complement function for checksum result in CRC_CHECKSUM register.
+     * |        |          |0 = 1's complement for CRC checksum Disabled.
+     * |        |          |1 = 1's complement for CRC checksum Enabled.
      * |[29:28] |DATLEN    |CPU Write Data Length
      * |        |          |This field indicates the write data length.
      * |        |          |00 = Data length is 8-bit mode.

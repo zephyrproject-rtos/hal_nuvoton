@@ -163,16 +163,16 @@ typedef struct
      * |        |          |00 = Detect rising edge only.
      * |        |          |01 = Detect falling edge only.
      * |        |          |1x = Detect both rising and falling edge.
-     * |[8]     |CAP0RLDEN |Capture Counter’s Reload Function Triggered by Event CAPTE0 Enable Bit
+     * |[8]     |CAP0RLDEN |Capture Counter's Reload Function Triggered by Event CAPTE0 Enable Bit
      * |        |          |0 = The reload triggered by Event CAPTE0 Disabled.
      * |        |          |1 = The reload triggered by Event CAPTE0 Enabled.
-     * |[9]     |CAP1RLDEN |Capture Counter’s Reload Function Triggered by Event CAPTE1 Enable Bit
+     * |[9]     |CAP1RLDEN |Capture Counter's Reload Function Triggered by Event CAPTE1 Enable Bit
      * |        |          |0 = The reload triggered by Event CAPTE1 Disabled.
      * |        |          |1 = The reload triggered by Event CAPTE1 Enabled.
-     * |[10]    |CAP2RLDEN |Capture Counter’s Reload Function Triggered by Event CAPTE2 Enable Bit
+     * |[10]    |CAP2RLDEN |Capture Counter's Reload Function Triggered by Event CAPTE2 Enable Bit
      * |        |          |0 = The reload triggered by Event CAPTE2 Disabled.
      * |        |          |1 = The reload triggered by Event CAPTE2 Enabled.
-     * |[11]    |OVRLDEN   |Capture Counter’s Reload Function Triggered by Overflow Enable Bit
+     * |[11]    |OVRLDEN   |Capture Counter's Reload Function Triggered by Overflow Enable Bit
      * |        |          |0 = The reload triggered by CAPOV Disabled.
      * |        |          |1 = The reload triggered by CAPOV Enabled.
      * |[14:12] |CLKSEL    |Capture Timer Clock Divide Selection

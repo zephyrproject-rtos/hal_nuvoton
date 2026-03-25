@@ -331,39 +331,39 @@ typedef struct
      * |Bits    |Field     |Descriptions
      * | :----: | :----:   | :---- |
      * |[0]     |PORF      |POR Reset Flag
-     * |        |          |The POR reset flag is set by the “Reset Signal” from the Power-on Reset (POR) Controller or bit CHIPRST (SYS_IPRST0[0]) to indicate the previous reset source.
+     * |        |          |The POR reset flag is set by the "Reset Signal" from the Power-on Reset (POR) Controller or bit CHIPRST (SYS_IPRST0[0]) to indicate the previous reset source.
      * |        |          |0 = No reset from POR or CHIPRST.
      * |        |          |1 = Power-on Reset (POR) or CHIPRST had issued the reset signal to reset the system.
      * |        |          |Note: Write 1 to clear this bit to 0.
      * |[1]     |PINRF     |NRESET Pin Reset Flag
-     * |        |          |The nRESET pin reset flag is set by the “Reset Signal” from the nRESET pin to indicate the previous reset source.
+     * |        |          |The nRESET pin reset flag is set by the "Reset Signal" from the nRESET pin to indicate the previous reset source.
      * |        |          |0 = No reset from nRESET pin.
      * |        |          |1 = Pin nRESET had issued the reset signal to reset the system.
      * |        |          |Note: Write 1 to clear this bit to 0.
      * |[2]     |WDTRF     |WDT Reset Flag
-     * |        |          |The WDT reset flag is set by the “Reset Signal” from the Watchdog Timer or Window Watchdog Timer to indicate the previous reset source.
+     * |        |          |The WDT reset flag is set by the "Reset Signal" from the Watchdog Timer or Window Watchdog Timer to indicate the previous reset source.
      * |        |          |0 = No reset from watchdog timer or window watchdog timer.
      * |        |          |1 = The watchdog timer or window watchdog timer had issued the reset signal to reset the system.
      * |        |          |Note 1: Write 1 to clear this bit to 0.
      * |        |          |Note 2: Watchdog Timer register RSTF(WDT_CTL[2]) bit is set if the system has been reset by WDT time-out reset
      * |        |          |Window Watchdog Timer register WWDTRF(WWDT_STATUS[1]) bit is set if the system has been reset by WWDT time-out reset.
      * |[3]     |LVRRF     |LVR Reset Flag
-     * |        |          |The LVR reset flag is set by the “Reset Signal” from the Low Voltage Reset Controller to indicate the previous reset source.
+     * |        |          |The LVR reset flag is set by the "Reset Signal" from the Low Voltage Reset Controller to indicate the previous reset source.
      * |        |          |0 = No reset from LVR.
      * |        |          |1 = LVR controller had issued the reset signal to reset the system.
      * |        |          |Note: Write 1 to clear this bit to 0.
      * |[4]     |BODRF     |BOD Reset Flag
-     * |        |          |The BOD reset flag is set by the “Reset Signal” from the Brown-Out Detector to indicate the previous reset source.
+     * |        |          |The BOD reset flag is set by the "Reset Signal" from the Brown-Out Detector to indicate the previous reset source.
      * |        |          |0 = No reset from BOD.
      * |        |          |1 = The BOD had issued the reset signal to reset the system.
      * |        |          |Note: Write 1 to clear this bit to 0.
      * |[5]     |MCURF     |MCU Reset Flag
-     * |        |          |The MCU reset flag is set by the “Reset Signal” from the Cortex-M33 Core to indicate the previous reset source.
+     * |        |          |The MCU reset flag is set by the "Reset Signal" from the Cortex-M33 Core to indicate the previous reset source.
      * |        |          |0 = No reset from Cortex-M33.
      * |        |          |1 = The Cortex-M33 had issued the reset signal to reset the system by writing 1 to the bit SYSRESETREQ(AIRCR[2], Application Interrupt and Reset Control Register, address = 0xE000ED0C) in system control registers of Cortex-M33 core.
      * |        |          |Note: Write 1 to clear this bit to 0.
      * |[6]     |HRESETRF  |HRESET Reset Flag
-     * |        |          |The HRESET reset flag is set by the “Reset Signal” from the HRESET.
+     * |        |          |The HRESET reset flag is set by the "Reset Signal" from the HRESET.
      * |        |          |0 = No reset from HRESET.
      * |        |          |1 = Reset from HRESET.
      * |        |          |Note 1: Write 1 to clear this bit to 0.
@@ -654,8 +654,8 @@ typedef struct
      * |        |          |Note: This bit is write protected. Refer to the SYS_REGLCTL register.
      * |[3]     |BODRSTEN  |Brown-out Reset Enable Bit (Write Protect)
      * |        |          |The default value is set by Flash controller user configuration register CBORST(CONFIG0[20]) bit.
-     * |        |          |0 = Brown-out “INTERRUPT” function Enabled.
-     * |        |          |1 = Brown-out “RESET” function Enabled.
+     * |        |          |0 = Brown-out "INTERRUPT" function Enabled.
+     * |        |          |1 = Brown-out "RESET" function Enabled.
      * |        |          |Note 1: While the Brown-out Detector function is enabled (BODEN high) and BOD reset function is enabled (BODRSTEN high), BOD will assert a signal to reset chip when the detected voltage is lower than the threshold (BODOUT high).
      * |        |          |While the BOD function is enabled (BODEN high) and BOD interrupt function is enabled (BODRSTEN low), BOD will assert an interrupt if BODIF is high
      * |        |          |BOD interrupt will keep till the BODIF set to 0
@@ -708,7 +708,7 @@ typedef struct
      * |        |          |0 = Low Voltage Reset function not ready.
      * |        |          |1 = Low Voltage Reset function ready.
      * |[19:16] |BODVL     |Brown-out Detector Threshold Voltage Selection (Write Protect)
-     * |        |          |The default value is set by Flash controller user configuration register CBOV ({1’b1, CONFIG0 [23:21]}).
+     * |        |          |The default value is set by Flash controller user configuration register CBOV ({1'b1, CONFIG0 [23:21]}).
      * |        |          |1011 = Brown-Out Detector threshold voltage is 2.8V.
      * |        |          |1101 = Brown-Out Detector threshold voltage is 3.7V.
      * |        |          |1111 = Brown-Out Detector threshold voltage is 4.4V.
@@ -2003,7 +2003,7 @@ typedef struct
      * |[16]    |SRBEND0   |System SRAM Bank0 BIST Test Finish (Read Only)
      * |        |          |0 = System SRAM bank0 BIST active.
      * |        |          |1 = System SRAM bank0 BIST finished.
-     * |[17]    |SRBEND1   |System SRAM Bnak1 BIST Test Finish (Read Only)
+     * |[17]    |SRBEND1   |System SRAM Bank1 BIST Test Finish (Read Only)
      * |        |          |0 = System SRAM bank1 BIST is active.
      * |        |          |1 = System SRAM bank1 BIST finished.
      * |[18]    |CACHEBEND |CACHE SRAM BIST Test Finish (Read Only)
@@ -2053,7 +2053,7 @@ typedef struct
      * |[7:6]   |RETRYCNT  |Trim Value Update Limitation Count
      * |        |          |This field defines that how many times the auto trim circuit will try to update the HIRC trim value before the frequency of HIRC locked.
      * |        |          |Once the HIRC locked, the internal trim value update counter will be reset.
-     * |        |          |If the trim value update counter reached this limitation value and frequency of HIRC still doesn’t lock, the auto trim operation will be disabled and FREQSEL will be cleared to 00.
+     * |        |          |If the trim value update counter reached this limitation value and frequency of HIRC still doesn't lock, the auto trim operation will be disabled and FREQSEL will be cleared to 00.
      * |        |          |00 = Trim retry count limitation is 64 loops.
      * |        |          |01 = Trim retry count limitation is 128 loops.
      * |        |          |10 = Trim retry count limitation is 256 loops.
@@ -2092,13 +2092,13 @@ typedef struct
      * | :----: | :----:   | :---- |
      * |[0]     |FREQLOCK  |HIRC Frequency Lock Status
      * |        |          |This bit indicates the HIRC frequency is locked.
-     * |        |          |This is a status bit and doesn’t trigger any interrupt.
+     * |        |          |This is a status bit and doesn't trigger any interrupt.
      * |        |          |Write 1 to clear this to 0
      * |        |          |This bit will be set automatically, if the frequency is lock and the RC_TRIM is enabled.
-     * |        |          |0 = The internal high-speed oscillator frequency doesn’t lock at 48 MHz yet.
+     * |        |          |0 = The internal high-speed oscillator frequency doesn't lock at 48 MHz yet.
      * |        |          |1 = The internal high-speed oscillator frequency locked at 48 MHz.
      * |[1]     |TFAILIF   |Trim Failure Interrupt Status
-     * |        |          |This bit indicates that HIRC trim value update limitation count reached and the HIRC clock frequency still doesn’t be locked
+     * |        |          |This bit indicates that HIRC trim value update limitation count reached and the HIRC clock frequency still doesn't be locked
      * |        |          |Once this bit is set, the auto trim operation stopped and FREQSEL(SYS_HIRCTCTL[1:0]) will be cleared to 00 by hardware automatically.
      * |        |          |If this bit is set and TFAILIEN(SYS_HIRCTIEN[1]) is high, an interrupt will be triggered to notify that HIRC trim value update limitation count was reached
      * |        |          |Write 1 to clear this to 0.
@@ -2152,7 +2152,7 @@ typedef struct
      * | :----: | :----:   | :---- |
      * |[7:0]   |REGLCTL   |Register Lock Control Code (Write Only)
      * |        |          |Some registers have write-protection function
-     * |        |          |Writing these registers have to disable the protected function by writing the sequence value “59h”, “16h”, “88h” to this field
+     * |        |          |Writing these registers have to disable the protected function by writing the sequence value "59h", "16h", "88h" to this field
      * |        |          |After this sequence is completed, the REGLCTL bit will be set to 1 and write-protection registers can be normal write.
      * |        |          |REGLCTL[0]
      * |        |          |Register Lock Control Disable Index (Read Only)

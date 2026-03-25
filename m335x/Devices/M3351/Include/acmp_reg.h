@@ -169,7 +169,7 @@ typedef struct
      * |[15]    |CLAMPEN0  |ACMP Speed Up Function Enable Bit
      * |        |          |0 = ACMP0 Speed Up Function Disabled.
      * |        |          |1 = ACMP0 Speed Up Function Enabled.
-     * |        |          |Note: ACMP speed up function only support MODESEL(ACMP_CTL0 [29:28])=2b’11 & 2b’10.
+     * |        |          |Note: ACMP speed up function only support MODESEL(ACMP_CTL0 [29:28])=2b'11 & 2b'10.
      * |[23:16] |CRV1SEL   |ACMP Reference Voltage Setting 1
      * |        |          |Set CRV output voltage for ACMP1 negtive input.
      * |        |          |CRV1 = CRV1 source voltage * (CRV1SEL)/ 255.
@@ -182,7 +182,7 @@ typedef struct
      * |[31]    |CLAMPEN1  |ACMP Speed Up Function Enable Bit
      * |        |          |0 = ACMP1 Speed Up Function Disabled.
      * |        |          |1 = ACMP1 Speed Up Function Enabled.
-     * |        |          |Note: ACMP speed up function only support MODESEL(ACMP_CTL1 [29:28])=2b’11 & 2b’10.
+     * |        |          |Note: ACMP speed up function only support MODESEL(ACMP_CTL1 [29:28])=2b'11 & 2b'10.
      * @var ACMP_T::CALCTL
      * Offset: 0x10  Analog Comparator Calibration Control Register
      * ---------------------------------------------------------------------------------------------------

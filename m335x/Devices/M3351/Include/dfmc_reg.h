@@ -131,7 +131,7 @@ typedef struct
      * |        |          |l Mass erase is not executed in Data Flash
      * |        |          |Note: This bit is write protected. Refer to the SYS_REGLCTL register.
      * |[7]     |ALLONE    |Data Flash All-one Verification Flag
-     * |        |          |This bit is set by hardware if all of Flash bits are 1, and clear if Flash bits are not all 1 after “Run Data Flash All-One Verification” complete; this bit also can be clear by writing 1
+     * |        |          |This bit is set by hardware if all of Flash bits are 1, and clear if Flash bits are not all 1 after "Run Data Flash All-One Verification" complete; this bit also can be clear by writing 1
      * |        |          |0 = Data Flash bits are not all 1 after "Run Data Flash All-One Verification" is complete.
      * |        |          |1 = All of Data Flash bits are 1 after "Run Data Flash All-One Verification" is complete.
      * |[8]     |EEP_PGFULL|EEPROM Emulation in the page full processing

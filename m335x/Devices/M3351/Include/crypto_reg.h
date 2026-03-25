@@ -201,10 +201,10 @@ typedef struct
      * |        |          |Note: This bit is always 0 when it is read back.
      * |[3:2]   |KEYSZ     |AES Key Size
      * |        |          |This bit defines three different key size for AES operation.
-     * |        |          |2’b00 = 128 bits key.
-     * |        |          |2’b01 = 192 bits key.
-     * |        |          |2’b10 = 256 bits key.
-     * |        |          |2’b11 = Reserved.
+     * |        |          |2'b00 = 128 bits key.
+     * |        |          |2'b01 = 192 bits key.
+     * |        |          |2'b10 = 256 bits key.
+     * |        |          |2'b11 = Reserved.
      * |        |          |If the AES accelerator is operating and the corresponding flag BUSY is 1, updating this register has no effect.
      * |[5]     |DMALAST   |AES Last Block
      * |        |          |In DMA mode, this bit must be set as beginning the last DMA cascade round.
@@ -251,7 +251,7 @@ typedef struct
      * |        |          |0 = Keep the original order.
      * |        |          |1 = The order that CPU feeds key and initial vector to the accelerator will be changed from {byte3, byte2, byte1, byte0} to {byte0, byte1, byte2, byte3}.
      * |[30:26] |KEYUNPRT  |Unprotect Key
-     * |        |          |Writing 0 to CRYPTO_AES_CTL[31] and “10110” to CRYPTO_AES_CTL[30:26] is to unprotect the AES key.
+     * |        |          |Writing 0 to CRYPTO_AES_CTL[31] and "10110" to CRYPTO_AES_CTL[30:26] is to unprotect the AES key.
      * |        |          |The KEYUNPRT can be read and written
      * |        |          |When it is written as the AES engine is operating, BUSY flag is 1, there would be no effect on KEYUNPRT.
      * |[31]    |KEYPRT    |Protect Key
@@ -348,7 +348,7 @@ typedef struct
      * |        |          |The start of source address should be located at word boundary
      * |        |          |In other words, bit 1 and 0 of SADDR are ignored.
      * |        |          |SADDR can be read and written
-     * |        |          |Writing to SADDR while the AES accelerator is operating doesn’t affect the current AES operation
+     * |        |          |Writing to SADDR while the AES accelerator is operating doesn't affect the current AES operation
      * |        |          |But the value of SADDR will be updated later on
      * |        |          |Consequently, software can prepare the DMA source address for the next AES operation.
      * |        |          |In DMA mode, software can update the next CRYPTO_AES_SADDR before triggering START.
@@ -360,12 +360,12 @@ typedef struct
      * | :----: | :----:   | :---- |
      * |[31:0]  |DADDR     |AES DMA Destination Address
      * |        |          |The AES accelerator supports DMA function to transfer the cipher text between system memory space and embedded FIFO
-     * |        |          |The DADDR keeps the destination address of the data buffer where the engine output’s text will be stored
+     * |        |          |The DADDR keeps the destination address of the data buffer where the engine output's text will be stored
      * |        |          |Based on the destination address, the AES accelerator can write the cipher text (encryption) / plain text (decryption) back to system memory space after the AES operation is finished
      * |        |          |The start of destination address should be located at word boundary
      * |        |          |In other words, bit 1 and 0 of DADDR are ignored.
      * |        |          |DADDR can be read and written
-     * |        |          |Writing to DADDR while the AES accelerator is operating doesn’t affect the current AES operation
+     * |        |          |Writing to DADDR while the AES accelerator is operating doesn't affect the current AES operation
      * |        |          |But the value of DADDR will be updated later on
      * |        |          |Consequently, software can prepare the destination address for the next AES operation.
      * |        |          |In DMA mode, software can update the next CRYPTO_AES_DADDR before triggering START.
@@ -379,7 +379,7 @@ typedef struct
      * |        |          |The   CRYPTO_AES_CNT keeps the byte count of source text that is for the AES engine   operating in DMA mode
      * |        |          |The CRYPTO_AES_CNT is 32-bit and the maximum of byte   count is 4G bytes.
      * |        |          |CRYPTO_AES_CNT   can be read and written
-     * |        |          |Writing to CRYPTO_AES_CNT while the AES accelerator   is operating doesn’t affect the current AES operation
+     * |        |          |Writing to CRYPTO_AES_CNT while the AES accelerator   is operating doesn't affect the current AES operation
      * |        |          |But the value of   CRYPTO_AES_CNT will be updated later on
      * |        |          |Consequently, software can prepare   the byte count of data for the next AES operation.
      * |        |          |According   to CBC-CS1, CBC-CS2, and CBC-CS3 standard, the count of operation data must   be more than 16 bytes
@@ -423,7 +423,7 @@ typedef struct
      * |        |          |0x101: SHA2-224
      * |        |          |0x110: SHA2-512
      * |        |          |0x111: SHA2-384
-     * |        |          |Note: These bits can be read and written. But writing to them wouldn’t take effect as BUSY is 1.
+     * |        |          |Note: These bits can be read and written. But writing to them wouldn't take effect as BUSY is 1.
      * |        |          |Note: When MD5EN=1, SHA/HMAC only execute MD5 and then generate 128 bits digest.
      * |[11]    |HMACEN    |HMAC_SHA Engine Operating Mode
      * |        |          |0 = Execute SHA function.
@@ -480,7 +480,7 @@ typedef struct
      * |        |          |The CRYPTO_HMAC_KEYCNT keeps the byte count of key that SHA/HMAC engine operates
      * |        |          |The register is 32-bit and the maximum byte count is 4G bytes
      * |        |          |It can be read and written.
-     * |        |          |Writing to the register CRYPTO_HMAC_KEYCNT as the SHA/HMAC accelerator operating doesn’t affect the current SHA/HMAC operation
+     * |        |          |Writing to the register CRYPTO_HMAC_KEYCNT as the SHA/HMAC accelerator operating doesn't affect the current SHA/HMAC operation
      * |        |          |But the value of CRYPTO_HMAC_KEYCNT will be updated later on
      * |        |          |Consequently, software can prepare the key count for the next SHA/HMAC operation.
      * @var CRYPTO_T::HMAC_SADDR
@@ -495,7 +495,7 @@ typedef struct
      * |        |          |The start of source address should be located at word boundary
      * |        |          |In other words, bit 1 and 0 of CRYPTO_HMAC_SADDR are ignored.
      * |        |          |CRYPTO_HMAC_SADDR can be read and written
-     * |        |          |Writing to CRYPTO_HMAC_SADDR while the SHA/HMAC accelerator is operating doesn’t affect the current SHA/HMAC operation
+     * |        |          |Writing to CRYPTO_HMAC_SADDR while the SHA/HMAC accelerator is operating doesn't affect the current SHA/HMAC operation
      * |        |          |But the value of CRYPTO_HMAC_SADDR will be updated later on
      * |        |          |Consequently, software can prepare the DMA source address for the next SHA/HMAC operation.
      * |        |          |In DMA mode, software can update the next CRYPTO_HMAC_SADDR before triggering START.
@@ -509,7 +509,7 @@ typedef struct
      * |        |          |The CRYPTO_HMAC_DMACNT keeps the byte count of source text that is for the SHA/HMAC engine operating in DMA mode
      * |        |          |The CRYPTO_HMAC_DMACNT is 32-bit and the maximum of byte count is 4G bytes.
      * |        |          |CRYPTO_HMAC_DMACNT can be read and written
-     * |        |          |Writing to CRYPTO_HMAC_DMACNT while the SHA/HMAC accelerator is operating doesn’t affect the current SHA/HMAC operation
+     * |        |          |Writing to CRYPTO_HMAC_DMACNT while the SHA/HMAC accelerator is operating doesn't affect the current SHA/HMAC operation
      * |        |          |But the value of CRYPTO_HMAC_DMACNT will be updated later on
      * |        |          |Consequently, software can prepare the byte count of data for the next SHA/HMAC operation.
      * |        |          |In Non-DMA mode, CRYPTO_HMAC_DMACNT must be set as the byte count of the last block before feeding in the last block of data.

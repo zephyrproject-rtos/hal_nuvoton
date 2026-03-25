@@ -40,15 +40,12 @@ int32_t TRNG_Open(void)
     SYS_ResetModule(TRNG_RST);
 
     TRNG->CTL |= TRNG_CTL_LDOEN_Msk;
-    /* Waiting for ready */
-#ifndef __PLDM_EMU__
 
+    /* Waiting for ready */
     while ((TRNG->STS & TRNG_STS_LDORDY_Msk) == 0)
     {
         TRNG_DBGMSG("Waiting for ready\n");
     };
-
-#endif
 
     TRNG->CTL &= ~TRNG_CTL_NRST_Msk;
 
@@ -60,15 +57,13 @@ int32_t TRNG_Open(void)
 
     TRNG_DBGMSG("TRNG->STS0 0x%x \n", TRNG->STS);
 
-#ifndef __PLDM_EMU__
-
     /* Waiting for ready */
     while ((TRNG->STS & TRNG_STS_TRNGRDY_Msk) == 0);
 
-#endif
-
     for (i = 0; i < 3; i++)
+    {
         TRNG_DBGMSG("TRNG->STS: loop%d  0x%x \n", i, TRNG->STS);
+    }
 
     if ((TRNG->STS & (TRNG_STS_ESAPT_Msk | TRNG_STS_ESRCT_Msk | TRNG_STS_ESSUT_Msk)) \
             != (TRNG_STS_ESAPT_Msk | TRNG_STS_ESRCT_Msk | TRNG_STS_ESSUT_Msk))
@@ -133,7 +128,7 @@ int32_t TRNG_GenWord(uint32_t *u32RndNum)
 int32_t TRNG_GenBignum(uint8_t u8BigNum[], int32_t i32Len)
 {
     uint32_t   u32Reg, timeout;
-	int32_t    i;
+    int32_t    i;
 
     u32Reg = TRNG->CTL;
 
@@ -173,7 +168,7 @@ int32_t TRNG_GenBignumHex(char cBigNumHex[], int32_t i32Len)
 {
     uint32_t   idx, u32Reg, timeout;
     uint32_t   data;
-	int32_t    i;
+    int32_t    i;
 
     u32Reg = TRNG->CTL;
     idx = 0;

@@ -332,7 +332,7 @@ typedef struct
      * |        |          |Software can write 1 to clear this bit.
      * |        |          |Note: FBSTSIEN (ELLSI_CTL[29]) need to be set.
      * |[24]    |ASETIDOV  |AUTO SET Mode Feedback ID Overflow Flag
-     * |        |          |It will be set 1 when setting ID 4b’1111, and get two pulses back.
+     * |        |          |It will be set 1 when setting ID 4b'1111, and get two pulses back.
      * |        |          |Software can write 1 to clear this bit.
      * |        |          |Note: ASETIEN (ELLSI_CTL[30]) need to be set.
      * |[25]    |ASETDONE  |AUTO SET Mode Done Flag
