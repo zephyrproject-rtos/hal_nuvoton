@@ -152,7 +152,7 @@ int32_t RNG_Random(uint32_t *pu32Buf, int32_t nWords)
 
 
 /**
- *  @brief      To generate entropy from hardware entropy source (TRNG)
+ *  @brief      To generate entropy(TRNG)
  *
  *  @param[in]  pu32Out  Buffer pointer to store the random number in word
  *
@@ -175,7 +175,7 @@ int32_t RNG_EntropyPoll(uint32_t *pu32Out, int32_t i32Len)
     }
 
     /* Trigger entropy generate */
-    TRNG->CTL |= (TRNG_CTL_TRNGEN_Msk | TRNG_CTL_DVIEN_Msk);
+    TRNG->CTL |= (TRNG_CTL_TRNGEN_Msk | TRNG_CTL_MODE_OUTPUT_NRBG );
 
     for (i = 0; i < i32Len; i += 4)
     {

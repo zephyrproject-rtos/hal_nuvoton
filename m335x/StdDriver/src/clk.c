@@ -762,7 +762,7 @@ void CLK_SetSysTickClockSrc(uint32_t u32ClkSrc)
 void CLK_EnableXtalRC(uint32_t u32ClkMask)
 {
 	/* WORKAROUND */
-	if (u32ClkMask == CLK_PWRCTL_HXTEN_Msk)
+	if ((u32ClkMask & CLK_PWRCTL_HXTEN_Msk) == CLK_PWRCTL_HXTEN_Msk)
 	{
 		outp32(SYS_BASE + 0x190, (inp32(SYS_BASE + 0x190) & ~(BIT21|BIT22|BIT23)) | BIT22);
 	}

@@ -1771,4 +1771,8 @@ typedef struct
 /** @} end of CANFD register group */
 /** @} end of REGISTER group */
 
+#if defined ( __CC_ARM   )
+    #pragma no_anon_unions
+#endif
+
 #endif /* __CANFD_REG_H__ */

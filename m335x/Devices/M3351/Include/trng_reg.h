@@ -47,7 +47,7 @@ typedef struct
      * |        |          |1 = Start TRNG.
      * |        |          |Note: Do not enable START and KATEN at the same time. This bit is always 0 when it is read back.
      * |[5:4]   |MODE      |Random Bit Generator Output Selection
-     * |        |          |00 = Output data is from entropy (32-bits).
+     * |        |          |00 = Reserved.
      * |        |          |01 = Output data is from NRBG (128-bits).
      * |        |          |10 = Output data is from DRBG (128-bits).
      * |        |          |11 = Reserved.
@@ -112,15 +112,15 @@ typedef struct
      * |[27]    |KATPASS   |CTR_DRBG Known Answer Test Pass
      * |        |          |0 = Test fail.
      * |        |          |1 = Test pass.
-     * |        |          |Note: When users enable KATEN, they can check this bit after DVIF become ‘1’.
+     * |        |          |Note: When users enable KATEN, they can check this bit after DVIF become '1'.
      * |[30]    |ERRIF     |TRNG Error Interrupt Flag
      * |        |          |0 = No TRNG error.
-     * |        |          |1 = TRNGRDY became ‘0’ over 1ms , TRNG error interrupt.
+     * |        |          |1 = TRNGRDY became '0' over 1ms , TRNG error interrupt.
      * |[31]    |DVIF      |Data Valid Interrupt Flag
      * |        |          |0 = Data is invalid.
      * |        |          |1 = Data is valid. A valid random number can be read form TRNG_DATAx.
-     * |        |          |Note: This bit is cleared to ‘0’ by reading DATA_OUT[0] ~ DATA_OUT[3].
-     * |        |          |If MODE (TRNG_CTL[5:4]) = ‘00’, this bit is cleared to ‘0’ by reading DATA_OUT[0].
+     * |        |          |Note: This bit is cleared to '0' by reading DATA_OUT[0] ~ DATA_OUT[3].
+     * |        |          |If MODE (TRNG_CTL[5:4]) = '00', this bit is cleared to '0' by reading DATA_OUT[0].
      * @var TRNG_T::DATA_OUT[4]
      * Offset: 0x0C~0x18  TRNG Data Output Word Register
      * ---------------------------------------------------------------------------------------------------

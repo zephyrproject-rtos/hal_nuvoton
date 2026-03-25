@@ -70,7 +70,7 @@ typedef struct
      * |        |          |Note 1: The interrupt will occur when both PDWKIF and PDWKIEN are high.
      * |        |          |Note 2: This bit is write protected. Refer to the SYS_REGLCTL register.
      * |[6]     |PDWKIF    |Power-down Mode Wake-up Interrupt Status
-     * |        |          |Set by “Power-down wake-up event”, it indicates that resume from Power-down mode.
+     * |        |          |Set by "Power-down wake-up event", it indicates that resume from Power-down mode.
      * |        |          |The flag is set if any wake-up source occurred. Refer Power Modes and Wake-up Sources chapter.
      * |        |          |Note 1: Write 1 to clear the bit to 0.
      * |        |          |Note 2: This bit works only if PDWKIEN (CLK_PWRCTL[5]) set to 1.

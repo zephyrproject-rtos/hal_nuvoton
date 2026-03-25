@@ -181,16 +181,16 @@ typedef struct
      * |        |          |· ISP conflict error
      * |        |          |Note: This bit is write protected. Refer to the SYS_REGLCTL register.
      * |[7]     |ALLONE    |Flash All-one Verification Flag (Write Protect)
-     * |        |          |This bit is set by hardware if all of Flash bits are 1, and cleared if Flash bits are not all 1 after “Run Flash All-One Verification” is complete; this bit also can be cleared by writing 1
-     * |        |          |0 = Flash bits are not all 1 after “Run Flash All-One Verification” complete.
-     * |        |          |1 = All of Flash bits are 1 after “Run Flash All-One Verification” complete.
+     * |        |          |This bit is set by hardware if all of Flash bits are 1, and cleared if Flash bits are not all 1 after "Run Flash All-One Verification" is complete; this bit also can be cleared by writing 1
+     * |        |          |0 = Flash bits are not all 1 after "Run Flash All-One Verification" complete.
+     * |        |          |1 = All of Flash bits are 1 after "Run Flash All-One Verification" complete.
      * |[8]     |INTFLAG   |ISP Interrupt Flag (Write Protect)
      * |        |          |This bit shows when FMC occurs interrupt, it needs to be cleared by writing 1 to FMC_ISPSTS[8].
      * |        |          |0 = ISP Not Finished.
      * |        |          |1 = ISP done or ISPFF set.
      * |        |          |Note: This function needs to be enabled by FMC_ISPCTRL[24].
      * |[27:10] |VECMAP    |Vector Page Mapping Address (Read Only)
-     * |        |          |All access to 0x0000_0000~0x0000_03FF is remapped to the Flash memory address {VECMAP[17:0], 10’h000} ~ {VECMAP[17:0], 10’h3FF}
+     * |        |          |All access to 0x0000_0000~0x0000_03FF is remapped to the Flash memory address {VECMAP[17:0], 10'h000} ~ {VECMAP[17:0], 10'h3FF}
      * |[28]    |ISPCERR   |ISP Conflict Error
      * |        |          |This bit shows when FMC is doing ISP operation, it needs to be cleared by writing 1 to FMC_ISPSTS[28]
      * |        |          |User cannot access FMC_ISP_ADDR,FMC_ISPDAT,FMC_ISPCMD,FMC_ISPTRG

@@ -343,7 +343,7 @@ uint32_t UUART_Open(UUART_T *uuart, uint32_t u32baudrate)
     uint32_t u32Div;
 
     /* Get PCLK frequency */
-    if ((uuart == UUART0) || (uuart == UUART0_NS))
+    if (uuart == UUART0)
     {
         u32PCLKFreq = CLK_GetPCLK0Freq();
     }
@@ -525,7 +525,7 @@ uint32_t UUART_SetLine_Config(UUART_T *uuart, uint32_t u32baudrate, uint32_t u32
     uint32_t u32MinDSCnt = 0UL;
 
     /* Get PCLK frequency */
-    if ((uuart == UUART0) || (uuart == UUART0_NS))
+    if (uuart == UUART0)
     {
         u32PCLKFreq = CLK_GetPCLK0Freq();
     }

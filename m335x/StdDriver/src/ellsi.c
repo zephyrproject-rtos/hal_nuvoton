@@ -1443,7 +1443,7 @@ void ELLSI_ClearOverflowFlag(ELLSI_T *ellsi, uint32_t u32ID)
 
     u32Idx = u32ID - 1;
 
-    ellsi->FB[u32Idx].FBPCNT |= (ellsi->FB[u32Idx].FBPCNT & ELLSI_FBPCNT_FBPOV_Msk);
+    ellsi->FB[u32Idx].FBPCNT |= ELLSI_FBPCNT_FBPOV_Msk;
 }
 
 /** @} end of group ELLSI_EXPORTED_FUNCTIONS */

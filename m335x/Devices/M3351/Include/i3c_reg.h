@@ -123,8 +123,10 @@ typedef struct
     __I  uint32_t DBSTSLV;              /*!< [0x0050] I3C Data Buffer Status Level Register */
     __I  uint32_t PRESENTS;             /*!< [0x0054] I3C Present State Register */
     __I  uint32_t CCCDEVS;              /*!< [0x0058] I3C Target Device Operating Status Register */
+    __I  uint32_t ADDRTBP;              /*!< [0x005c] I3C Controller Mode Device Address Table Pointer Register */
+    __I  uint32_t CHRTBP;               /*!< [0x0060] I3C Controller Mode Device Characteristics Table Pointer Register */
     /// @cond HIDDEN_SYMBOLS
-    __I  uint32_t RESERVE3[5];          /*!< [0x005c] ~ [0x006c] Reserved */
+    __I  uint32_t RESERVE3[3];          /*!< [0x0064] ~ [0x006c] Reserved */
     /// @endcond //HIDDEN_SYMBOLS
     __IO uint32_t SLVMID;               /*!< [0x0070] I3C Target MIPI Manufacturer ID Register */
     __IO uint32_t SLVPID;               /*!< [0x0074] I3C Target Normal Provisional ID Register */
@@ -596,6 +598,9 @@ typedef struct
 
 #define I3C_CCCDEVS_FRAMEERR_Pos        (13U)
 #define I3C_CCCDEVS_FRAMEERR_Msk        (0x1UL << I3C_CCCDEVS_FRAMEERR_Pos)
+
+#define I3C_CHRTBP_CHRINDEX_Pos         (19U)
+#define I3C_CHRTBP_CHRINDEX_Msk         (0x1FFFUL << I3C_CHRTBP_CHRINDEX_Pos)
 
 #define I3C_SLVMID_PIDTYPE_Pos          (0U)
 #define I3C_SLVMID_PIDTYPE_Msk          (0x1UL << I3C_SLVMID_PIDTYPE_Pos)
