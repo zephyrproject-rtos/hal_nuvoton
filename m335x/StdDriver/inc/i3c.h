@@ -42,6 +42,7 @@ extern "C"
 /*---------------------------------------------------------------------------------------------------------*/
 /* I3C CCC (Common Command Codes) Commands valid in both broadcast and unicast modes                       */
 /*---------------------------------------------------------------------------------------------------------*/
+#ifndef CONFIG_HAS_NUMAKER_HAL
 #define I3C_CCC_ENEC(broadcast)             I3C_CCC_ID(0x0, broadcast)           /*!< Enable Events Command */
 #define I3C_CCC_DISEC(broadcast)            I3C_CCC_ID(0x1, broadcast)           /*!< Disable Events Command */
 #define I3C_CCC_ENTAS(as, broadcast)        I3C_CCC_ID(0x2 + (as), broadcast)    /*!< Enter Activity State */
@@ -83,7 +84,7 @@ extern "C"
 #define I3C_CCC_GETCAPS                     I3C_CCC_ID(0x15, FALSE) /*!< Get Optional Feature Capabilities */
 #define I3C_CCC_GETXTIME                    I3C_CCC_ID(0x19, FALSE) /*!< Get Exchange Timing Information */
 #define I3C_CCC_SETGRPA                     I3C_CCC_ID(0x1b, FALSE) /*!< Set Group Address */
-
+#endif /* CONFIG_HAS_NUMAKER_HAL */
 /*---------------------------------------------------------------------------------------------------------*/
 /*  I3C Maximum RX/TX FIFO and Response/Command Queue Constant Definitions                                 */
 /*---------------------------------------------------------------------------------------------------------*/
