@@ -126,6 +126,57 @@ int32_t FMC_Erase(uint32_t u32PageAddr)
 }
 
 /**
+  * @brief Execute FMC_ISPCMD_PAGE_ERASE command to erase a flash bank.
+  * @param[in]  u32BankAddr Base address of the flash bank to be erased.
+  * @return ISP page erase success or not.
+  * @retval   0  Success
+  * @retval   -1  Erase failed
+  *
+  * @note     Global error code g_FMC_i32ErrCode
+  *           -1  Erase failed or erase time-out
+  */
+int32_t FMC_Erase_Bank(uint32_t u32BankAddr)
+{
+    int32_t i32RetCode = FMC_OK;
+    int32_t i32TimeOutCnt;
+    int page_nums = (FMC_BANK_SIZE / FMC_FLASH_PAGE_SIZE);
+    uint32_t u32PageAddr = u32BankAddr;
+
+    g_FMC_i32ErrCode = FMC_OK;
+
+    FMC->ISPCMD  = FMC_ISPCMD_PAGE_ERASE;
+    FMC->ISPTRG  = FMC_ISPTRG_ISPGO_Msk;
+
+    while (page_nums)
+    {
+        FMC->ISPADDR = u32PageAddr;
+        i32TimeOutCnt = FMC_TIMEOUT_ERASE;
+
+        while (FMC->ISPTRG & FMC_ISPTRG_ISPGO_Msk)
+        {
+            if (i32TimeOutCnt-- <= 0)
+            {
+                i32RetCode = FMC_ERR_TIMEOUT;
+                g_FMC_i32ErrCode = i32RetCode;
+                break;
+            }
+        }
+
+        if (FMC->ISPCTL & FMC_ISPCTL_ISPFF_Msk)
+        {
+            FMC->ISPCTL |= FMC_ISPCTL_ISPFF_Msk;
+            i32RetCode = FMC_ERR_FAIL;
+            g_FMC_i32ErrCode = i32RetCode;
+	    break;
+        }
+	page_nums--;
+	u32PageAddr += FMC_FLASH_PAGE_SIZE;
+    }
+    
+    return i32RetCode;
+}
+
+/**
   * @brief  Execute Erase XOM Region
   *
   * @param[in]  u32XomNum  The XOM number (0~1).

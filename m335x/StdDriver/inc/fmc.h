@@ -699,6 +699,7 @@ extern void     FMC_Open(void);
 extern void     FMC_Close(void);
 extern int32_t  FMC_ConfigXOM(uint32_t u32XomNum, uint32_t u32XomBase, uint8_t u8XomPage);
 extern int32_t  FMC_Erase(uint32_t u32PageAddr);
+extern int32_t  FMC_Erase_Bank(uint32_t u32BankAddr);
 extern int32_t  FMC_EraseXOM(uint32_t u32XomNum);
 extern int32_t  FMC_GetXOMState(uint32_t u32XomNum);
 extern uint32_t FMC_Read(uint32_t u32Addr);
