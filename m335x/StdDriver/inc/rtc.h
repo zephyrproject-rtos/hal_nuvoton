@@ -134,7 +134,8 @@ typedef struct
   * @details    This macro is used to clear RTC alarm interrupt flag.
   * \hideinitializer
   */
-#define RTC_CLEAR_ALARM_INT_FLAG(rtc)   ((rtc)->INTSTS = RTC_INTSTS_ALMIF_Msk)
+//#define RTC_CLEAR_ALARM_INT_FLAG(rtc)   ((rtc)->INTSTS = RTC_INTSTS_ALMIF_Msk)
+#define RTC_CLEAR_ALARM_INT_FLAG()   (RTC->INTSTS = RTC_INTSTS_ALMIF_Msk)
 
 /**
   * @brief      Clear RTC Tick Interrupt Flag
