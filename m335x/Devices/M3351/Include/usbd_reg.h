@@ -895,10 +895,10 @@ typedef struct
 #define USBD_SE0_SE0_Msk                 (0x1ul << USBD_SE0_SE0_Pos)                       /*!< USBD_T::SE0: SE0 Mask                  */
 
 #define USBD_BUFSEG_BUFSEG_Pos          (3)                                               /*!< USBD_T::BUFSEG0: BUFSEG Position       */
-#define USBD_BUFSEG_BUFSEG_Msk          (0xfful << USBD_BUFSEG0_BUFSEG_Pos)               /*!< USBD_T::BUFSEG0: BUFSEG Mask           */
+#define USBD_BUFSEG_BUFSEG_Msk          (0xfful << USBD_BUFSEG_BUFSEG_Pos)               /*!< USBD_T::BUFSEG0: BUFSEG Mask           */
 
 #define USBD_MXPLD_MXPLD_Pos            (0)                                               /*!< USBD_T::MXPLD0: MXPLD Position         */
-#define USBD_MXPLD_MXPLD_Msk            (0x7fful << USBD_MXPLD0_MXPLD_Pos)                /*!< USBD_T::MXPLD0: MXPLD Mask             */
+#define USBD_MXPLD_MXPLD_Msk            (0x7fful << USBD_MXPLD_MXPLD_Pos)                /*!< USBD_T::MXPLD0: MXPLD Mask             */
 
 #define USBD_CFG_EPNUM_Pos               (0)                                               /*!< USBD_T::CFG: EPNUM Position            */
 #define USBD_CFG_EPNUM_Msk               (0xful << USBD_CFG_EPNUM_Pos)                     /*!< USBD_T::CFG: EPNUM Mask                */
