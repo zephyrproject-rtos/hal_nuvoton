@@ -950,7 +950,10 @@ __WEAK void SCU_IRQHandler(void)
                 if (s_au32VSrcIdx[i] != VSRC_NULL)
                 {
 #if (CHECK_SCU_VIOLATION == 1)
-                    printf("[Warning] Secure violation: %s access %s@0x%08X illegallly.\n", s_astrMasterName[M32(s_u32VSrcIdx[i])], s_astrSlaveName[i], M32(s_au32VAddrIdx[i]));
+                    /* Zephyr: Use printk instead for ISR safe */
+                    /* Zephyr: Fix typo with s_au32VSrcIdx */
+                    extern void printk(const char *fmt, ...);
+		    printk("[Warning] Secure violation: %s access %s@0x%08X illegallly.\n", s_astrMasterName[M32(s_au32VSrcIdx[i])], s_astrSlaveName[i], M32(s_au32VAddrIdx[i]));
 #endif
                     SCU->SVINTSTS = (1 << i);
                 }
@@ -987,6 +990,9 @@ void NSC_Init(uint32_t u32RegionIdx)
     u32Limit = (uint32_t)Image$$NSC_ROM$$XO$$Limit;
 #pragma clang diagnostic pop
 #else
+    /* Zephyr: Conform to linker script exported symbols */
+    #define __start_NSC __sg_start
+    #define __end_NSC __sg_end
     extern uint32_t __start_NSC[];
     extern uint32_t __end_NSC[];
     u32Base  = (uint32_t)__start_NSC;
