@@ -276,7 +276,12 @@ typedef enum IRQn
 
 /* --------  Configuration of Core Peripherals  ----------------------------------- */
 #define __CM33_REV                0x0000U   /* Core revision r0p1 */
+/* Zephyr: Build system requires these two to be consistent */
+#if defined(CONFIG_CPU_HAS_ARM_SAU)
+#define __SAUREGION_PRESENT       1U        /* SAU regions present */
+#else
 #define __SAUREGION_PRESENT       0U        /* SAU regions present */
+#endif
 #define __MPU_PRESENT             1U        /* MPU present */
 #define __VTOR_PRESENT            1U        /* VTOR present */
 #define __NVIC_PRIO_BITS          3U        /* Number of Bits used for Priority Levels */
@@ -631,6 +636,7 @@ typedef enum IRQn
 #define PWM0_NS                   ((PWM_T *)      (PWM0_BASE      + NS_OFFSET))
 #define PWM1_NS                   ((PWM_T *)      (PWM1_BASE      + NS_OFFSET))
 #define QSPI0_NS                  ((QSPI_T *)     (QSPI0_BASE     + NS_OFFSET))
+#define RTC_NS                    ((RTC_T *)      (RTC_BASE       + NS_OFFSET))
 
 #define SCU_NS                    ((SCU_T *)      (SCU_BASE       + NS_OFFSET))
 #define SPI0_NS                   ((SPI_T *)      (SPI0_BASE      + NS_OFFSET))

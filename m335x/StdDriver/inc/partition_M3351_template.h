@@ -39,25 +39,27 @@
 //                              <0x24000=> 144 KB (If ECC disabled)
 //                              <0x28000=> 160 KB (If ECC disabled)
 */
-#define SCU_SECURE_SRAM_SIZE        0x008000
+/* Zephyr: 64KiB Secure, 64KiB Non-Secure */
+#define SCU_SECURE_SRAM_SIZE        0x10000UL
 #define NON_SECURE_SRAM_BASE        (SRAM_BASE + NS_OFFSET + SCU_SECURE_SRAM_SIZE)
 
 /*
 // <h> Non-secure Base Address (NSCBA)
 */
-#define FMC_INIT_NSCBA              1
+#define FMC_INIT_NSCBA              1UL
 /*
 //    <o> Secure APROM Flash Size <0x2000-0x200000:0x2000>
 */
 
-#define FMC_SECURE_REGION_SIZE      0x20000
+/* Zephyr: 512KiB Secure, 512KiB Non-Secure */
+#define FMC_SECURE_REGION_SIZE      0x80000UL
 #define FMC_SECURE_END              (FMC_APROM_BASE + FMC_SECURE_REGION_SIZE)
 #define FMC_NON_SECURE_BASE         (FMC_SECURE_END + NS_OFFSET)
 
 /*
 // <q>Enable Mirror Boundary (Bank Remap Function)
 */
-#define FMC_INIT_MIRROR_BOUND       0x0
+#define FMC_INIT_MIRROR_BOUND       0x0UL
 /*
 // </h>
 */
@@ -65,23 +67,23 @@
 /*
 // <e> DFMC Non-secure Base Address
 */
-#define DFMC_INIT_NSCBA              1
+#define DFMC_INIT_NSCBA              1UL
 /*
 //    <o> Secure DFMC Flash Size <0x1000-0x10000:0x1000>
 */
-#define DFMC_SECURE_REGION_SIZE      0x4000
+#define DFMC_SECURE_REGION_SIZE      0x4000UL
 #define DFMC_SECURE_END              (DFMC_DATA_FLASH_BASE + DFMC_SECURE_REGION_SIZE)
 #define DFMC_NON_SECURE_BASE         (DFMC_SECURE_END + NS_OFFSET)
 
 /*
 // <e> Enable EEPROM
 */
-#define DFMC_ENABLE_EEPROM          1
+#define DFMC_ENABLE_EEPROM          1UL
 
 /*
 // <o.0>  EEPROM Secure Attribute   <1=> Secure <0=> Non-Secure
 */
-#define DFMC_SECURE_EEPROM          0x1
+#define DFMC_SECURE_EEPROM          0x1UL
 /*
 // </e>
 */
@@ -103,7 +105,8 @@
 //   <o.9>  USBH        <0=> Secure <1=> Non-Secure
 //   <o.16> EBI         <0=> Secure <1=> Non-Secure
 */
-#define SCU_INIT_PNSSET0_VAL      0x0
+/* Zephyr: All peripherals NS except: CACHE */
+#define SCU_INIT_PNSSET0_VAL      0xFFFFFFFFUL
 /*
     PNSSET1
 */
@@ -116,7 +119,8 @@
 //   <o.17> CRC         <0=> Secure <1=> Non-Secure
 //   <o.22> CACHE       <0=> Secure <1=> Non-Secure
 */
-#define SCU_INIT_PNSSET1_VAL      0x00000
+/* Zephyr: All peripherals NS except: CACHE */
+#define SCU_INIT_PNSSET1_VAL      (0xFFFFFFFFUL & ~(1UL << 22))
 /*
     PNSSET2
 */
@@ -141,7 +145,8 @@
 //   <o.29> PWM1        <0=> Secure <1=> Non-Secure
 //   </h>
 */
-#define SCU_INIT_PNSSET2_VAL      0x0
+/* Zephyr: All peripherals NS except: CACHE */
+#define SCU_INIT_PNSSET2_VAL      0xFFFFFFFFUL
 /*
     PNSSET3
 */
@@ -165,7 +170,8 @@
 //   <o.25> UART9       <0=> Secure <1=> Non-Secure
 //   </h>
 */
-#define SCU_INIT_PNSSET3_VAL      0x0
+/* Zephyr: All peripherals NS except: CACHE */
+#define SCU_INIT_PNSSET3_VAL      0xFFFFFFFFUL
 /*
     PNSSET4
 */
@@ -185,7 +191,8 @@
 //   </h>
 //   <o.24> WWDT1       <0=> Secure <1=> Non-Secure
 */
-#define SCU_INIT_PNSSET4_VAL      0x0
+/* Zephyr: All peripherals NS except: CACHE */
+#define SCU_INIT_PNSSET4_VAL      0xFFFFFFFFUL
 /*
     PNSSET5
 */
@@ -198,7 +205,8 @@
 //   <o.20> ECAP0       <0=> Secure <1=> Non-Secure
 //   <o.25> TRNG        <0=> Secure <1=> Non-Secure
 */
-#define SCU_INIT_PNSSET5_VAL      0x0
+/* Zephyr: All peripherals NS except: CACHE */
+#define SCU_INIT_PNSSET5_VAL      0xFFFFFFFFUL
 /*
     PNSSET6
 */
@@ -210,7 +218,8 @@
 //   <o.17> USCI1       <0=> Secure <1=> Non-Secure
 //   </h>
 */
-#define SCU_INIT_PNSSET6_VAL      0x0
+/* Zephyr: All peripherals NS except: CACHE */
+#define SCU_INIT_PNSSET6_VAL      0xFFFFFFFFUL
 /*
 // </h>
 */
@@ -242,7 +251,8 @@
 //   </h>
 
 */
-#define SCU_INIT_IONSSET0_VAL      0x00000000
+/* Zephyr: All pins NS */
+#define SCU_INIT_IONSSET0_VAL      0xFFFFFFFFUL
 
 /*
 // Bit 0..15
@@ -265,7 +275,8 @@
 //   <o.15> PB15        <0=> Secure <1=> Non-Secure
 //   </h>
 */
-#define SCU_INIT_IONSSET1_VAL      0x00000000
+/* Zephyr: All pins NS */
+#define SCU_INIT_IONSSET1_VAL      0xFFFFFFFFUL
 
 
 /*
@@ -288,7 +299,8 @@
 //   <o.14> PC14        <0=> Secure <1=> Non-Secure
 //   </h>
 */
-#define SCU_INIT_IONSSET2_VAL      0x00000000
+/* Zephyr: All pins NS */
+#define SCU_INIT_IONSSET2_VAL      0xFFFFFFFFUL
 
 /*
 // Bit 0..15
@@ -311,7 +323,8 @@
 //   <o.15> PD15        <0=> Secure <1=> Non-Secure
 //   </h>
 */
-#define SCU_INIT_IONSSET3_VAL      0x00000000
+/* Zephyr: All pins NS */
+#define SCU_INIT_IONSSET3_VAL      0xFFFFFFFFUL
 
 
 /*
@@ -335,7 +348,8 @@
 //   <o.15> PE15        <0=> Secure <1=> Non-Secure
 //   </h>
 */
-#define SCU_INIT_IONSSET4_VAL      0x00000000
+/* Zephyr: All pins NS */
+#define SCU_INIT_IONSSET4_VAL      0xFFFFFFFFUL
 
 
 /*
@@ -356,7 +370,8 @@
 //   <o.14> PF14        <0=> Secure <1=> Non-Secure
 //   </h>
 */
-#define SCU_INIT_IONSSET5_VAL      0x00000000
+/* Zephyr: All pins NS */
+#define SCU_INIT_IONSSET5_VAL      0xFFFFFFFFUL
 
 
 /*
@@ -374,7 +389,8 @@
 //   <o.15> PG15        <0=> Secure <1=> Non-Secure
 //   </h>
 */
-#define SCU_INIT_IONSSET6_VAL      0x00000000
+/* Zephyr: All pins NS */
+#define SCU_INIT_IONSSET6_VAL      0xFFFFFFFFUL
 
 /*
 // Bit 0..15
@@ -389,7 +405,8 @@
 //   <o.11> PH11        <0=> Secure <1=> Non-Secure
 //   </h>
 */
-#define SCU_INIT_IONSSET7_VAL      0x00000000
+/* Zephyr: All pins NS */
+#define SCU_INIT_IONSSET7_VAL      0xFFFFFFFFUL
 
 /*
 // </h>
@@ -415,7 +432,8 @@
 //   <o.6>  EINT6       <0=> Secure <1=> Non-Secure
 //   <o.7>  EINT7       <0=> Secure <1=> Non-Secure
 */
-#define SCU_INIT_EINTNS_VAL      0x0000
+/* Zephyr: All NS */
+#define SCU_INIT_EINTNS_VAL      0xFFFFFFFFUL
 /*
 // </h>
 */
@@ -441,7 +459,8 @@
 //   <o.6>  GPG         <0=> Secure <1=> Non-Secure
 //   <o.7>  GPH         <0=> Secure <1=> Non-Secure
 */
-#define SCU_INIT_IONSSET_VAL      0x0000
+/* Zephyr: All NS */
+#define SCU_INIT_IONSSET_VAL      0xFFFFFFFFUL
 /*
 // </h>
 */
@@ -451,13 +470,13 @@
 /*
 // <e>Initialize Security Attribution Unit (SAU) CTRL register
 */
-#define SAU_INIT_CTRL 1
+#define SAU_INIT_CTRL           1UL
 
 /*
 //   <q> Enable SAU
 //   <i> To enable Secure Attribute Unit (SAU).
 */
-#define SAU_INIT_CTRL_ENABLE 1
+#define SAU_INIT_CTRL_ENABLE    1UL
 
 /*
 //   <o> All Memory Attribute When SAU is disabled
@@ -466,7 +485,7 @@
 //   <i> To set the ALLNS bit in SAU CTRL.
 //   <i> When all Memory is Non-secure (ALLNS is 1), IDAU can override memory map configuration.
 */
-#define SAU_INIT_CTRL_ALLNS  0
+#define SAU_INIT_CTRL_ALLNS     0UL
 
 /*
 // </e>
@@ -480,27 +499,27 @@
 // <i> - Non-secure
 // <i>Note: All memory regions not configured by SAU are Secure
 */
-#define SAU_REGIONS_MAX   8                 /* Max. number of SAU regions */
+#define SAU_REGIONS_MAX     8UL                 /* Max. number of SAU regions */
 
 /*
 //   <e>Initialize SAU Region 0
 //   <i> Setup SAU Region 0 memory attributes
 */
-#define SAU_INIT_REGION0    0
+#define SAU_INIT_REGION0    0UL
 /*
 //     <o>Start Address <0-0xFFFFFFE0>
 */
-#define SAU_INIT_START0     0x0003F000      /* start address of SAU region 0 */
+#define SAU_INIT_START0     0x0003F000UL      /* start address of SAU region 0 */
 /*
 //     <o>End Address <0x1F-0xFFFFFFFF>
 */
-#define SAU_INIT_END0       0x0003FFFF      /* end address of SAU region 0 */
+#define SAU_INIT_END0       0x0003FFFFUL      /* end address of SAU region 0 */
 /*
 //     <o>Region is
 //         <0=>Non-secure
 //         <1=>Secure, Non-secure Callable
 */
-#define SAU_INIT_NSC0       1
+#define SAU_INIT_NSC0       1UL
 /*
 //   </e>
 */
@@ -509,21 +528,21 @@
 //   <e>Initialize SAU Region 1
 //   <i> Setup SAU Region 1 memory attributes
 */
-#define SAU_INIT_REGION1    0
+#define SAU_INIT_REGION1    0UL
 /*
 //     <o>Start Address <0-0xFFFFFFE0>
 */
-#define SAU_INIT_START1     0x10040000
+#define SAU_INIT_START1     0x10040000UL
 /*
 //     <o>End Address <0x1F-0xFFFFFFFF>
 */
-#define SAU_INIT_END1       0x1007FFFF
+#define SAU_INIT_END1       0x1007FFFFUL
 /*
 //     <o>Region is
 //         <0=>Non-secure
 //         <1=>Secure, Non-secure Callable
 */
-#define SAU_INIT_NSC1       0
+#define SAU_INIT_NSC1       0UL
 /*
 //   </e>
 */
@@ -532,21 +551,21 @@
 //   <e>Initialize SAU Region 2
 //   <i> Setup SAU Region 2 memory attributes
 */
-#define SAU_INIT_REGION2    0
+#define SAU_INIT_REGION2    0UL
 /*
 //     <o>Start Address <0-0xFFFFFFE0>
 */
-#define SAU_INIT_START2     0x2000F000
+#define SAU_INIT_START2     0x2000F000UL
 /*
 //     <o>End Address <0x1F-0xFFFFFFFF>
 */
-#define SAU_INIT_END2       0x2000FFFF
+#define SAU_INIT_END2       0x2000FFFFUL
 /*
 //     <o>Region is
 //         <0=>Non-secure
 //         <1=>Secure, Non-secure Callable
 */
-#define SAU_INIT_NSC2       1
+#define SAU_INIT_NSC2       1UL
 /*
 //   </e>
 */
@@ -555,21 +574,21 @@
 //   <e>Initialize SAU Region 3
 //   <i> Setup SAU Region 3 memory attributes
 */
-#define SAU_INIT_REGION3    0
+#define SAU_INIT_REGION3    0UL
 /*
 //     <o>Start Address <0-0xFFFFFFE0>
 */
-#define SAU_INIT_START3     0x3F000
+#define SAU_INIT_START3     0x3F000UL
 /*
 //     <o>End Address <0x1F-0xFFFFFFFF>
 */
-#define SAU_INIT_END3       0x3FFFF
+#define SAU_INIT_END3       0x3FFFFUL
 /*
 //     <o>Region is
 //         <0=>Non-secure
 //         <1=>Secure, Non-secure Callable
 */
-#define SAU_INIT_NSC3       1
+#define SAU_INIT_NSC3       1UL
 /*
 //   </e>
 */
@@ -578,23 +597,23 @@
 //   <e>Initialize SAU Region 4 (Config Non-secure Callable in system_M3351.c)
 //   <i> Setup SAU Region 4 memory attributes
 */
-#define SAU_INIT_REGION4    0
+#define SAU_INIT_REGION4    0UL
 /*
 //     <o>Start Address <0-0xFFFFFFE0>
 */
-#define SAU_INIT_START4     0      /* start address of SAU region 4 */
+#define SAU_INIT_START4     0UL      /* start address of SAU region 4 */
 
 /*
 //     <o>End Address <0x1F-0xFFFFFFFF>
 */
-#define SAU_INIT_END4       0      /* end address of SAU region 4 */
+#define SAU_INIT_END4       0UL      /* end address of SAU region 4 */
 
 /*
 //     <o>Region is
 //         <0=>Non-secure
 //         <1=>Secure, Non-secure Callable
 */
-#define SAU_INIT_NSC4       1
+#define SAU_INIT_NSC4       1UL
 /*
 //   </e>
 */
@@ -603,7 +622,7 @@
 //   <e>Initialize SAU Region 5 (Non-secure APROM)
 //   <i> Setup SAU Region 5 memory attributes
 */
-#define SAU_INIT_REGION5    1
+#define SAU_INIT_REGION5    1UL
 /*
 //     <o>Start Address <0-0xFFFFFFE0>
 */
@@ -612,14 +631,14 @@
 /*
 //     <o>End Address <0x1F-0xFFFFFFFF>
 */
-#define SAU_INIT_END5       0x100FFFFF              /* end address of SAU region 5 */
+#define SAU_INIT_END5       0x100FFFFFUL            /* end address of SAU region 5 */
 
 /*
 //     <o>Region is
 //         <0=>Non-secure
 //         <1=>Secure, Non-secure Callable
 */
-#define SAU_INIT_NSC5       0
+#define SAU_INIT_NSC5       0UL
 /*
 //   </e>
 */
@@ -628,7 +647,7 @@
 //   <e>Initialize SAU Region 6 (Non-secure SRAM)
 //   <i> Setup SAU Region 6 memory attributes
 */
-#define SAU_INIT_REGION6    1
+#define SAU_INIT_REGION6    1UL
 
 /*
 //     <o>Start Address <0-0xFFFFFFE0>
@@ -638,14 +657,14 @@
 /*
 //     <o>End Address <0x1F-0xFFFFFFFF>
 */
-#define SAU_INIT_END6       0x30027FFF              /* end address of SAU region 6 */
+#define SAU_INIT_END6       0x30027FFFUL            /* end address of SAU region 6 */
 
 /*
 //     <o>Region is
 //         <0=>Non-secure
 //         <1=>Secure, Non-secure Callable
 */
-#define SAU_INIT_NSC6       0
+#define SAU_INIT_NSC6       0UL
 /*
 //   </e>
 */
@@ -654,24 +673,24 @@
 //   <e>Initialize SAU Region 7 (Non-secure IP region)
 //   <i> Setup SAU Region 7 memory attributes
 */
-#define SAU_INIT_REGION7    1
+#define SAU_INIT_REGION7    1UL
 
 /*
 //     <o>Start Address <0-0xFFFFFFE0>
 */
-#define SAU_INIT_START7     0x50000000      /* start address of SAU region 7 */
+#define SAU_INIT_START7     0x50000000UL      /* start address of SAU region 7 */
 
 /*
 //     <o>End Address <0x1F-0xFFFFFFFF>
 */
-#define SAU_INIT_END7       0x5FFFFFFF      /* end address of SAU region 7 */
+#define SAU_INIT_END7       0x5FFFFFFFUL      /* end address of SAU region 7 */
 
 /*
 //     <o>Region is
 //         <0=>Non-secure
 //         <1=>Secure, Non-secure Callable
 */
-#define SAU_INIT_NSC7       0
+#define SAU_INIT_NSC7       0UL
 /*
 //   </e>
 */
@@ -683,7 +702,7 @@
 /*
 // <e>Setup behavior of Sleep and Exception Handling
 */
-#define SCB_CSR_AIRCR_INIT  1
+#define SCB_CSR_AIRCR_INIT          1UL
 
 /*
 //   <o> Deep Sleep can be enabled by
@@ -691,7 +710,7 @@
 //     <1=>Secure state only
 //   <i> Value for SCB->CSR register bit DEEPSLEEPS
 */
-#define SCB_CSR_DEEPSLEEPS_VAL  0
+#define SCB_CSR_DEEPSLEEPS_VAL      0UL
 
 /*
 //   <o>System reset request accessible from
@@ -699,7 +718,7 @@
 //     <1=> Secure state only
 //   <i> Value for SCB->AIRCR register bit SYSRESETREQS
 */
-#define SCB_AIRCR_SYSRESETREQS_VAL  0
+#define SCB_AIRCR_SYSRESETREQS_VAL  0UL
 
 /*
 //   <o>Priority of Non-secure exceptions is
@@ -707,10 +726,15 @@
 //     <1=> Lowered to 0x80-0xFF
 //   <i> Value for SCB->AIRCR register bit PRIS
 */
-#define SCB_AIRCR_PRIS_VAL      0
+#define SCB_AIRCR_PRIS_VAL          0UL
 
+/* Zephyr: Defined per Kconfig */
+#if defined(CONFIG_ARM_SECURE_BUSFAULT_HARDFAULT_NMI)
 /* Assign HardFault to be always Secure for safe */
-#define SCB_AIRCR_BFHFNMINS_VAL 0
+#define SCB_AIRCR_BFHFNMINS_VAL     0UL
+#else
+#define SCB_AIRCR_BFHFNMINS_VAL     1UL
+#endif
 
 /*
 // </e>
@@ -719,7 +743,7 @@
 /*
 // <e>Setup behaviour of Floating Point Unit (FPU)
 */
-#define TZ_FPU_NS_USAGE 1
+#define TZ_FPU_NS_USAGE             1UL
 
 /*
 // <o>Floating Point Unit usage
@@ -727,7 +751,7 @@
 //     <3=> Secure and Non-secure state
 //   <i> Value for SCB->NSACR register bits CP10, CP11
 */
-#define SCB_NSACR_CP10_11_VAL       3
+#define SCB_NSACR_CP10_11_VAL       3UL
 
 /*
 // <o>Treat floating-point registers as Secure
@@ -735,7 +759,7 @@
 //     <1=> Enabled
 //   <i> Value for FPU->FPCCR register bit TS
 */
-#define FPU_FPCCR_TS_VAL            0
+#define FPU_FPCCR_TS_VAL            0UL
 
 /*
 // <o>Clear on return (CLRONRET) accessibility
@@ -743,7 +767,7 @@
 //     <1=> Secure state only
 //   <i> Value for FPU->FPCCR register bit CLRONRETS
 */
-#define FPU_FPCCR_CLRONRETS_VAL     0
+#define FPU_FPCCR_CLRONRETS_VAL     0UL
 
 /*
 // <o>Clear floating-point caller saved registers on exception return
@@ -751,7 +775,7 @@
 //     <1=> Enabled
 //   <i> Value for FPU->FPCCR register bit CLRONRET
 */
-#define FPU_FPCCR_CLRONRET_VAL      1
+#define FPU_FPCCR_CLRONRET_VAL      1UL
 
 /*
 // </e>
@@ -763,10 +787,9 @@
  */
 
 #define SAU_INIT_REGION(n) \
-    SAU->RNR  =  ((n)                                    & SAU_RNR_REGION_Msk); \
+    SAU->RNR  =  ((uint32_t)(n)                          & SAU_RNR_REGION_Msk); \
     SAU->RBAR =  (SAU_INIT_START##n                      & SAU_RBAR_BADDR_Msk); \
     SAU->RLAR =  (SAU_INIT_END##n                        & SAU_RLAR_LADDR_Msk) | \
-                 ((SAU_INIT_NSC##n << SAU_RLAR_NSC_Pos)  & SAU_RLAR_NSC_Msk)   | 1U
+                 ((SAU_INIT_NSC##n << SAU_RLAR_NSC_Pos)  & SAU_RLAR_NSC_Msk)   | 1UL
 
 #endif  /* __PARTITION_M3351_TEMPLATE_H__ */
-
